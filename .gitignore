@@ -1,0 +1,12 @@
+# Arduino IDE & Build files
+build/
+*.bin
+*.elf
+*.hex
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini

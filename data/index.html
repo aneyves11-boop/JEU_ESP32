@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ESP32 Arcade - Salle de Jeux Offline</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <span class="logo-icon">🕹️</span>
+            <span>ESP Arcade</span>
+        </div>
+        <div class="header-badges">
+            <a href="/wifi" class="badge" style="text-decoration:none;border-color:var(--neon-cyan);color:var(--neon-cyan);">
+                <span>⚙️ Wi-Fi</span>
+            </a>
+            <div class="badge">
+                <div class="badge-dot"></div>
+                <span>ESP32 Wi-Fi</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero-banner">
+            <h1>🎮 SALLE D'ARCADE ESP32</h1>
+            <p>Sélectionne un jeu ci-dessous. 100% autonome et hébergé directement sur la puce ESP32 !</p>
+        </section>
+
+        <section class="games-grid">
+            <!-- Game 1: Snake -->
+            <a href="games/snake.html" class="game-card snake-card" onclick="sfx.click()">
+                <div class="game-card-top">
+                    <div class="game-icon">🐍</div>
+                    <div class="game-info">
+                        <h2>Snake Retro</h2>
+                        <p>Guide le serpent, mange les orbes et évite les murs !</p>
+                    </div>
+                </div>
+                <div class="game-card-bottom">
+                    <span class="high-score-tag">Record : <span id="snake-best">0</span></span>
+                    <span class="play-btn">Jouer ▶</span>
+                </div>
+            </a>
+
+            <!-- Game 2: Flappy -->
+            <a href="games/flappy.html" class="game-card flappy-card" onclick="sfx.click()">
+                <div class="game-card-top">
+                    <div class="game-icon">🐦</div>
+                    <div class="game-info">
+                        <h2>Flappy ESP</h2>
+                        <p>Fais planer le drone entre les pylônes électriques.</p>
+                    </div>
+                </div>
+                <div class="game-card-bottom">
+                    <span class="high-score-tag">Record : <span id="flappy-best">0</span></span>
+                    <span class="play-btn">Jouer ▶</span>
+                </div>
+            </a>
+
+            <!-- Game 3: 2048 -->
+            <a href="games/puzzle2048.html" class="game-card puzzle-card" onclick="sfx.click()">
+                <div class="game-card-top">
+                    <div class="game-icon">🔢</div>
+                    <div class="game-info">
+                        <h2>2048 Cyber</h2>
+                        <p>Fusionne les blocs numérotés jusqu'à atteindre 2048.</p>
+                    </div>
+                </div>
+                <div class="game-card-bottom">
+                    <span class="high-score-tag">Record : <span id="2048-best">0</span></span>
+                    <span class="play-btn">Jouer ▶</span>
+                </div>
+            </a>
+
+            <!-- Game 4: Breakout -->
+            <a href="games/breakout.html" class="game-card breakout-card" onclick="sfx.click()">
+                <div class="game-card-top">
+                    <div class="game-icon">🧱</div>
+                    <div class="game-info">
+                        <h2>Casse-Briques</h2>
+                        <p>Détruis toutes les briques sans faire tomber la balle !</p>
+                    </div>
+                </div>
+                <div class="game-card-bottom">
+                    <span class="high-score-tag">Record : <span id="breakout-best">0</span></span>
+                    <span class="play-btn">Jouer ▶</span>
+                </div>
+            </a>
+        </section>
+    </main>
+
+    <footer>
+        ESP32 Web Arcade • Flash LittleFS • 0 Connexion Internet requise
+    </footer>
+
+    <script src="audio.js"></script>
+    <script>
+        // Charger les meilleurs scores enregistrés localement
+        document.getElementById('snake-best').textContent = localStorage.getItem('snake_highscore') || '0';
+        document.getElementById('flappy-best').textContent = localStorage.getItem('flappy_highscore') || '0';
+        document.getElementById('2048-best').textContent = localStorage.getItem('2048_highscore') || '0';
+        document.getElementById('breakout-best').textContent = localStorage.getItem('breakout_highscore') || '0';
+    </script>
+</body>
+</html>

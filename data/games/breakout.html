@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Casse-Briques - ESP32 Arcade</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .breakout-board {
+            width: 360px;
+            height: 440px;
+            max-width: 92vw;
+            max-height: 65vh;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="../index.html" class="back-btn" onclick="sfx.click()">◀ Retour au Menu</a>
+        <div class="score-panel">
+            <div class="score-box">
+                <div class="label">Score</div>
+                <div class="value" id="current-score">0</div>
+            </div>
+            <div class="score-box best">
+                <div class="label">Record</div>
+                <div class="value" id="best-score">0</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="game-wrapper">
+            <div class="canvas-container">
+                <canvas id="gameCanvas" class="breakout-board" width="360" height="440"></canvas>
+                
+                <div id="overlay" class="game-overlay">
+                    <h2 id="overlay-title">CASSE-BRIQUES</h2>
+                    <p id="overlay-msg">Glisse ton doigt ou utilise les flèches pour diriger la raquette</p>
+                    <button class="btn-primary" id="start-btn">Lancer la Balle 🚀</button>
+                </div>
+            </div>
+
+            <!-- Virtual Left/Right buttons for mobile -->
+            <div class="touch-controls">
+                <div class="dpad-row" style="gap: 30px;">
+                    <button class="dpad-btn" id="btn-left" style="width: 100px;">◀ GAUCHE</button>
+                    <button class="dpad-btn" id="btn-right" style="width: 100px;">DROITE ▶</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../audio.js"></script>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('current-score');
+        const bestEl = document.getElementById('best-score');
+        const overlay = document.getElementById('overlay');
+        const overlayTitle = document.getElementById('overlay-title');
+        const overlayMsg = document.getElementById('overlay-msg');
+        const startBtn = document.getElementById('start-btn');
+
+        // Raquette
+        const PADDLE_WIDTH = 75;
+        const PADDLE_HEIGHT = 12;
+        let paddleX = (canvas.width - PADDLE_WIDTH) / 2;
+        let paddleSpeed = 7;
+        let rightPressed = false;
+        let leftPressed = false;
+
+        // Balle
+        const BALL_RADIUS = 6;
+        let ballX = canvas.width / 2;
+        let ballY = canvas.height - 40;
+        let ballDx = 3;
+        let ballDy = -3.5;
+
+        // Briques
+        const BRICK_ROW_COUNT = 5;
+        const BRICK_COL_COUNT = 6;
+        const BRICK_PADDING = 6;
+        const BRICK_OFFSET_TOP = 40;
+        const BRICK_OFFSET_LEFT = 15;
+        const BRICK_WIDTH = 50;
+        const BRICK_HEIGHT = 16;
+        let bricks = [];
+
+        const ROW_COLORS = ['#ff0055', '#ff7700', '#ffe600', '#00ff66', '#00f3ff'];
+        const ROW_POINTS = [50, 40, 30, 20, 10];
+
+        let score = 0;
+        let bestScore = parseInt(localStorage.getItem('breakout_highscore') || '0', 10);
+        let isRunning = false;
+        let animationId = null;
+
+        bestEl.textContent = bestScore;
+
+        function initBricks() {
+            bricks = [];
+            for (let c = 0; c < BRICK_COL_COUNT; c++) {
+                bricks[c] = [];
+                for (let r = 0; r < BRICK_ROW_COUNT; r++) {
+                    bricks[c][r] = { x: 0, y: 0, status: 1 };
+                }
+            }
+        }
+
+        function initGame() {
+            paddleX = (canvas.width - PADDLE_WIDTH) / 2;
+            ballX = canvas.width / 2;
+            ballY = canvas.height - 40;
+            ballDx = (Math.random() > 0.5 ? 1 : -1) * 3.2;
+            ballDy = -3.6;
+            score = 0;
+            scoreEl.textContent = '0';
+            initBricks();
+            isRunning = true;
+            overlay.classList.add('hidden');
+            if (animationId) cancelAnimationFrame(animationId);
+            gameLoop();
+        }
+
+        function collisionDetection() {
+            let activeBricks = 0;
+            for (let c = 0; c < BRICK_COL_COUNT; c++) {
+                for (let r = 0; r < BRICK_ROW_COUNT; r++) {
+                    const b = bricks[c][r];
+                    if (b.status === 1) {
+                        activeBricks++;
+                        if (
+                            ballX > b.x &&
+                            ballX < b.x + BRICK_WIDTH &&
+                            ballY > b.y &&
+                            ballY < b.y + BRICK_HEIGHT
+                        ) {
+                            ballDy = -ballDy;
+                            b.status = 0;
+                            score += ROW_POINTS[r];
+                            scoreEl.textContent = score;
+                            sfx.score();
+
+                            if (score > bestScore) {
+                                bestScore = score;
+                                bestEl.textContent = bestScore;
+                                localStorage.setItem('breakout_highscore', bestScore);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (activeBricks === 0) {
+                victory();
+            }
+        }
+
+        function update() {
+            // Mouvement de la raquette
+            if (rightPressed && paddleX < canvas.width - PADDLE_WIDTH) {
+                paddleX += paddleSpeed;
+            } else if (leftPressed && paddleX > 0) {
+                paddleX -= paddleSpeed;
+            }
+
+            // Mouvement de la balle
+            ballX += ballDx;
+            ballY += ballDy;
+
+            // Collision murs gauche/droite
+            if (ballX + BALL_RADIUS > canvas.width || ballX - BALL_RADIUS < 0) {
+                ballDx = -ballDx;
+                sfx.click();
+            }
+
+            // Collision plafond
+            if (ballY - BALL_RADIUS < 0) {
+                ballDy = -ballDy;
+                sfx.click();
+            }
+
+            // Collision raquette
+            const paddleY = canvas.height - PADDLE_HEIGHT - 10;
+            if (
+                ballY + BALL_RADIUS >= paddleY &&
+                ballY - BALL_RADIUS <= paddleY + PADDLE_HEIGHT &&
+                ballX >= paddleX &&
+                ballX <= paddleX + PADDLE_WIDTH
+            ) {
+                // Angle de rebond dynamique selon le point d'impact
+                const hitPoint = (ballX - (paddleX + PADDLE_WIDTH / 2)) / (PADDLE_WIDTH / 2);
+                ballDx = hitPoint * 4.5;
+                ballDy = -Math.abs(ballDy);
+                sfx.jump();
+            }
+
+            // Balle tombée en bas (Game Over)
+            if (ballY - BALL_RADIUS > canvas.height) {
+                gameOver();
+                return;
+            }
+
+            collisionDetection();
+        }
+
+        function draw() {
+            ctx.fillStyle = '#0a0d18';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Dessiner les briques
+            for (let c = 0; c < BRICK_COL_COUNT; c++) {
+                for (let r = 0; r < BRICK_ROW_COUNT; r++) {
+                    if (bricks[c][r].status === 1) {
+                        const brickX = c * (BRICK_WIDTH + BRICK_PADDING) + BRICK_OFFSET_LEFT;
+                        const brickY = r * (BRICK_HEIGHT + BRICK_PADDING) + BRICK_OFFSET_TOP;
+                        bricks[c][r].x = brickX;
+                        bricks[c][r].y = brickY;
+
+                        const color = ROW_COLORS[r];
+                        ctx.shadowColor = color;
+                        ctx.shadowBlur = 6;
+                        ctx.fillStyle = color;
+                        ctx.fillRect(brickX, brickY, BRICK_WIDTH, BRICK_HEIGHT);
+                    }
+                }
+            }
+
+            // Dessiner la raquette
+            const paddleY = canvas.height - PADDLE_HEIGHT - 10;
+            ctx.shadowColor = '#00f3ff';
+            ctx.shadowBlur = 10;
+            ctx.fillStyle = '#00f3ff';
+            ctx.fillRect(paddleX, paddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
+
+            // Dessiner la balle
+            ctx.shadowColor = '#ffe600';
+            ctx.shadowBlur = 12;
+            ctx.fillStyle = '#ffe600';
+            ctx.beginPath();
+            ctx.arc(ballX, ballY, BALL_RADIUS, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+        }
+
+        function gameLoop() {
+            if (!isRunning) return;
+            update();
+            draw();
+            animationId = requestAnimationFrame(gameLoop);
+        }
+
+        function gameOver() {
+            isRunning = false;
+            sfx.gameover();
+            overlayTitle.textContent = "GAME OVER";
+            overlayTitle.className = "";
+            overlayMsg.textContent = `Score final : ${score}`;
+            startBtn.textContent = "Rejouer ↺";
+            overlay.classList.remove('hidden');
+        }
+
+        function victory() {
+            isRunning = false;
+            sfx.win();
+            overlayTitle.textContent = "VICTOIRE ! 🎉";
+            overlayTitle.className = "win";
+            overlayMsg.textContent = `Tableau nettoyé avec un score de ${score} !`;
+            startBtn.textContent = "Rejouer ↺";
+            overlay.classList.remove('hidden');
+        }
+
+        // Clavier
+        window.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' || e.key === 'd') rightPressed = true;
+            if (e.key === 'ArrowLeft' || e.key === 'q' || e.key === 'a') leftPressed = true;
+            if (e.code === 'Space' && !isRunning) initGame();
+        });
+
+        window.addEventListener('keyup', e => {
+            if (e.key === 'ArrowRight' || e.key === 'd') rightPressed = false;
+            if (e.key === 'ArrowLeft' || e.key === 'q' || e.key === 'a') leftPressed = false;
+        });
+
+        // Contrôles Souris / Touch Dragging direct
+        function setPaddleFromClientX(clientX) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const relativeX = (clientX - rect.left) * scaleX;
+            paddleX = Math.max(0, Math.min(canvas.width - PADDLE_WIDTH, relativeX - PADDLE_WIDTH / 2));
+        }
+
+        canvas.addEventListener('mousemove', e => {
+            if (isRunning) setPaddleFromClientX(e.clientX);
+        });
+
+        canvas.addEventListener('touchmove', e => {
+            if (isRunning && e.touches.length > 0) {
+                e.preventDefault();
+                setPaddleFromClientX(e.touches[0].clientX);
+            }
+        }, { passive: false });
+
+        // Boutons virtuels
+        const bLeft = document.getElementById('btn-left');
+        const bRight = document.getElementById('btn-right');
+
+        bLeft.addEventListener('touchstart', (e) => { e.preventDefault(); leftPressed = true; });
+        bLeft.addEventListener('touchend', () => { leftPressed = false; });
+        bLeft.addEventListener('mousedown', () => { leftPressed = true; });
+        bLeft.addEventListener('mouseup', () => { leftPressed = false; });
+
+        bRight.addEventListener('touchstart', (e) => { e.preventDefault(); rightPressed = true; });
+        bRight.addEventListener('touchend', () => { rightPressed = false; });
+        bRight.addEventListener('mousedown', () => { rightPressed = true; });
+        bRight.addEventListener('mouseup', () => { rightPressed = false; });
+
+        startBtn.addEventListener('click', () => {
+            sfx.click();
+            initGame();
+        });
+
+        initBricks();
+        draw();
+    </script>
+</body>
+</html>
