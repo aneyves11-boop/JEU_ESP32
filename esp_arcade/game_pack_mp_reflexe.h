@@ -4,13 +4,13 @@
 #include <pgmspace.h>
 
 // ==================================================================================
-//   ESP32 ARCADE - 5 JEUX MULTIJOUEURS DE REFLEXE & ACTION (1V1 LOCAL WI-FI)
+//   ESP32 ARCADE - 5 JEUX DE REFLEXE & ACTION (1V1 WI-FI & SOLO VS IA)
 //   1. PONG LASER  |  2. AIR HOCKEY ARCADE  |  3. TANK BATTLE 2D
 //   4. DUEL DE REFLEXES  |  5. TAP DUEL (TIR A LA CORDE)
 // ==================================================================================
 
 // ----------------------------------------------------------------------------------
-//   1. PONG 1V1 LASER REALISTE (SCREEN SHAKE, COMET TRAIL, 3D PADDLES & SPARKS)
+//   1. PONG 1V1 LASER (1V1 WI-FI & SOLO VS IA)
 // ----------------------------------------------------------------------------------
 const char MP_PONG_HTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
@@ -92,6 +92,7 @@ const char MP_PONG_HTML[] PROGMEM = R"rawliteral(
       <p id="ov-desc">En attente d'un adversaire sur son smartphone...</p>
       <div id="ov-actions" style="display:none; flex-direction:column; gap:8px; width:100%; max-width:240px; margin-top:10px;">
         <button id="btn-rematch" class="act-btn btn-rematch">🔄 Rejouer (Revanche)</button>
+        <button id="btn-ai" class="act-btn btn-rematch" style="background:linear-gradient(180deg,#a855f7,#6b21a8);color:#fff;margin-top:6px;" onclick="startAiMode()">🤖 Jouer contre l'IA</button>
         <a href="/hub" class="act-btn btn-quit">◀ Quitter au Salon</a>
       </div>
     </div>
@@ -113,8 +114,20 @@ const char MP_PONG_HTML[] PROGMEM = R"rawliteral(
     const P_WIDTH = 74, P_HEIGHT = 14;
     let myRematch = false, oppRematch = false;
     let trail = [], sparks = [], screenShake = 0;
+    let isAi = new URLSearchParams(window.location.search).get('vs') === 'ai';
+    function startAiMode() {
+      isAi = true;
+      if (ws && ws.readyState === WebSocket.OPEN) ws.close();
+      overlay.style.display = "none";
+      ovActions.style.display = "none";
+      playing = true; role = 1;
+      badge.textContent = "🤖 Solo vs IA"; badge.style.color = "#a855f7";
+      p1Name.textContent = myPseudo; p2Name.textContent = "IA Bot";
+    }
 
-    const ws = new WebSocket('ws://' + location.hostname + ':81/');
+
+    let ws = null;
+    if (isAi) { setTimeout(startAiMode, 100); } else { ws = new WebSocket('ws://' + location.hostname + ':81/');
     ws.onopen = () => {
       badge.textContent = "Recherche...";
       ws.send(JSON.stringify({ t: "join", g: "pong", name: myPseudo }));
@@ -162,7 +175,8 @@ const char MP_PONG_HTML[] PROGMEM = R"rawliteral(
           badge.textContent = "Interrompu";
         }
       } catch(err){}
-    };
+    }; 
+    }
 
     function updateScores() {
       s1El.textContent = score1; s2El.textContent = score2;
@@ -180,7 +194,7 @@ const char MP_PONG_HTML[] PROGMEM = R"rawliteral(
       }
     }
 
-    btnRematch.onclick = () => {
+    btnRematch.onclick = () => { if (isAi) { resetGame(); return; }
       myRematch = true;
       btnRematch.disabled = true;
       btnRematch.textContent = "⏳ En attente de l'adversaire...";
@@ -267,7 +281,23 @@ const char MP_PONG_HTML[] PROGMEM = R"rawliteral(
       ctx.beginPath(); ctx.moveTo(0, 250); ctx.lineTo(340, 250); ctx.stroke();
       ctx.setLineDash([]);
 
-      if (playing && role === 1) {
+      if (playing) {
+        if (isAi) {
+          oppX += (ball.x - oppX) * 0.085;
+          oppX = Math.max(P_WIDTH/2, Math.min(340 - P_WIDTH/2, oppX));
+          ball.x += ball.vx; ball.y += ball.vy;
+          if (ball.x - ball.r <= 0 || ball.x + ball.r >= 340) { ball.vx = -ball.vx; }
+          // player paddle
+          if (ball.y + ball.r >= 475 && ball.y - ball.r <= 485 && ball.x >= myX - P_WIDTH/2 && ball.x <= myX + P_WIDTH/2) {
+            ball.vy = -Math.abs(ball.vy) * 1.03; ball.vx = ((ball.x - myX)/(P_WIDTH/2)) * 4.5;
+          }
+          // AI paddle
+          if (ball.y - ball.r <= 25 && ball.y + ball.r >= 15 && ball.x >= oppX - P_WIDTH/2 && ball.x <= oppX + P_WIDTH/2) {
+            ball.vy = Math.abs(ball.vy) * 1.03; ball.vx = ((ball.x - oppX)/(P_WIDTH/2)) * 4.5;
+          }
+          if (ball.y > 515) { score2++; updateScores(); resetBall(); checkMatchOver(); }
+          if (ball.y < -15) { score1++; updateScores(); resetBall(); checkMatchOver(); }
+        } else if (role === 1) {
         ball.x += ball.vx; ball.y += ball.vy;
         trail.push({ x: ball.x, y: ball.y });
         if (trail.length > 8) trail.shift();
@@ -357,7 +387,7 @@ const char MP_PONG_HTML[] PROGMEM = R"rawliteral(
 )rawliteral";
 
 // ----------------------------------------------------------------------------------
-//   2. AIR HOCKEY ARCADE NEON (MALLETS 3D, PUCKS GLOW & REBONDS ELASTIQUES)
+//   2. AIR HOCKEY ARCADE (1V1 WI-FI & SOLO VS IA)
 // ----------------------------------------------------------------------------------
 const char MP_HOCKEY_HTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
@@ -420,6 +450,7 @@ const char MP_HOCKEY_HTML[] PROGMEM = R"rawliteral(
       <p id="ov-desc">En attente d'un adversaire...</p>
       <div id="ov-actions" style="display:none; flex-direction:column; gap:8px; width:100%; max-width:240px; margin-top:10px;">
         <button id="btn-rematch" class="act-btn btn-rematch">🔄 Rejouer (Revanche)</button>
+        <button id="btn-ai" class="act-btn btn-rematch" style="background:linear-gradient(180deg,#a855f7,#6b21a8);color:#fff;margin-top:6px;" onclick="startAiMode()">🤖 Jouer contre l'IA</button>
         <a href="/hub" class="act-btn btn-quit">◀ Quitter au Salon</a>
       </div>
     </div>
@@ -438,9 +469,20 @@ const char MP_HOCKEY_HTML[] PROGMEM = R"rawliteral(
     let puck = { x: 170, y: 250, vx: 0, vy: 0, r: 13 };
     const MALLET_R = 25;
     let myRematch = false, oppRematch = false;
+    let isAi = new URLSearchParams(window.location.search).get('vs') === 'ai';
+    function startAiMode() {
+      isAi = true;
+      if (ws && ws.readyState === WebSocket.OPEN) ws.close();
+      overlay.style.display = "none"; ovActions.style.display = "none";
+      playing = true; role = 1;
+      badge.textContent = "🤖 Solo vs IA"; badge.style.color = "#a855f7";
+      p1Name.textContent = myPseudo; p2Name.textContent = "IA Bot";
+    }
+
     let sparks = [];
 
-    const ws = new WebSocket('ws://' + location.hostname + ':81/');
+    let ws = null;
+    if (isAi) { setTimeout(startAiMode, 100); } else { ws = new WebSocket('ws://' + location.hostname + ':81/');
     ws.onopen = () => ws.send(JSON.stringify({ t: "join", g: "hockey", name: myPseudo }));
     ws.onmessage = (e) => {
       const d = JSON.parse(e.data);
@@ -492,7 +534,7 @@ const char MP_HOCKEY_HTML[] PROGMEM = R"rawliteral(
       }
     }
 
-    btnRematch.onclick = () => {
+    btnRematch.onclick = () => { if (isAi) { resetMatch(); return; }
       myRematch = true;
       btnRematch.disabled = true;
       btnRematch.textContent = "⏳ En attente de l'adversaire...";
@@ -572,6 +614,16 @@ const char MP_HOCKEY_HTML[] PROGMEM = R"rawliteral(
     }
 
     function loop() {
+      if (playing) {
+        if (isAi) {
+          if (puck.y < 260) {
+            oppX += (puck.x - oppX) * 0.12; oppY += (puck.y - oppY) * 0.1;
+          } else {
+            oppX += (165 - oppX) * 0.05; oppY += (70 - oppY) * 0.05;
+          }
+          oppX = Math.max(30, Math.min(300, oppX)); oppY = Math.max(30, Math.min(230, oppY));
+        }
+      }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Realistic ice rink background
@@ -648,7 +700,7 @@ const char MP_HOCKEY_HTML[] PROGMEM = R"rawliteral(
 )rawliteral";
 
 // ----------------------------------------------------------------------------------
-//   3. TANK BATTLE 2D REALISTE (CHENILLES, DEBRIS, PROJECTILES & MURS CAVERNES)
+//   3. TANK BATTLE 2D (1V1 WI-FI & SOLO VS IA)
 // ----------------------------------------------------------------------------------
 const char MP_TANK_HTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
@@ -706,6 +758,7 @@ const char MP_TANK_HTML[] PROGMEM = R"rawliteral(
       <p id="ov-desc">En attente d'un adversaire...</p>
       <div id="ov-actions" style="display:none; flex-direction:column; gap:8px; width:100%; max-width:240px; margin-top:10px;">
         <button id="btn-rematch" class="act-btn btn-rematch">🔄 Rejouer (Revanche)</button>
+        <button id="btn-ai" class="act-btn btn-rematch" style="background:linear-gradient(180deg,#a855f7,#6b21a8);color:#fff;margin-top:6px;" onclick="startAiMode()">🤖 Jouer contre l'IA</button>
         <a href="/hub" class="act-btn btn-quit">◀ Quitter au Salon</a>
       </div>
     </div>
@@ -731,8 +784,20 @@ const char MP_TANK_HTML[] PROGMEM = R"rawliteral(
     let oppTank = { x: 290, y: 50, a: Math.PI, hp: 3 };
     let bullets = [], explosions = [];
     let myRematch = false, oppRematch = false;
+    let isAi = new URLSearchParams(window.location.search).get('vs') === 'ai';
+    let aiShootTick = 0;
+    function startAiMode() {
+      isAi = true;
+      if (ws && ws.readyState === WebSocket.OPEN) ws.close();
+      overlay.style.display = "none"; ovActions.style.display = "none";
+      playing = true; role = 1;
+      badge.textContent = "🤖 Solo vs IA"; badge.style.color = "#a855f7";
+      p1Name.textContent = myPseudo; p2Name.textContent = "IA Bot";
+    }
 
-    const ws = new WebSocket('ws://' + location.hostname + ':81/');
+
+    let ws = null;
+    if (isAi) { setTimeout(startAiMode, 100); } else { ws = new WebSocket('ws://' + location.hostname + ':81/');
     ws.onopen = () => ws.send(JSON.stringify({ t: "join", g: "tank", name: myPseudo }));
     ws.onmessage = (e) => {
       const d = JSON.parse(e.data);
@@ -784,7 +849,7 @@ const char MP_TANK_HTML[] PROGMEM = R"rawliteral(
       }
     }
 
-    btnRematch.onclick = () => {
+    btnRematch.onclick = () => { if (isAi) { resetAll(); return; }
       myRematch = true;
       btnRematch.disabled = true;
       btnRematch.textContent = "⏳ En attente de l'adversaire...";
@@ -879,6 +944,17 @@ const char MP_TANK_HTML[] PROGMEM = R"rawliteral(
     }
 
     function loop() {
+      if (playing && isAi) {
+        const da = Math.atan2(p1.y - p2.y, p1.x - p2.x);
+        p2.a += (da - p2.a) * 0.05;
+        p2.x += Math.cos(p2.a) * 1.3; p2.y += Math.sin(p2.a) * 1.3;
+        p2.x = Math.max(16, Math.min(324, p2.x)); p2.y = Math.max(16, Math.min(384, p2.y));
+        aiShootTick++;
+        if (aiShootTick > 75) {
+          bullets.push({ x: p2.x + Math.cos(p2.a)*16, y: p2.y + Math.sin(p2.a)*16, vx: Math.cos(p2.a)*5, vy: Math.sin(p2.a)*5, p: 2, b: 0 });
+          aiShootTick = 0;
+        }
+      }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Battlefield grid
@@ -954,7 +1030,7 @@ const char MP_TANK_HTML[] PROGMEM = R"rawliteral(
 )rawliteral";
 
 // ----------------------------------------------------------------------------------
-//   4. DUEL DE REFLEXES CYBER (FEUX TRICOLORES REALISTES, CHRONOMETRE PRECISION)
+//   4. DUEL DE REFLEXES (1V1 WI-FI & SOLO VS IA)
 // ----------------------------------------------------------------------------------
 const char MP_REFLEX_HTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
@@ -1025,6 +1101,7 @@ const char MP_REFLEX_HTML[] PROGMEM = R"rawliteral(
     <div id="msg-sub">En attente d'un adversaire sur son smartphone.</div>
     <div id="ov-actions" style="display:none; flex-direction:column; gap:8px; width:100%; max-width:240px; margin-top:16px;">
       <button id="btn-rematch" class="act-btn btn-rematch">🔄 Rejouer (Revanche)</button>
+      <button id="btn-ai" class="act-btn btn-rematch" style="background:linear-gradient(180deg,#a855f7,#6b21a8);color:#fff;margin-top:6px;" onclick="startAiMode()">🤖 Jouer contre l'IA</button>
       <a href="/hub" class="act-btn btn-quit">◀ Quitter au Salon</a>
     </div>
   </div>
@@ -1045,8 +1122,20 @@ const char MP_REFLEX_HTML[] PROGMEM = R"rawliteral(
     let state = "wait";
     let fireTime = 0, timerId = null;
     let myRematch = false, oppRematch = false;
+    let isAi = new URLSearchParams(window.location.search).get('vs') === 'ai';
+    let aiReflexTimer = null;
+    function startAiMode() {
+      isAi = true;
+      if (ws && ws.readyState === WebSocket.OPEN) ws.close();
+      badge.textContent = "🤖 Solo vs IA"; badge.style.color = "#a855f7";
+      ovActions.style.display = "none";
+      role = 1; playing = true;
+      startRoundCountdown();
+    }
 
-    const ws = new WebSocket('ws://' + location.hostname + ':81/');
+
+    let ws = null;
+    if (isAi) { setTimeout(startAiMode, 100); } else { ws = new WebSocket('ws://' + location.hostname + ':81/');
     ws.onopen = () => ws.send(JSON.stringify({ t: "join", g: "reflex", name: myPseudo }));
     ws.onmessage = (e) => {
       const d = JSON.parse(e.data);
@@ -1099,6 +1188,15 @@ const char MP_REFLEX_HTML[] PROGMEM = R"rawliteral(
     }
 
     function triggerFire() {
+      if (isAi) {
+        clearTimeout(aiReflexTimer);
+        const aiReact = Math.floor(Math.random() * 110 + 260); // 260 to 370 ms
+        aiReflexTimer = setTimeout(() => {
+          if (state === 'fire') {
+            handleRoundEnd(2, "L'IA a dégainé en " + aiReact + " ms !");
+          }
+        }, aiReact);
+      }
       state = "fire";
       fireTime = performance.now();
       zone.className = "state-fire";
@@ -1181,7 +1279,7 @@ const char MP_REFLEX_HTML[] PROGMEM = R"rawliteral(
 )rawliteral";
 
 // ----------------------------------------------------------------------------------
-//   5. TAP DUEL : TIR A LA CORDE TACTILE (GAUGE DYNAMIQUE, COMBOS & VIBRATIONS)
+//   5. TAP DUEL : TIR A LA CORDE (1V1 WI-FI & SOLO VS IA)
 // ----------------------------------------------------------------------------------
 const char MP_TAPDUEL_HTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
@@ -1353,6 +1451,7 @@ const char MP_TAPDUEL_HTML[] PROGMEM = R"rawliteral(
     <p id="ov-desc">En attente d'un adversaire sur son smartphone...</p>
     <div id="ov-actions" style="display:none; flex-direction:column; align-items:center; width:100%;">
       <button id="btn-rematch" class="act-btn btn-rematch">🔄 Rejouer (Revanche)</button>
+      <button id="btn-ai" class="act-btn btn-rematch" style="background:linear-gradient(180deg,#a855f7,#6b21a8);color:#fff;margin-top:6px;" onclick="startAiMode()">🤖 Jouer contre l'IA</button>
       <a href="/hub" class="act-btn btn-quit">◀ Quitter au Salon</a>
     </div>
   </div>
@@ -1373,6 +1472,24 @@ const char MP_TAPDUEL_HTML[] PROGMEM = R"rawliteral(
     let ropePos = 0; // -100 (J1 gagne) à +100 (J2 gagne)
     let myTapCount = 0, lastTapCalc = Date.now();
     let myRematch = false, oppRematch = false;
+    let isAi = new URLSearchParams(window.location.search).get('vs') === 'ai';
+    let aiTapInterval = null;
+    function startAiMode() {
+      isAi = true;
+      if (ws && ws.readyState === WebSocket.OPEN) ws.close();
+      overlay.style.display = "none"; ovActions.style.display = "none";
+      badge.textContent = "🤖 Solo vs IA"; badge.style.color = "#a855f7";
+      p2Name.textContent = "IA Bot";
+      role = 1; playing = true;
+      clearInterval(aiTapInterval);
+      aiTapInterval = setInterval(() => {
+        if (!playing) return;
+        ropePos += 3.5;
+        if (ropePos > 100) ropePos = 100;
+        updateRopeUI(); checkRoundEnd();
+      }, 175);
+    }
+
 
     // Web Audio synthesizer for haptic & click sensation
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -1489,7 +1606,7 @@ const char MP_TAPDUEL_HTML[] PROGMEM = R"rawliteral(
       playing = true;
     }
 
-    btnRematch.onclick = () => {
+    btnRematch.onclick = () => { if (isAi) { resetFullMatch(); startAiMode(); return; }
       myRematch = true;
       btnRematch.textContent = "⏳ En attente de l'adversaire...";
       btnRematch.style.background = "rgba(255,255,255,0.2)";
@@ -1497,7 +1614,8 @@ const char MP_TAPDUEL_HTML[] PROGMEM = R"rawliteral(
       if (oppRematch) resetFullMatch();
     };
 
-    const ws = new WebSocket('ws://' + location.hostname + ':81/');
+    let ws = null;
+    if (isAi) { setTimeout(startAiMode, 100); } else { ws = new WebSocket('ws://' + location.hostname + ':81/');
     ws.onopen = () => {
       badge.textContent = "Recherche...";
       ws.send(JSON.stringify({ t: "join", g: "tapduel", name: myPseudo }));
@@ -1549,10 +1667,10 @@ const char MP_TAPDUEL_HTML[] PROGMEM = R"rawliteral(
         }
       } catch(err){}
     };
+    }
   </script>
 </body>
 </html>
-
 )rawliteral";
 
 #endif // GAME_PACK_MP_REFLEXE_H

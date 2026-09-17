@@ -4,13 +4,13 @@
 #include <pgmspace.h>
 
 // ==================================================================================
-//   ESP32 ARCADE - 5 JEUX MULTIJOUEURS DE BACCALAUREAT, MOTS & LETTRES (1V1 LOCAL WI-FI)
+//   ESP32 ARCADE - 5 JEUX DE BACCALAUREAT, MOTS & LETTRES (1V1 WI-FI & SOLO VS IA)
 //   1. PETIT BAC CLASSIC  |  2. ANAGRAMME FLASH  |  3. BOMBE A MOTS
 //   4. CHAINE DE MOTS     |  5. PENDU DUEL
 // ==================================================================================
 
 // ----------------------------------------------------------------------------------
-//   1. LE PETIT BAC CLASSIC 1V1 (LETTRE SYNCHRO, 4 CATEGORIES & REVISION COMPARATIVE)
+//   1. LE PETIT BAC CLASSIC (1V1 WI-FI & SOLO VS IA)
 // ----------------------------------------------------------------------------------
 const char MP_PETITBAC_HTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
@@ -160,6 +160,7 @@ const char MP_PETITBAC_HTML[] PROGMEM = R"rawliteral(
     <p id="ov-desc">En attente d'un adversaire sur son smartphone...</p>
     <div id="ov-actions" style="display:none; flex-direction:column; align-items:center; width:100%;">
       <button id="btn-ov-rematch" class="act-btn btn-rematch">🔄 Rejouer (Revanche)</button>
+      <button id="btn-ai" class="act-btn btn-rematch" style="background:linear-gradient(180deg,#a855f7,#6b21a8);color:#fff;margin-top:6px;" onclick="startAiMode()">🤖 Jouer contre l'IA</button>
       <a href="/hub" class="act-btn btn-quit">◀ Quitter au Salon</a>
     </div>
   </div>
@@ -183,6 +184,34 @@ const char MP_PETITBAC_HTML[] PROGMEM = R"rawliteral(
     let timerInterval = null, timeLeft = 0;
     let myAnswers = {}, oppAnswers = {};
     let myRematch = false, oppRematch = false;
+    let isAi = new URLSearchParams(window.location.search).get('vs') === 'ai';
+    const AI_WORDS_MAP = {
+      'A': { prenom: 'Arthur', ville: 'Alger', animal: 'Aigle', objet: 'Avion' },
+      'B': { prenom: 'Bruno', ville: 'Bordeaux', animal: 'Baleine', objet: 'Bateau' },
+      'C': { prenom: 'Claire', ville: 'Canada', animal: 'Chat', objet: 'Crayon' },
+      'D': { prenom: 'David', ville: 'Dakar', animal: 'Dauphin', objet: 'Dé' },
+      'E': { prenom: 'Emma', ville: 'Espagne', animal: 'Éléphant', objet: 'Épée' },
+      'F': { prenom: 'Fabien', ville: 'France', animal: 'Faucon', objet: 'Fusée' },
+      'G': { prenom: 'Gabriel', ville: 'Genève', animal: 'Girafe', objet: 'Guitare' },
+      'L': { prenom: 'Lucas', ville: 'Lyon', animal: 'Lion', objet: 'Lampe' },
+      'M': { prenom: 'Marie', ville: 'Marseille', animal: 'Mouton', objet: 'Marteau' },
+      'P': { prenom: 'Paul', ville: 'Paris', animal: 'Panda', objet: 'Pinceau' },
+      'R': { prenom: 'Romain', ville: 'Rome', animal: 'Renard', objet: 'Robot' },
+      'S': { prenom: 'Sarah', ville: 'Suisse', animal: 'Singe', objet: 'Stylo' },
+      'T': { prenom: 'Thomas', ville: 'Tokyo', animal: 'Tigre', objet: 'Table' },
+      'V': { prenom: 'Victor', ville: 'Venise', animal: 'Vache', objet: 'Voiture' }
+    };
+    let aiStopTimer = null;
+    function startAiMode() {
+      isAi = true;
+      if (ws && ws.readyState === WebSocket.OPEN) ws.close();
+      overlay.style.display = "none"; ovActions.style.display = "none";
+      badge.textContent = "🤖 Solo vs IA"; badge.style.color = "#a855f7";
+      oppPseudo = "IA Bot"; role = 1;
+      const l = LETTERS[Math.floor(Math.random() * LETTERS.length)];
+      startNewRound(l);
+    }
+
 
     const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'L', 'M', 'P', 'R', 'S', 'T', 'V'];
 
@@ -204,6 +233,16 @@ const char MP_PETITBAC_HTML[] PROGMEM = R"rawliteral(
       btnStop.style.opacity = '1';
       myRematch = false; oppRematch = false;
       playing = true;
+      if (isAi) {
+        clearTimeout(aiStopTimer);
+        const aiTime = Math.floor(Math.random() * 4000 + 8000); // 8 to 12s
+        aiStopTimer = setTimeout(() => {
+          if (playing && btnStop.disabled === false) {
+            oppAnswers = AI_WORDS_MAP[currentLetter] || { prenom: 'Alex', ville: 'Paris', animal: 'Chat', objet: 'Livre' };
+            triggerStopCountdown("🤖 L'IA");
+          }
+        }, aiTime);
+      }
     }
 
     function triggerStopCountdown(starterPseudo) {
@@ -295,10 +334,11 @@ const char MP_PETITBAC_HTML[] PROGMEM = R"rawliteral(
       }
     }
 
-    btnRematch.onclick = requestRematch;
+    btnRematch.onclick = () => { if (isAi) { startAiMode(); return; } requestRematch(); };
     btnOvRematch.onclick = requestRematch;
 
-    const ws = new WebSocket('ws://' + location.hostname + ':81/');
+    let ws = null;
+    if (isAi) { setTimeout(startAiMode, 100); } else { ws = new WebSocket('ws://' + location.hostname + ':81/');
     ws.onopen = () => {
       badge.textContent = "Recherche...";
       ws.send(JSON.stringify({ t: "join", g: "petitbac", name: myPseudo }));
@@ -346,14 +386,14 @@ const char MP_PETITBAC_HTML[] PROGMEM = R"rawliteral(
         }
       } catch(err){}
     };
+    }
   </script>
 </body>
 </html>
-
 )rawliteral";
 
 // ----------------------------------------------------------------------------------
-//   2. ANAGRAMME FLASH 1V1 (TUILES 3D, DICTIONNAIRE FRANCAIS & COURSE AU SCORE)
+//   2. ANAGRAMME FLASH (1V1 WI-FI & SOLO VS IA)
 // ----------------------------------------------------------------------------------
 const char MP_ANAGRAM_HTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
@@ -467,6 +507,7 @@ const char MP_ANAGRAM_HTML[] PROGMEM = R"rawliteral(
     <p id="ov-desc">En attente d'un adversaire sur son smartphone...</p>
     <div id="ov-actions" style="display:none; flex-direction:column; align-items:center; width:100%;">
       <button id="btn-rematch" class="act-btn btn-rematch">🔄 Rejouer (Revanche)</button>
+      <button id="btn-ai" class="act-btn btn-rematch" style="background:linear-gradient(180deg,#a855f7,#6b21a8);color:#fff;margin-top:6px;" onclick="startAiMode()">🤖 Jouer contre l'IA</button>
       <a href="/hub" class="act-btn btn-quit">◀ Quitter au Salon</a>
     </div>
   </div>
@@ -484,6 +525,18 @@ const char MP_ANAGRAM_HTML[] PROGMEM = R"rawliteral(
     let role = 0, playing = false, targetWord = '', scrambled = '';
     let score1 = 0, score2 = 0;
     let myRematch = false, oppRematch = false;
+    let isAi = new URLSearchParams(window.location.search).get('vs') === 'ai';
+    let aiAnagTimer = null;
+    function startAiMode() {
+      isAi = true;
+      if (ws && ws.readyState === WebSocket.OPEN) ws.close();
+      overlay.style.display = "none"; ovActions.style.display = "none";
+      badge.textContent = "🤖 Solo vs IA"; badge.style.color = "#a855f7";
+      p2Name.textContent = "IA Bot"; role = 1; playing = true;
+      const w = WORDS[Math.floor(Math.random() * WORDS.length)];
+      setWord(w, scramble(w));
+    }
+
 
     const WORDS = [
       "ARCADE", "CANARD", "CASTEL", "CHEVAL", "SOLEIL", "PLANETE", "MYSTERE",
@@ -514,6 +567,13 @@ const char MP_ANAGRAM_HTML[] PROGMEM = R"rawliteral(
       });
       wordIn.value = '';
       wordIn.focus();
+      if (isAi) {
+        clearTimeout(aiAnagTimer);
+        const aiTime = Math.floor(Math.random() * 3000 + 7000);
+        aiAnagTimer = setTimeout(() => {
+          if (playing) handleRoundWin(2);
+        }, aiTime);
+      }
     }
 
     function submitWord() {
@@ -579,7 +639,7 @@ const char MP_ANAGRAM_HTML[] PROGMEM = R"rawliteral(
       playing = true;
     }
 
-    btnRematch.onclick = () => {
+    btnRematch.onclick = () => { if (isAi) { resetGame(); return; }
       myRematch = true;
       btnRematch.textContent = "⏳ En attente de l'adversaire...";
       btnRematch.style.background = "rgba(255,255,255,0.2)";
@@ -587,7 +647,8 @@ const char MP_ANAGRAM_HTML[] PROGMEM = R"rawliteral(
       if (oppRematch) resetGame();
     };
 
-    const ws = new WebSocket('ws://' + location.hostname + ':81/');
+    let ws = null;
+    if (isAi) { setTimeout(startAiMode, 100); } else { ws = new WebSocket('ws://' + location.hostname + ':81/');
     ws.onopen = () => {
       badge.textContent = "Recherche...";
       ws.send(JSON.stringify({ t: "join", g: "anagram", name: myPseudo }));
@@ -635,14 +696,14 @@ const char MP_ANAGRAM_HTML[] PROGMEM = R"rawliteral(
         }
       } catch(err){}
     };
+    }
   </script>
 </body>
 </html>
-
 )rawliteral";
 
 // ----------------------------------------------------------------------------------
-//   3. LA BOMBE A MOTS 1V1 (MECHE ANIMEE, SYLLABES CYBER & TIC-TAC SOUS PRESSION)
+//   3. LA BOMBE A MOTS (1V1 WI-FI & SOLO VS IA)
 // ----------------------------------------------------------------------------------
 const char MP_WORDBOMB_HTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
@@ -752,6 +813,7 @@ const char MP_WORDBOMB_HTML[] PROGMEM = R"rawliteral(
     <p id="ov-desc">En attente d'un adversaire sur son smartphone...</p>
     <div id="ov-actions" style="display:none; flex-direction:column; align-items:center; width:100%;">
       <button id="btn-rematch" class="act-btn btn-rematch">🔄 Rejouer (Revanche)</button>
+      <button id="btn-ai" class="act-btn btn-rematch" style="background:linear-gradient(180deg,#a855f7,#6b21a8);color:#fff;margin-top:6px;" onclick="startAiMode()">🤖 Jouer contre l'IA</button>
       <a href="/hub" class="act-btn btn-quit">◀ Quitter au Salon</a>
     </div>
   </div>
@@ -772,6 +834,17 @@ const char MP_WORDBOMB_HTML[] PROGMEM = R"rawliteral(
     let timeLeft = 10, maxTurnTime = 12;
     let timerInt = null;
     let myRematch = false, oppRematch = false;
+    let isAi = new URLSearchParams(window.location.search).get('vs') === 'ai';
+    function startAiMode() {
+      isAi = true;
+      if (ws && ws.readyState === WebSocket.OPEN) ws.close();
+      overlay.style.display = "none"; ovActions.style.display = "none";
+      badge.textContent = "🤖 Solo vs IA"; badge.style.color = "#a855f7";
+      role = 1; playing = true;
+      const syl = SYLLABLES[Math.floor(Math.random() * SYLLABLES.length)];
+      setTurn(1, syl);
+    }
+
 
     const SYLLABLES = ["CH", "ON", "AR", "TE", "PO", "MA", "IN", "QU", "BL", "TR", "VI", "ST", "RA", "LO", "DI", "OU", "AN"];
 
@@ -790,7 +863,14 @@ const char MP_WORDBOMB_HTML[] PROGMEM = R"rawliteral(
         btnSend.disabled = false;
         wordIn.focus();
       } else {
-        turnLabel.textContent = "⏳ Tour de l'adversaire...";
+        turnLabel.textContent = isAi ? "🤖 L'IA cherche un mot..." : "⏳ Tour de l'adversaire...";
+      if (isAi && activeRole === 2) {
+        setTimeout(() => {
+          if (!playing || activeRole !== 2) return;
+          const nextSyl = SYLLABLES[Math.floor(Math.random() * SYLLABLES.length)];
+          setTurn(1, nextSyl);
+        }, Math.floor(Math.random() * 2000 + 3000));
+      }
         turnLabel.style.color = "#8b9bb4";
         wordIn.disabled = true;
         btnSend.disabled = true;
@@ -854,7 +934,7 @@ const char MP_WORDBOMB_HTML[] PROGMEM = R"rawliteral(
       }
     }
 
-    btnRematch.onclick = () => {
+    btnRematch.onclick = () => { if (isAi) { resetGame(); return; }
       myRematch = true;
       btnRematch.textContent = "⏳ En attente de l'adversaire...";
       btnRematch.style.background = "rgba(255,255,255,0.2)";
@@ -862,7 +942,8 @@ const char MP_WORDBOMB_HTML[] PROGMEM = R"rawliteral(
       if (oppRematch) resetGame();
     };
 
-    const ws = new WebSocket('ws://' + location.hostname + ':81/');
+    let ws = null;
+    if (isAi) { setTimeout(startAiMode, 100); } else { ws = new WebSocket('ws://' + location.hostname + ':81/');
     ws.onopen = () => {
       badge.textContent = "Recherche...";
       ws.send(JSON.stringify({ t: "join", g: "wordbomb", name: myPseudo }));
@@ -905,14 +986,14 @@ const char MP_WORDBOMB_HTML[] PROGMEM = R"rawliteral(
         }
       } catch(err){}
     };
+    }
   </script>
 </body>
 </html>
-
 )rawliteral";
 
 // ----------------------------------------------------------------------------------
-//   4. CHAINE DE MOTS 1V1 (SHIRITORI FRANCAIS, FIL HISTORIQUE & CHRONO EN TENSION)
+//   4. CHAINE DE MOTS (1V1 WI-FI & SOLO VS IA)
 // ----------------------------------------------------------------------------------
 const char MP_WORDCHAIN_HTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
@@ -1017,6 +1098,7 @@ const char MP_WORDCHAIN_HTML[] PROGMEM = R"rawliteral(
     <p id="ov-desc">En attente d'un adversaire sur son smartphone...</p>
     <div id="ov-actions" style="display:none; flex-direction:column; align-items:center; width:100%;">
       <button id="btn-rematch" class="act-btn btn-rematch">🔄 Rejouer (Revanche)</button>
+      <button id="btn-ai" class="act-btn btn-rematch" style="background:linear-gradient(180deg,#a855f7,#6b21a8);color:#fff;margin-top:6px;" onclick="startAiMode()">🤖 Jouer contre l'IA</button>
       <a href="/hub" class="act-btn btn-quit">◀ Quitter au Salon</a>
     </div>
   </div>
@@ -1037,6 +1119,29 @@ const char MP_WORDCHAIN_HTML[] PROGMEM = R"rawliteral(
     let usedWords = new Set();
     let timeLeft = 15, timerInt = null;
     let myRematch = false, oppRematch = false;
+    let isAi = new URLSearchParams(window.location.search).get('vs') === 'ai';
+    const AI_CHAIN_DICT = {
+      'A': ['ARBRE', 'AVION', 'AMOUR', 'AGNEAU'],
+      'B': ['BATEAU', 'BANANE', 'BOUCLIER', 'BALLON'],
+      'C': ['CHEVAL', 'CANARD', 'CHATEAU', 'CITRON'],
+      'D': ['DRAGON', 'DAUPHIN', 'DESERT', 'DIAMANT'],
+      'E': ['ECLAIR', 'ETOILE', 'ELEPHANT', 'ENFANT'],
+      'L': ['LION', 'LUMIERE', 'LIVRE', 'LUNETTES'],
+      'M': ['MAISON', 'MONTAGNE', 'MIROIR', 'MUSIQUE'],
+      'P': ['POMME', 'PAPILLON', 'PLANETE', 'POISSON'],
+      'R': ['ROBOT', 'RENARD', 'RIVIERE', 'RADAR'],
+      'S': ['SOLEIL', 'SERPENT', 'SOURIS', 'SOLDAT'],
+      'T': ['TIGRE', 'TRAIN', 'TRESOR', 'TULIPE']
+    };
+    function startAiMode() {
+      isAi = true;
+      if (ws && ws.readyState === WebSocket.OPEN) ws.close();
+      overlay.style.display = "none"; ovActions.style.display = "none";
+      badge.textContent = "🤖 Solo vs IA"; badge.style.color = "#a855f7";
+      role = 1; playing = true;
+      setTurn(1, 'P');
+    }
+
 
     function setTurn(r, reqLetter) {
       activeRole = r;
@@ -1053,7 +1158,17 @@ const char MP_WORDCHAIN_HTML[] PROGMEM = R"rawliteral(
         btnSend.disabled = false;
         wordIn.focus();
       } else {
-        turnStatus.textContent = "⏳ Tour de l'adversaire...";
+        turnStatus.textContent = isAi ? "🤖 L'IA réfléchit..." : "⏳ Tour de l'adversaire...";
+      if (isAi && activeRole === 2) {
+        setTimeout(() => {
+          if (!playing || activeRole !== 2) return;
+          const list = AI_CHAIN_DICT[requiredLetter] || ['RADAR', 'AVION', 'TRAIN', 'LION'];
+          const picked = list.find(w => !usedWords.has(w)) || (requiredLetter + 'LUS');
+          usedWords.add(picked);
+          addFeedItem(2, picked);
+          setTurn(1, picked.slice(-1));
+        }, Math.floor(Math.random() * 2000 + 3000));
+      }
         turnStatus.style.color = "#8b9bb4";
         wordIn.disabled = true;
         btnSend.disabled = true;
@@ -1125,7 +1240,7 @@ const char MP_WORDCHAIN_HTML[] PROGMEM = R"rawliteral(
       }
     }
 
-    btnRematch.onclick = () => {
+    btnRematch.onclick = () => { if (isAi) { resetGame(); return; }
       myRematch = true;
       btnRematch.textContent = "⏳ En attente de l'adversaire...";
       btnRematch.style.background = "rgba(255,255,255,0.2)";
@@ -1133,7 +1248,8 @@ const char MP_WORDCHAIN_HTML[] PROGMEM = R"rawliteral(
       if (oppRematch) resetGame();
     };
 
-    const ws = new WebSocket('ws://' + location.hostname + ':81/');
+    let ws = null;
+    if (isAi) { setTimeout(startAiMode, 100); } else { ws = new WebSocket('ws://' + location.hostname + ':81/');
     ws.onopen = () => {
       badge.textContent = "Recherche...";
       ws.send(JSON.stringify({ t: "join", g: "wordchain", name: myPseudo }));
@@ -1179,14 +1295,14 @@ const char MP_WORDCHAIN_HTML[] PROGMEM = R"rawliteral(
         }
       } catch(err){}
     };
+    }
   </script>
 </body>
 </html>
-
 )rawliteral";
 
 // ----------------------------------------------------------------------------------
-//   5. LE PENDU DUEL 1V1 (MOT SECRET, GIBET CYBER 6 CHANCES & CLAVIER TACTILE)
+//   5. LE PENDU DUEL (1V1 WI-FI & SOLO VS IA)
 // ----------------------------------------------------------------------------------
 const char MP_HANGMAN_HTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
@@ -1295,6 +1411,7 @@ const char MP_HANGMAN_HTML[] PROGMEM = R"rawliteral(
     <p id="ov-desc">En attente d'un adversaire sur son smartphone...</p>
     <div id="ov-actions" style="display:none; flex-direction:column; align-items:center; width:100%;">
       <button id="btn-rematch" class="act-btn btn-rematch">🔄 Rejouer (Revanche)</button>
+      <button id="btn-ai" class="act-btn btn-rematch" style="background:linear-gradient(180deg,#a855f7,#6b21a8);color:#fff;margin-top:6px;" onclick="startAiMode()">🤖 Jouer contre l'IA</button>
       <a href="/hub" class="act-btn btn-quit">◀ Quitter au Salon</a>
     </div>
   </div>
@@ -1317,6 +1434,22 @@ const char MP_HANGMAN_HTML[] PROGMEM = R"rawliteral(
     let mistakes = 0;
     const MAX_MISTAKES = 6;
     let myRematch = false, oppRematch = false;
+    let isAi = new URLSearchParams(window.location.search).get('vs') === 'ai';
+    const HANGMAN_WORDS = ["PIRATE", "CHATEAU", "MYSTERE", "GAUFRE", "DRAGON", "ROBOT", "GUITARE", "POISSON", "AVION", "SOLEIL"];
+    function startAiMode() {
+      isAi = true;
+      if (ws && ws.readyState === WebSocket.OPEN) ws.close();
+      overlay.style.display = "none"; ovActions.style.display = "none";
+      badge.textContent = "🤖 Solo vs IA"; badge.style.color = "#a855f7";
+      role = 2; setterRole = 1; // AI is setter in round 1
+      secretWord = HANGMAN_WORDS[Math.floor(Math.random() * HANGMAN_WORDS.length)];
+      revealed = Array(secretWord.length).fill('_');
+      startSetup();
+      updateWordUI();
+      roleInfo.textContent = "À VOUS DE DEVINER LE MOT DE L'IA !";
+      playing = true;
+    }
+
 
     // Draw gallows
     function drawGallows(m) {
@@ -1452,7 +1585,7 @@ const char MP_HANGMAN_HTML[] PROGMEM = R"rawliteral(
       startSetup();
     }
 
-    btnRematch.onclick = () => {
+    btnRematch.onclick = () => { if (isAi) { startAiMode(); return; }
       myRematch = true;
       btnRematch.textContent = "⏳ En attente de l'adversaire...";
       btnRematch.style.background = "rgba(255,255,255,0.2)";
@@ -1460,7 +1593,8 @@ const char MP_HANGMAN_HTML[] PROGMEM = R"rawliteral(
       if (oppRematch) resetGame();
     };
 
-    const ws = new WebSocket('ws://' + location.hostname + ':81/');
+    let ws = null;
+    if (isAi) { setTimeout(startAiMode, 100); } else { ws = new WebSocket('ws://' + location.hostname + ':81/');
     ws.onopen = () => {
       badge.textContent = "Recherche...";
       ws.send(JSON.stringify({ t: "join", g: "hangman", name: myPseudo }));
@@ -1497,10 +1631,10 @@ const char MP_HANGMAN_HTML[] PROGMEM = R"rawliteral(
         }
       } catch(err){}
     };
+    }
   </script>
 </body>
 </html>
-
 )rawliteral";
 
 #endif // GAME_PACK_MP_MOTS_H

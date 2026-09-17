@@ -249,11 +249,11 @@ const char HUB_HTML[] PROGMEM = R"rawliteral(
       <p id="hero-sub">50 Jeux Solo & 15 Jeux Multijoueur 1v1 en Temps Réel !</p>
       
       <div class="mode-nav">
-        <button class="btn-mode active" id="tab-solo" onclick="setMode('solo')">🕹️ 50 Jeux Solo</button>
+        <button class="btn-mode active" id="tab-solo" onclick="setMode('solo')">🕹️ Solo & 15 Duels IA</button>
         <button class="btn-mode" id="tab-mp" onclick="setMode('mp')">⚔️ Salon Multijoueur (15 Jeux)</button>
       </div>
 
-      <input type="text" id="search" class="search-box" placeholder="🔍 Rechercher parmi les 50 jeux solo..." oninput="filterGames()">
+      <input type="text" id="search" class="search-box" placeholder="🔍 Rechercher un jeu solo ou duel IA..." oninput="filterGames()">
     </div>
 
     <!-- VUE 1 : 50 JEUX SOLO -->
@@ -323,6 +323,38 @@ const char HUB_HTML[] PROGMEM = R"rawliteral(
       <a href="/game_pacmaze" class="game-card" data-title="pac maze"><div class="card-top"><div class="card-icon">🟡</div><div class="card-info"><h2>48. Cyber Pac-Maze</h2><p>Mange les orbes et fuis les fantômes.</p></div></div><div class="card-bot"><span>👾 Rétro</span><span class="play-pill">Jouer ▶</span></div></a>
       <a href="/game_lunar" class="game-card" data-title="lunar lander"><div class="card-top"><div class="card-icon">🚀</div><div class="card-info"><h2>49. Lunar Lander</h2><p>Dose les rétro-fusées pour alunir en douceur.</p></div></div><div class="card-bot"><span>👾 Rétro</span><span class="play-pill">Jouer ▶</span></div></a>
       <a href="/game_cannon" class="game-card" data-title="cannon blaster"><div class="card-top"><div class="card-icon">💣</div><div class="card-info"><h2>50. Cannon Blaster</h2><p>Tire au canon pour détruire les châteaux.</p></div></div><div class="card-bot"><span>👾 Rétro</span><span class="play-pill">Jouer ▶</span></div></a>
+
+      <!-- SECTION 15 JEUX DUEL VS IA -->
+      <div style="grid-column: 1 / -1; margin: 16px 0 6px 0; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+        <h2 style="font-size: 1.25rem; color: #a855f7; display: flex; align-items: center; gap: 8px;">
+          🤖 Les 15 Jeux de Duel vs IA (Entraînement Solo)
+        </h2>
+        <p style="font-size: 0.85rem; color: var(--dim); margin-top: 4px;">
+          Défiez une intelligence artificielle réactive sur les 15 jeux multijoueurs !
+        </p>
+      </div>
+
+      <!-- 5 Réflexion vs IA -->
+      <a href="/mp_connect4?vs=ai" class="game-card" data-title="puissance 4 ia duel"><div class="card-top"><div class="card-icon" style="color:#ffe600;border-color:#ffe600;">🔴</div><div class="card-info"><h2>Puissance 4 vs IA</h2><p>Alignez 4 jetons contre l'IA stratégique.</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+      <a href="/mp_naval?vs=ai" class="game-card" data-title="bataille navale ia duel"><div class="card-top"><div class="card-icon" style="color:#0088ff;border-color:#0088ff;">🚢</div><div class="card-info"><h2>Bataille Navale vs IA</h2><p>Détruisez la flotte secrète de l'ordinateur.</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+      <a href="/mp_tictactoe?vs=ai" class="game-card" data-title="morpion cyber ia duel"><div class="card-top"><div class="card-icon" style="color:#ff0055;border-color:#ff0055;">❌</div><div class="card-info"><h2>Morpion Cyber vs IA</h2><p>Croix vs Rond contre le bot intelligent.</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+      <a href="/mp_memory?vs=ai" class="game-card" data-title="duel memoire ia"><div class="card-top"><div class="card-icon" style="color:#a855f7;border-color:#a855f7;">🃏</div><div class="card-info"><h2>Duel de Mémoire vs IA</h2><p>Trouvez plus de paires que l'IA.</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+      <a href="/mp_mastermind?vs=ai" class="game-card" data-title="mastermind duel ia"><div class="card-top"><div class="card-icon" style="color:#00f3ff;border-color:#00f3ff;">🔢</div><div class="card-info"><h2>Mastermind vs IA</h2><p>Décodez les 4 couleurs avant l'IA.</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+
+      <!-- 5 Réflexe vs IA -->
+      <a href="/mp_pong?vs=ai" class="game-card" data-title="pong laser ia duel"><div class="card-top"><div class="card-icon" style="color:#00f3ff;border-color:#00f3ff;">🏓</div><div class="card-info"><h2>Pong Laser vs IA</h2><p>Tennis de table laser face au bot.</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+      <a href="/mp_airhockey?vs=ai" class="game-card" data-title="air hockey ia duel"><div class="card-top"><div class="card-icon" style="color:#ff0055;border-color:#ff0055;">🏒</div><div class="card-info"><h2>Air Hockey vs IA</h2><p>Frapper le palet contre le maillet IA.</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+      <a href="/mp_tank?vs=ai" class="game-card" data-title="tank battle 2d ia duel"><div class="card-top"><div class="card-icon" style="color:#00ff66;border-color:#00ff66;">🛡️</div><div class="card-info"><h2>Tank Battle vs IA</h2><p>Détruisez le blindé ennemi autonome.</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+      <a href="/mp_reflex?vs=ai" class="game-card" data-title="duel reflexes ia"><div class="card-top"><div class="card-icon" style="color:#ffe600;border-color:#ffe600;">⚡</div><div class="card-info"><h2>Duel de Réflexes vs IA</h2><p>Dégainez plus vite que le processeur en ms.</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+      <a href="/mp_tapduel?vs=ai" class="game-card" data-title="tir a la corde tap duel ia"><div class="card-top"><div class="card-icon" style="color:#ff5500;border-color:#ff5500;">🪢</div><div class="card-info"><h2>Tir à la Corde vs IA</h2><p>Duel de clics frénétiques contre l'IA.</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+
+      <!-- 5 Mots & Baccalauréat vs IA -->
+      <a href="/mp_petitbac?vs=ai" class="game-card" data-title="le petit bac ia duel"><div class="card-top"><div class="card-icon" style="color:#00f3ff;border-color:#00f3ff;">📝</div><div class="card-info"><h2>Le Petit Bac vs IA</h2><p>Remplissez les 4 catégories avant le bot.</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+      <a href="/mp_anagram?vs=ai" class="game-card" data-title="anagrammes ia duel"><div class="card-top"><div class="card-icon" style="color:#ffe600;border-color:#ffe600;">🔤</div><div class="card-info"><h2>Anagrammes vs IA</h2><p>Trouvez le mot mélangé plus vite que l'IA.</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+      <a href="/mp_wordbomb?vs=ai" class="game-card" data-title="bombe mots ia duel"><div class="card-top"><div class="card-icon" style="color:#ff0055;border-color:#ff0055;">💣</div><div class="card-info"><h2>Bombe à Mots vs IA</h2><p>Passez la bombe avant l'explosion !</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+      <a href="/mp_wordchain?vs=ai" class="game-card" data-title="chaine mots shiritori ia duel"><div class="card-top"><div class="card-icon" style="color:#00ff66;border-color:#00ff66;">🔗</div><div class="card-info"><h2>Chaîne de Mots vs IA</h2><p>Enchaînez les mots avec la dernière lettre.</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+      <a href="/mp_hangman?vs=ai" class="game-card" data-title="pendu duel ia"><div class="card-top"><div class="card-icon" style="color:#a855f7;border-color:#a855f7;">🪢</div><div class="card-info"><h2>Pendu Duel vs IA</h2><p>Devinez le mot secret avant 6 erreurs.</p></div></div><div class="card-bot"><span style="color:#a855f7;">🤖 Duel IA</span><span class="play-pill">Jouer ▶</span></div></a>
+
     </div>
 
     <!-- VUE 2 : SALON MULTIJOUEUR AVEC DÉFIS -->
