@@ -33,7 +33,7 @@ const char GAME_KNIFE_HTML[] PROGMEM = R"rawliteral(
     .btn-throw { width: 100%; max-width: 340px; height: 50px; margin-top: 8px; background: linear-gradient(135deg, #ff0055, #ff7700); border: none; border-radius: 12px; color: #fff; font-weight: 900; font-size: 1.1rem; cursor: pointer; }
     .btn-throw:active { transform: scale(0.97); }
   </style>
-</head>
+<script src="/pause.js"></script></head>
 <body>
   <header>
     <a href="/hub" class="btn-back">◀ Menu</a>

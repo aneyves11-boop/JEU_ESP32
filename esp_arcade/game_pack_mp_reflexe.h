@@ -169,10 +169,21 @@ const char MP_PONG_HTML[] PROGMEM = R"rawliteral(
             btnRematch.style.color = "#000";
           }
         } else if (d.t === "left" || d.t === "opp_left") {
-          playing = false; overlay.style.display = "flex"; ovActions.style.display = "none";
-          ovTitle.textContent = "Adversaire déconnecté";
-          ovDesc.textContent = "L'autre joueur a quitté la partie.";
-          badge.textContent = "Interrompu";
+          const pName = d.name || "Votre adversaire";
+          badge.textContent = "Déconnecté";
+          badge.style.color = "#ffaa00";
+          if (playing && !isAi) {
+            isAi = true;
+            oppName = pName + " (IA)";
+            if (typeof oppNameEl !== 'undefined' && oppNameEl) oppNameEl.textContent = oppName;
+            alert("⚠️ " + pName + " s'est déconnecté(e).\nL'IA prend le relais pour terminer le match !");
+          } else {
+            overlay.style.display = "flex"; ovActions.style.display = "flex";
+            ovTitle.textContent = "Adversaire parti";
+            ovDesc.textContent = pName + " a quitté la partie.";
+            btnRematch.textContent = "🤖 Continuer contre l'IA";
+            btnRematch.onclick = () => { isAi = true; restartPong(); };
+          }
         }
       } catch(err){}
     }; 
@@ -512,9 +523,19 @@ const char MP_HOCKEY_HTML[] PROGMEM = R"rawliteral(
           btnRematch.style.color = "#000";
         }
       } else if (d.t === "left" || d.t === "opp_left") {
-        playing = false; overlay.style.display = "flex"; ovActions.style.display = "none";
-        ovTitle.textContent = "Adversaire déconnecté";
-        ovDesc.textContent = "L'autre joueur a quitté la partie.";
+        const pName = d.name || "Votre adversaire";
+        badge.textContent = "Déconnecté";
+        badge.style.color = "#ffaa00";
+        if (playing && !isAi) {
+          isAi = true;
+          alert("⚠️ " + pName + " s'est déconnecté(e).\nL'IA prend le relais pour terminer le match !");
+        } else {
+          overlay.style.display = "flex"; ovActions.style.display = "flex";
+          ovTitle.textContent = "Adversaire parti";
+          ovDesc.textContent = pName + " a quitté la partie.";
+          btnRematch.textContent = "🤖 Continuer contre l'IA";
+          btnRematch.onclick = () => { isAi = true; restartHockey(); };
+        }
       }
     };
 
@@ -826,9 +847,19 @@ const char MP_TANK_HTML[] PROGMEM = R"rawliteral(
           btnRematch.style.color = "#000";
         }
       } else if (d.t === "left" || d.t === "opp_left") {
-        playing = false; overlay.style.display = "flex"; ovActions.style.display = "none";
-        ovTitle.textContent = "Adversaire déconnecté";
-        ovDesc.textContent = "L'autre joueur a quitté le combat.";
+        const pName = d.name || "Votre adversaire";
+        badge.textContent = "Déconnecté";
+        badge.style.color = "#ffaa00";
+        if (playing && !isAi) {
+          isAi = true;
+          alert("⚠️ " + pName + " s'est déconnecté(e).\nL'IA prend le relais pour terminer le combat !");
+        } else {
+          overlay.style.display = "flex"; ovActions.style.display = "flex";
+          ovTitle.textContent = "Adversaire parti";
+          ovDesc.textContent = pName + " a quitté le combat.";
+          btnRematch.textContent = "🤖 Continuer contre l'IA";
+          btnRematch.onclick = () => { isAi = true; restartTank(); };
+        }
       }
     };
 

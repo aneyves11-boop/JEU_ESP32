@@ -13,140 +13,101 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
   <style>
     :root {
       --bg: #0b0f19;
-      --card: rgba(22, 28, 48, 0.92);
-      --card-border: rgba(0, 243, 255, 0.25);
+      --card: #141a29;
+      --card-border: #1e293b;
       --cyan: #00f3ff;
       --pink: #ff0055;
       --yellow: #ffe600;
       --green: #00ff66;
       --purple: #a855f7;
-      --text: #f0f4fc;
-      --dim: #8b9bb4;
+      --dim: #8e9bb0;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
     body {
-      background: var(--bg);
-      background-image: 
-        radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.12) 0%, transparent 40%),
-        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.015) 0px, rgba(255, 255, 255, 0.015) 1px, transparent 1px, transparent 30px);
-      color: var(--text);
-      font-family: system-ui, -apple-system, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 12px;
+      background: var(--bg); color: #fff; font-family: system-ui, -apple-system, sans-serif;
+      min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 12px;
     }
     header {
-      width: 100%; max-width: 600px;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 14px; background: rgba(14, 18, 32, 0.85);
-      border-radius: 14px; border: 1px solid var(--card-border);
-      margin-bottom: 14px; backdrop-filter: blur(10px);
+      width: 100%; max-width: 480px; display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 12px;
     }
     .btn-back {
-      color: #fff; text-decoration: none; font-size: 0.85rem; font-weight: 700;
-      background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.2);
+      background: var(--card); border: 1px solid var(--card-border); color: #fff;
+      padding: 8px 14px; border-radius: 10px; text-decoration: none; font-size: 0.85rem; font-weight: bold;
     }
     .status-badge {
-      font-size: 0.8rem; font-weight: 800; padding: 4px 10px; border-radius: 12px;
-      display: flex; align-items: center; gap: 6px;
+      font-size: 0.8rem; font-weight: 800; padding: 6px 12px; border-radius: 20px;
     }
     .status-online { background: rgba(0, 255, 102, 0.15); color: var(--green); border: 1px solid var(--green); }
     .status-offline { background: rgba(255, 0, 85, 0.15); color: var(--pink); border: 1px solid var(--pink); }
 
     .main-box {
-      width: 100%; max-width: 600px;
-      background: var(--card); border: 1px solid var(--card-border);
-      border-radius: 18px; padding: 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      display: flex; flex-direction: column; gap: 16px;
+      width: 100%; max-width: 480px; background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 20px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-    h1 {
-      font-size: 1.5rem; text-align: center; text-transform: uppercase; letter-spacing: 1px;
-      background: linear-gradient(135deg, #fff, var(--purple), var(--cyan));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .subtitle { text-align: center; color: var(--dim); font-size: 0.85rem; }
+    h1 { font-size: 1.4rem; color: var(--purple); text-align: center; margin-bottom: 4px; }
+    p.subtitle { font-size: 0.82rem; color: var(--dim); text-align: center; margin-bottom: 16px; }
 
-    /* Player Chips */
-    .player-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px;
-      margin: 10px 0;
-    }
+    /* Player Cards */
+    .player-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 12px 0; }
     .player-card {
-      background: rgba(11, 15, 28, 0.8); border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px; padding: 10px; text-align: center;
+      background: rgba(11, 15, 25, 0.8); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 10px; display: flex; align-items: center; gap: 10px;
       transition: all 0.2s; position: relative;
     }
-    .player-card.is-me { border-color: var(--cyan); box-shadow: 0 0 10px rgba(0,243,255,0.2); }
+    .player-card.is-me { border-color: var(--cyan); background: rgba(0, 243, 255, 0.08); }
     .player-card.is-host::after {
-      content: '👑 HÔTE'; position: absolute; top: -6px; right: 6px;
-      font-size: 0.6rem; font-weight: 900; background: var(--yellow); color: #000;
-      padding: 1px 5px; border-radius: 4px;
+      content: '👑'; position: absolute; top: 4px; right: 6px; font-size: 0.85rem;
     }
-    .player-card.is-dead { opacity: 0.4; filter: grayscale(1); border-color: #555; text-decoration: line-through; }
-    .player-card.is-active-speaker { border-color: var(--yellow); box-shadow: 0 0 15px rgba(255,230,0,0.4); }
-    .p-avatar { font-size: 1.6rem; margin-bottom: 4px; }
-    .p-name { font-weight: 800; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .p-status { font-size: 0.75rem; color: var(--dim); }
+    .player-card.is-active-speaker {
+      border-color: var(--yellow); box-shadow: 0 0 14px rgba(255, 230, 0, 0.4);
+      background: rgba(255, 230, 0, 0.12);
+    }
+    .player-card.is-dead { opacity: 0.4; filter: grayscale(0.8); text-decoration: line-through; }
+    .p-avatar {
+      font-size: 1.6rem; width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center;
+    }
+    .p-name { font-weight: 700; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 105px; }
+    .p-status { font-size: 0.72rem; color: var(--dim); }
 
-    /* Controls & Buttons */
+    /* Buttons */
     .btn {
-      width: 100%; padding: 14px; border: none; border-radius: 12px;
-      font-size: 1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
-      cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 13px; border-radius: 12px; font-weight: 800; font-size: 0.95rem;
+      border: none; cursor: pointer; transition: all 0.2s; text-align: center;
     }
-    .btn-primary {
-      background: linear-gradient(135deg, #a855f7, #6366f1); color: #fff;
-      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
-    }
-    .btn-action {
-      background: linear-gradient(135deg, var(--cyan), #0077ff); color: #000;
-      box-shadow: 0 4px 15px rgba(0, 243, 255, 0.4);
-    }
-    .btn-danger {
-      background: linear-gradient(135deg, #ff0055, #c026d3); color: #fff;
-    }
-    .btn:active { transform: scale(0.97); }
-    .btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+    .btn-primary { background: linear-gradient(135deg, var(--purple), #6366f1); color: #fff; box-shadow: 0 0 15px rgba(168,85,247,0.4); }
+    .btn-action { background: linear-gradient(135deg, var(--cyan), #0077ff); color: #000; box-shadow: 0 0 15px rgba(0,243,255,0.4); }
+    .btn-danger { background: linear-gradient(135deg, var(--pink), #ff0055); color: #fff; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 
+    /* Host Controls */
     .role-settings {
-      background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px;
-      display: flex; justify-content: space-around; font-size: 0.85rem;
+      display: flex; gap: 8px; background: rgba(0,0,0,0.25); padding: 10px;
+      border-radius: 12px; margin: 10px 0;
     }
-    .role-opt { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    .role-opt select {
-      background: #111628; color: #fff; border: 1px solid var(--card-border);
-      padding: 6px 10px; border-radius: 8px; font-weight: bold;
+    .role-opt { flex: 1; display: flex; flex-direction: column; gap: 4px; font-size: 0.78rem; color: var(--dim); }
+    select {
+      background: #090c14; border: 1px solid var(--card-border); color: #fff;
+      padding: 8px; border-radius: 8px; font-weight: bold;
     }
 
-    /* Secret Card Box */
+    /* Secret Card Reveal */
     .secret-card-container {
-      background: linear-gradient(145deg, #182038, #0e1424);
-      border: 2px dashed var(--purple); border-radius: 16px;
-      padding: 24px 16px; text-align: center; cursor: pointer;
-      position: relative; overflow: hidden; transition: all 0.3s;
+      background: linear-gradient(145deg, #182035, #0c101c); border: 2px dashed var(--purple);
+      border-radius: 18px; padding: 24px 16px; text-align: center; margin: 14px 0;
+      position: relative; overflow: hidden; min-height: 170px; display: flex;
+      flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
     }
-    .secret-card-container:active, .secret-card-container.revealed {
-      border-style: solid; border-color: var(--cyan);
-      background: linear-gradient(145deg, #202b4c, #131c33);
-      box-shadow: 0 0 25px rgba(0, 243, 255, 0.25);
-    }
+    .secret-card-container.revealed { border-style: solid; border-color: var(--cyan); background: #111827; }
+    .card-hidden-hint { display: block; }
     .card-secret-content { display: none; }
-    .revealed .card-secret-content { display: block; }
-    .revealed .card-hidden-hint { display: none; }
-
-    .secret-word-display {
-      font-size: 2rem; font-weight: 900; letter-spacing: 2px;
-      color: var(--yellow); text-shadow: 0 0 20px rgba(255, 230, 0, 0.6);
-      margin: 12px 0; text-transform: uppercase;
-    }
+    .secret-card-container.revealed .card-hidden-hint { display: none; }
+    .secret-card-container.revealed .card-secret-content { display: block; }
+    .secret-word-display { font-size: 2.2rem; font-weight: 900; color: var(--cyan); margin: 8px 0; text-shadow: 0 0 12px rgba(0,243,255,0.5); }
     .role-badge-tag {
-      display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: 900; font-size: 0.85rem;
-      margin-bottom: 8px;
+      font-size: 0.75rem; font-weight: 900; padding: 4px 10px; border-radius: 10px;
+      display: inline-block; margin-bottom: 6px;
     }
     .tag-civil { background: rgba(0, 255, 102, 0.2); color: var(--green); border: 1px solid var(--green); }
     .tag-undercover { background: rgba(255, 0, 85, 0.2); color: var(--pink); border: 1px solid var(--pink); }
@@ -171,16 +132,27 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
     }
     .modal {
       background: var(--card); border: 2px solid var(--cyan); border-radius: 20px;
-      padding: 22px; width: 100%; max-width: 480px; text-align: center;
-      box-shadow: 0 10px 40px rgba(0, 243, 255, 0.3); display: flex; flex-direction: column; gap: 14px;
+      padding: 22px; width: 100%; max-width: 440px; text-align: center;
+      box-shadow: 0 10px 40px rgba(0, 243, 255, 0.3); display: flex; flex-direction: column; gap: 12px;
     }
     input[type="text"] {
       width: 100%; padding: 12px; background: #0c1020; border: 1px solid var(--cyan);
       border-radius: 10px; color: #fff; font-size: 1.1rem; text-align: center;
     }
+
+    /* Floating Toast Notification */
+    #toastNotice {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+      background: rgba(20, 26, 41, 0.96); border: 2px solid var(--cyan);
+      color: #fff; padding: 10px 18px; border-radius: 14px; font-size: 0.88rem;
+      font-weight: 700; z-index: 1000; box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+      display: none; align-items: center; gap: 8px; max-width: 90vw; text-align: center;
+    }
   </style>
 </head>
 <body>
+
+  <div id="toastNotice"></div>
 
   <header>
     <a href="/hub" class="btn-back">⬅ Salon</a>
@@ -198,9 +170,7 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
         <span style="font-size:0.78rem; color:var(--dim);">Min. 3 joueurs</span>
       </div>
 
-      <div class="player-grid" id="lobbyPlayerGrid">
-        <!-- Rempli en JS -->
-      </div>
+      <div class="player-grid" id="lobbyPlayerGrid"></div>
 
       <!-- Réglages Réservés à l'Hôte -->
       <div id="hostSettingsBox" style="display:none; flex-direction:column; gap:10px; margin-top:10px;">
@@ -231,7 +201,7 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
     <!-- SECTION 2: RÉVÉLATION SECRÈTE DU MOT -->
     <div id="viewSecret" style="display: none;">
       <p style="text-align:center; font-size:0.88rem; color:var(--dim); margin-bottom:10px;">
-        Gardez votre écran discret ! Maintenez la carte pour voir votre rôle.
+        Gardez votre écran discret ! Touchez et maintenez la carte pour voir votre rôle.
       </p>
 
       <div class="secret-card-container" id="secretCard" onmousedown="showSecretCard(true)" onmouseup="showSecretCard(false)" ontouchstart="showSecretCard(true)" ontouchend="showSecretCard(false)">
@@ -257,8 +227,8 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
     <div id="viewDiscussion" style="display: none;">
       <div style="background:rgba(255,230,0,0.1); border:1px solid var(--yellow); border-radius:12px; padding:12px; text-align:center;">
         <div style="font-size:0.8rem; color:var(--yellow); font-weight:bold; text-transform:uppercase;">🎤 Tour de parole</div>
-        <div style="font-size:1.2rem; font-weight:900; margin:4px 0;" id="currentSpeakerName">Joueur...</div>
-        <div style="font-size:0.8rem; color:var(--dim);">Donnez à voix haute <b>1 seul mot/indice</b> pour décrire votre mot.</div>
+        <div style="font-size:1.25rem; font-weight:900; margin:4px 0; color:#fff;" id="currentSpeakerName">Joueur...</div>
+        <div style="font-size:0.8rem; color:var(--dim);">Donnez à voix haute <b>1 seul mot ou indice</b> pour décrire votre mot secret.</div>
       </div>
 
       <div class="player-grid" id="discussPlayerGrid" style="margin-top:14px;"></div>
@@ -267,17 +237,23 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
         <button class="btn btn-action" onclick="nextSpeaker()">⏭ Joueur Suivant</button>
         <button class="btn btn-danger" onclick="hostStartVote()">🗳 Passer au Vote</button>
       </div>
+      <div id="guestDiscussMsg" style="display:none; text-align:center; padding:10px; color:var(--dim); font-size:0.82rem;">
+        🎧 Écoutez attentivement chaque joueur pour repérer l'intrus !
+      </div>
     </div>
 
     <!-- SECTION 4: VOTE DE L'IMPOSTEUR -->
     <div id="viewVote" style="display: none;">
-      <h2 style="font-size:1.1rem; text-align:center; color:var(--pink);">🗳 QUI EST L'IMPOSTEUR ?</h2>
-      <p style="text-align:center; font-size:0.82rem; color:var(--dim);">Votez pour la personne que vous suspectez.</p>
+      <h2 style="font-size:1.15rem; text-align:center; color:var(--pink);">🗳 QUI EST L'IMPOSTEUR ?</h2>
+      <p style="text-align:center; font-size:0.82rem; color:var(--dim); margin-top:4px;">Votez pour éliminer la personne la plus suspecte.</p>
 
       <div class="vote-list" id="voteOptionsList"></div>
 
       <button id="btnConfirmVote" class="btn btn-danger" disabled onclick="submitMyVote()">Confirmer mon vote</button>
-      <div id="voteStatusMsg" style="text-align:center; font-size:0.82rem; color:var(--dim); margin-top:8px;"></div>
+      <div id="voteStatusMsg" style="text-align:center; font-size:0.85rem; color:var(--cyan); margin-top:8px; font-weight:bold;"></div>
+
+      <!-- Bouton de secours pour l'hôte pour forcer le dépouillement si quelqu'un tarde -->
+      <button id="btnForceTally" class="btn btn-primary" style="margin-top:10px; display:none; padding:10px; font-size:0.85rem;" onclick="tallyVotes()">⚡ Clôturer les votes maintenant</button>
     </div>
 
     <!-- SECTION 5: ÉCRAN DE FIN & RÉCAPITULATIF -->
@@ -288,8 +264,8 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
         <p id="endVictorySub" style="color:var(--dim); font-size:0.85rem; margin-top:4px;">Tous les imposteurs ont été éliminés.</p>
       </div>
 
-      <div style="background:rgba(0,0,0,0.3); border-radius:12px; padding:12px; margin:10px 0;">
-        <div style="font-size:0.85rem; font-weight:bold; margin-bottom:8px;">Mots de la partie :</div>
+      <div style="background:rgba(0,0,0,0.35); border-radius:12px; padding:12px; margin:10px 0;">
+        <div style="font-size:0.85rem; font-weight:bold; margin-bottom:8px;">Mots secrets de la partie :</div>
         <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:4px;">
           <span>👤 Mot des Civils :</span>
           <b id="endWordCivil" style="color:var(--green);">-</b>
@@ -305,6 +281,17 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
       <button id="btnRestartGame" class="btn btn-primary" style="margin-top:12px; display:none;" onclick="hostRestartLobby()">🔄 Rejouer une Partie</button>
     </div>
 
+  </div>
+
+  <!-- MODAL RÉSULTAT DU VOTE (S'AFFICHE POUR TOUS LES JOUEURS) -->
+  <div id="modalVoteResult" class="overlay" style="display:none;">
+    <div class="modal" style="border-color:var(--pink);">
+      <div id="voteResIcon" style="font-size:3rem;">🗳️</div>
+      <h2 id="voteResTitle" style="color:var(--pink); font-size:1.35rem;">RÉSULTAT DU VOTE</h2>
+      <p id="voteResMsg" style="font-size:1.1rem; color:#fff; font-weight:800; margin:6px 0;"></p>
+      <div id="voteResRole" style="font-size:0.85rem; padding:6px 14px; border-radius:10px; display:inline-block; margin:auto;"></div>
+      <div id="voteResDetail" style="font-size:0.82rem; color:var(--dim); margin-top:6px; line-height:1.4;"></div>
+    </div>
   </div>
 
   <!-- MODAL MR WHITE DEVINER -->
@@ -349,12 +336,21 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
   let isHost = false;
   let mySecretRole = "";
   let mySecretWord = "";
-  let selectedVoteId = -1;
   let gameState = null;
+  let selectedVoteId = -1;
+  let toastTimer = null;
+
+  function showToast(msg, duration = 3500) {
+    const el = document.getElementById("toastNotice");
+    if (!el) return;
+    el.innerHTML = msg;
+    el.style.display = "flex";
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.style.display = "none"; }, duration);
+  }
 
   function initWs() {
-    const host = window.location.hostname || "192.168.4.1";
-    ws = new WebSocket("ws://" + host + ":81");
+    ws = new WebSocket("ws://" + location.hostname + ":81");
 
     ws.onopen = () => {
       document.getElementById("statusTag").className = "status-badge status-online";
@@ -364,7 +360,7 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
 
     ws.onclose = () => {
       document.getElementById("statusTag").className = "status-badge status-offline";
-      document.getElementById("statusTag").innerText = "● Reconnexion...";
+      document.getElementById("statusTag").innerText = "● Déconnecté";
       setTimeout(initWs, 2000);
     };
 
@@ -381,10 +377,14 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
       myId = d.my_id;
     } else if (d.t === "room_state") {
       updateRoomState(d.players);
+    } else if (d.t === "player_left") {
+      onPlayerLeft(d);
     } else if (d.t === "game_started") {
       onGameStarted(d);
     } else if (d.t === "next_turn") {
       onNextTurn(d);
+    } else if (d.t === "start_discussion_round") {
+      onStartDiscussionRound(d);
     } else if (d.t === "start_vote_phase") {
       onStartVotePhase(d);
     } else if (d.t === "vote_cast_update") {
@@ -393,6 +393,8 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
       onVoteResult(d);
     } else if (d.t === "mrwhite_guess_prompt") {
       onMrWhiteGuessPrompt(d);
+    } else if (d.t === "mrwhite_guess_submitted") {
+      onMrWhiteGuessSubmitted(d);
     } else if (d.t === "game_over") {
       onGameOver(d);
     } else if (d.t === "restart_lobby") {
@@ -400,18 +402,59 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
     }
   }
 
+  function onPlayerLeft(d) {
+    const pName = d.name || "Un joueur";
+    showToast(`⚠️ ${escapeHtml(pName)} s'est déconnecté(e).`);
+
+    if (!gameState) return;
+    const leftId = d.id;
+
+    if (gameState.aliveIds.includes(leftId)) {
+      gameState.aliveIds = gameState.aliveIds.filter(id => id !== leftId);
+
+      // Si c'était son tour de parole dans la discussion
+      const curSpkId = gameState.speakerOrder[gameState.speakerIdx % gameState.speakerOrder.length];
+      if (curSpkId === leftId && isHost && gameState.phase === "discussion") {
+        nextSpeaker();
+      }
+
+      // Si un vote était en cours
+      if (gameState.phase === "vote") {
+        delete gameState.votes[leftId];
+        renderVoteOptions();
+        const totalVotes = Object.keys(gameState.votes).length;
+        if (isHost && totalVotes >= gameState.aliveIds.length && totalVotes > 0) {
+          tallyVotes();
+        }
+      }
+
+      if (isHost) {
+        checkGameConditions();
+      }
+    }
+  }
+
   function updateRoomState(players) {
+    const prevHost = isHost;
     roomPlayers = players || [];
     document.getElementById("playerCount").innerText = roomPlayers.length;
 
     const me = roomPlayers.find(p => p.id === myId);
     isHost = me && me.host;
 
+    if (!prevHost && isHost && gameState) {
+      showToast("👑 Vous êtes désormais l'hôte de la salle !");
+    }
+
     document.getElementById("hostSettingsBox").style.display = isHost ? "flex" : "none";
     document.getElementById("guestWaitMsg").style.display = (!isHost && (!gameState || gameState.phase === "lobby")) ? "block" : "none";
     document.getElementById("btnStartGame").disabled = roomPlayers.length < 3;
 
     renderLobbyPlayers();
+
+    if (gameState && gameState.phase === "discussion") {
+      renderDiscussionPhase();
+    }
   }
 
   function renderLobbyPlayers() {
@@ -529,12 +572,13 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
 
     document.getElementById("currentSpeakerName").innerText = spkPlayer ? spkPlayer.name : "Joueur";
     document.getElementById("hostDiscussControls").style.display = isHost ? "flex" : "none";
+    document.getElementById("guestDiscussMsg").style.display = isHost ? "none" : "block";
 
     const grid = document.getElementById("discussPlayerGrid");
     grid.innerHTML = "";
     roomPlayers.forEach((p, idx) => {
       const isDead = !gameState.aliveIds.includes(p.id);
-      const isSpeaker = p.id === currentSpkId;
+      const isSpeaker = p.id === currentSpkId && !isDead;
       const card = document.createElement("div");
       card.className = "player-card" + (p.id === myId ? " is-me" : "") + (isSpeaker ? " is-active-speaker" : "") + (isDead ? " is-dead" : "");
       card.innerHTML = `
@@ -549,8 +593,10 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
   function nextSpeaker() {
     if (!isHost || !gameState) return;
     let nextIdx = (gameState.speakerIdx + 1) % gameState.speakerOrder.length;
-    while (!gameState.aliveIds.includes(gameState.speakerOrder[nextIdx])) {
+    let attempts = 0;
+    while (!gameState.aliveIds.includes(gameState.speakerOrder[nextIdx]) && attempts < gameState.speakerOrder.length) {
       nextIdx = (nextIdx + 1) % gameState.speakerOrder.length;
+      attempts++;
     }
     const payload = { t: "next_turn", speakerIdx: nextIdx };
     ws.send(JSON.stringify(payload));
@@ -561,6 +607,17 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
     if (!gameState) return;
     gameState.speakerIdx = d.speakerIdx;
     renderDiscussionPhase();
+  }
+
+  function onStartDiscussionRound(d) {
+    if (!gameState) return;
+    gameState.phase = "discussion";
+    gameState.speakerIdx = d.speakerIdx;
+    gameState.votes = {};
+    selectedVoteId = -1;
+    switchView("viewDiscussion");
+    renderDiscussionPhase();
+    showToast("🎤 Nouvelle manche de parole !");
   }
 
   function hostStartVote() {
@@ -576,7 +633,10 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
     gameState.votes = {};
     selectedVoteId = -1;
     document.getElementById("btnConfirmVote").disabled = true;
+    document.getElementById("btnConfirmVote").style.display = "block";
+    document.getElementById("btnConfirmVote").innerText = "Confirmer mon vote";
     document.getElementById("voteStatusMsg").innerText = "";
+    document.getElementById("btnForceTally").style.display = isHost ? "block" : "none";
 
     switchView("viewVote");
     renderVoteOptions();
@@ -588,7 +648,7 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
 
     const isAlive = gameState.aliveIds.includes(myId);
     if (!isAlive) {
-      list.innerHTML = "<p style='text-align:center; color:var(--dim);'>Vous êtes éliminé. Vous observez le vote.</p>";
+      list.innerHTML = "<p style='text-align:center; color:var(--dim); padding:16px;'>Vous êtes éliminé. Vous observez le vote des survivants.</p>";
       document.getElementById("btnConfirmVote").style.display = "none";
       return;
     }
@@ -601,7 +661,7 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
 
       const item = document.createElement("div");
       item.className = "vote-item" + (selectedVoteId === id ? " selected" : "");
-      item.innerHTML = `<span>👤 ${escapeHtml(p.name)}</span> <span style="color:var(--dim);">👉 Suspect</span>`;
+      item.innerHTML = `<span>👤 ${escapeHtml(p.name)}</span> <span style="color:var(--pink);">👉 Suspecter</span>`;
       item.onclick = () => {
         selectedVoteId = id;
         document.getElementById("btnConfirmVote").disabled = false;
@@ -614,7 +674,8 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
   function submitMyVote() {
     if (selectedVoteId < 0 || !gameState) return;
     document.getElementById("btnConfirmVote").disabled = true;
-    document.getElementById("voteStatusMsg").innerText = "✅ Vote enregistré ! En attente des autres...";
+    document.getElementById("btnConfirmVote").innerText = "✅ Vote Confirmé !";
+    document.getElementById("voteStatusMsg").innerText = "En attente des autres joueurs...";
 
     const payload = { t: "vote_cast_update", voterId: myId, targetId: selectedVoteId };
     ws.send(JSON.stringify(payload));
@@ -629,12 +690,14 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
     const totalVotes = Object.keys(gameState.votes).length;
     document.getElementById("voteStatusMsg").innerText = `Votes reçus : ${totalVotes} / ${aliveVoters.length}`;
 
-    if (isHost && totalVotes >= aliveVoters.length) {
+    if (isHost && totalVotes >= aliveVoters.length && totalVotes > 0) {
       tallyVotes();
     }
   }
 
   function tallyVotes() {
+    if (!isHost || !gameState) return;
+
     let counts = {};
     for (let voter in gameState.votes) {
       let target = gameState.votes[voter];
@@ -643,33 +706,103 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
 
     let maxVotes = 0;
     let eliminatedId = -1;
+    let tie = false;
+
     for (let target in counts) {
-      if (counts[target] > maxVotes) {
-        maxVotes = counts[target];
+      let num = counts[target];
+      if (num > maxVotes) {
+        maxVotes = num;
         eliminatedId = parseInt(target);
+        tie = false;
+      } else if (num === maxVotes && maxVotes > 0) {
+        tie = true;
       }
     }
 
-    const payload = { t: "vote_result", eliminatedId: eliminatedId };
+    if (tie) eliminatedId = -1;
+
+    let pName = "";
+    let pRole = "";
+    if (eliminatedId >= 0) {
+      const pl = roomPlayers.find(p => p.id === eliminatedId);
+      pName = pl ? pl.name : "Joueur";
+      if (gameState.assignments && gameState.assignments[eliminatedId]) {
+        pRole = gameState.assignments[eliminatedId].role;
+      }
+    }
+
+    const payload = {
+      t: "vote_result",
+      eliminatedId: eliminatedId,
+      name: pName,
+      role: pRole,
+      isTie: tie,
+      maxVotes: maxVotes
+    };
+
     ws.send(JSON.stringify(payload));
     onVoteResult(payload);
   }
 
   function onVoteResult(d) {
     if (!gameState) return;
-    const elimId = d.eliminatedId;
-    const elimAssign = gameState.assignments[elimId];
 
-    gameState.aliveIds = gameState.aliveIds.filter(id => id !== elimId);
+    const modal = document.getElementById("modalVoteResult");
+    const resIcon = document.getElementById("voteResIcon");
+    const resTitle = document.getElementById("voteResTitle");
+    const resMsg = document.getElementById("voteResMsg");
+    const resRole = document.getElementById("voteResRole");
+    const resDetail = document.getElementById("voteResDetail");
 
-    if (elimAssign && elimAssign.role === "mrwhite") {
-      const promptPayload = { t: "mrwhite_guess_prompt", mrWhiteId: elimId };
-      if (isHost) ws.send(JSON.stringify(promptPayload));
-      onMrWhiteGuessPrompt(promptPayload);
-      return;
+    modal.style.display = "flex";
+
+    if (d.isTie || d.eliminatedId < 0) {
+      resIcon.innerText = "⚖️";
+      resTitle.innerText = "ÉGALITÉ PARFAITE !";
+      resTitle.style.color = "var(--yellow)";
+      resMsg.innerText = "Aucun joueur n'a obtenu la majorité !";
+      resRole.style.display = "none";
+      resDetail.innerText = "Personne n'est éliminé ce tour. La discussion reprend immédiatement !";
+    } else {
+      const elimId = d.eliminatedId;
+      gameState.aliveIds = gameState.aliveIds.filter(id => id !== elimId);
+
+      resIcon.innerText = "❌";
+      resTitle.innerText = "JOUEUR ÉLIMINÉ !";
+      resTitle.style.color = "var(--pink)";
+      resMsg.innerText = `${escapeHtml(d.name)} a été éliminé(e) !`;
+      resRole.style.display = "inline-block";
+
+      if (d.role === "civil") {
+        resRole.className = "role-badge-tag tag-civil";
+        resRole.innerText = "👤 ÉTAIT CIVIL";
+        resDetail.innerText = "Les civils ont voté contre un innocent !";
+      } else if (d.role === "undercover") {
+        resRole.className = "role-badge-tag tag-undercover";
+        resRole.innerText = "🕵️ ÉTAIT UNDERCOVER";
+        resDetail.innerText = "Bien joué ! Un imposteur Undercover a été démasqué !";
+      } else if (d.role === "mrwhite") {
+        resRole.className = "role-badge-tag tag-mrwhite";
+        resRole.innerText = "🎭 ÉTAIT MR. WHITE";
+        resDetail.innerText = "Mr. White a été démasqué ! Mais attention à sa devinette...";
+      }
     }
 
-    checkGameConditions();
+    // Affichage pendant 4 secondes pour que tous les joueurs prennent connaissance du résultat
+    setTimeout(() => {
+      modal.style.display = "none";
+
+      if (!d.isTie && d.role === "mrwhite") {
+        const promptPayload = { t: "mrwhite_guess_prompt", mrWhiteId: d.eliminatedId };
+        if (isHost) ws.send(JSON.stringify(promptPayload));
+        onMrWhiteGuessPrompt(promptPayload);
+        return;
+      }
+
+      if (isHost) {
+        checkGameConditions();
+      }
+    }, 4000);
   }
 
   function onMrWhiteGuessPrompt(d) {
@@ -684,24 +817,35 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
   }
 
   function submitMrWhiteGuess() {
-    const guess = document.getElementById("mrWhiteGuessInput").value.trim().toLowerCase();
+    const guess = document.getElementById("mrWhiteGuessInput").value.trim();
     document.getElementById("modalMrWhite").style.display = "none";
 
-    const civilWord = gameState.civilWord.toLowerCase();
-    const isCorrect = guess.length > 0 && civilWord.includes(guess);
+    const payload = { t: "mrwhite_guess_submitted", guess: guess, mrWhiteId: myId };
+    ws.send(JSON.stringify(payload));
+    onMrWhiteGuessSubmitted(payload);
+  }
+
+  function onMrWhiteGuessSubmitted(d) {
+    document.getElementById("modalMrWhite").style.display = "none";
+    const guess = (d.guess || "").trim().toLowerCase();
+    const civilWord = (gameState ? gameState.civilWord : "").trim().toLowerCase();
+    const isCorrect = guess.length > 0 && (civilWord === guess || civilWord.includes(guess));
 
     if (isCorrect) {
-      triggerGameOver("mrwhite_guessed");
+      showToast("🎭 Incroyable ! Mr. White a deviné le mot exact des civils !");
+      if (isHost) triggerGameOver("mrwhite_guessed");
     } else {
-      alert("❌ Mauvaise réponse ! Mr. White est définitivement éliminé.");
-      checkGameConditions();
+      showToast(`❌ Mauvaise tentative de Mr. White ("${escapeHtml(d.guess)}") !`);
+      if (isHost) {
+        setTimeout(checkGameConditions, 2500);
+      }
     }
   }
 
   function checkGameConditions() {
     if (!isHost || !gameState) return;
 
-    let livingRoles = gameState.aliveIds.map(id => gameState.assignments[id].role);
+    let livingRoles = gameState.aliveIds.map(id => gameState.assignments[id] ? gameState.assignments[id].role : "civil");
     let impostors = livingRoles.filter(r => r === "undercover" || r === "mrwhite").length;
     let civils = livingRoles.filter(r => r === "civil").length;
 
@@ -710,14 +854,16 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
     } else if (impostors >= civils) {
       triggerGameOver("impostors_win");
     } else {
+      // Nouvelle manche de discussion : désigner le premier joueur vivant disponible
       let nextSpk = 0;
-      while (!gameState.aliveIds.includes(gameState.speakerOrder[nextSpk])) {
+      let attempts = 0;
+      while (!gameState.aliveIds.includes(gameState.speakerOrder[nextSpk]) && attempts < gameState.speakerOrder.length) {
         nextSpk = (nextSpk + 1) % gameState.speakerOrder.length;
+        attempts++;
       }
-      const payload = { t: "next_turn", speakerIdx: nextSpk };
+      const payload = { t: "start_discussion_round", speakerIdx: nextSpk };
       ws.send(JSON.stringify(payload));
-      onNextTurn(payload);
-      switchView("viewDiscussion");
+      onStartDiscussionRound(payload);
     }
   }
 
@@ -729,6 +875,7 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
 
   function onGameOver(d) {
     document.getElementById("modalMrWhite").style.display = "none";
+    document.getElementById("modalVoteResult").style.display = "none";
     switchView("viewEnd");
 
     const title = document.getElementById("endVictoryTitle");
@@ -739,7 +886,7 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
       icon.innerText = "🏆";
       title.innerText = "VICTOIRE DES CIVILS !";
       title.style.color = "var(--green)";
-      sub.innerText = "Tous les imposteurs ont été démasqués.";
+      sub.innerText = "Tous les imposteurs ont été démasqués avec succès !";
     } else if (d.reason === "mrwhite_guessed") {
       icon.innerText = "🎭";
       title.innerText = "VICTOIRE DE MR. WHITE !";
@@ -769,7 +916,7 @@ const char MP_UNDERCOVER_HTML[] PROGMEM = R"rawliteral(
       card.innerHTML = `
         <div class="p-avatar">${AVATARS[idx % AVATARS.length]}</div>
         <div class="p-name">${escapeHtml(p.name)}</div>
-        <div class="p-status" style="font-size:0.7rem; color:var(--cyan);">${roleTag}</div>
+        <div class="p-status" style="font-size:0.72rem; color:var(--cyan);">${roleTag}</div>
       `;
       grid.appendChild(card);
     });

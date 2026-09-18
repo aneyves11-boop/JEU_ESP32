@@ -33,7 +33,7 @@ const char GAME_PONG_HTML[] PROGMEM = R"rawliteral(
     .btn-paddle { flex: 1; height: 48px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: #fff; font-weight: 900; font-size: 1.2rem; }
     .btn-paddle:active { background: rgba(0,243,255,0.3); border-color: var(--cyan); }
   </style>
-</head>
+<script src="/pause.js"></script></head>
 <body>
   <header>
     <a href="/hub" class="btn-back">◀ Menu</a>

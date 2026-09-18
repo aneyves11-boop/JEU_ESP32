@@ -12,7 +12,7 @@ header{width:100%;max-width:340px;display:flex;justify-content:space-between;mar
 .slot{aspect-ratio:1;background:#05070f;border-radius:50%;cursor:pointer;}
 .slot.r{background:#ff0055;box-shadow:0 0 8px #ff0055;}
 .slot.y{background:#ffe600;box-shadow:0 0 8px #ffe600;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span id="st">Ton tour (Rouge)</span></header>
 <div class="board" id="b"></div>
 <button onclick="init()" style="margin-top:14px;width:330px;height:45px;background:#00f3ff;border:none;border-radius:10px;font-weight:bold;">REJOUER 🔄</button>
@@ -68,7 +68,7 @@ header{width:100%;max-width:340px;display:flex;justify-content:space-between;mar
 .card{width:42px;height:60px;background:#fff;color:#000;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:bold;}
 .ctrl{display:flex;gap:10px;margin-top:14px;width:330px;}
 button{flex:1;height:46px;border-radius:10px;border:none;font-weight:bold;font-size:1rem;cursor:pointer;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Score: <span id="chips">100</span> $</span></header>
 <div class="tbl">
 <div style="font-weight:bold;color:#ffe600;">Croupier: <span id="ds">?</span></div>
@@ -119,7 +119,7 @@ const char GAME_MEMCARDS_HTML[] PROGMEM = R"rawliteral(
 header{width:100%;max-width:320px;display:flex;justify-content:space-between;margin-bottom:10px;font-weight:bold;}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:320px;}
 .c{aspect-ratio:1;background:#171d33;border:1px solid #00f3ff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;cursor:pointer;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Paires: <span id="s">0</span>/8</span></header>
 <div class="grid" id="g"></div>
 <script>
@@ -157,7 +157,7 @@ header{width:100%;max-width:320px;display:flex;justify-content:space-between;mar
 .btns{display:flex;gap:8px;margin-top:16px;width:320px;}
 button{flex:1;height:52px;background:rgba(255,255,255,0.08);border:1px solid #00f3ff;color:#fff;border-radius:10px;font-size:1.4rem;cursor:pointer;}
 button:active{background:#00f3ff;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Série: <span id="s">0</span></span></header>
 <div class="arena">
 <div style="font-size:2rem;margin-bottom:10px;" id="vs">❓ VS ❓</div>
@@ -188,7 +188,7 @@ header{width:100%;max-width:320px;display:flex;justify-content:space-between;mar
 .card{width:120px;height:170px;background:#fff;color:#000;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:3rem;font-weight:bold;margin:16px auto;}
 .ctrl{display:flex;gap:12px;width:320px;}
 button{flex:1;height:50px;border-radius:10px;border:none;font-weight:bold;font-size:1.1rem;cursor:pointer;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Score: <span id="s">0</span></span></header>
 <div class="card" id="c">7</div>
 <div class="ctrl">
@@ -215,7 +215,7 @@ const char GAME_BATTLESHIP_HTML[] PROGMEM = R"rawliteral(
 header{width:100%;max-width:300px;display:flex;justify-content:space-between;margin-bottom:12px;font-weight:bold;}
 .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;width:300px;}
 .c{aspect-ratio:1;background:#0d182b;border:1px solid #00f3ff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Navires: <span id="s">3</span>/3</span></header>
 <div class="grid" id="g"></div>
 <script>

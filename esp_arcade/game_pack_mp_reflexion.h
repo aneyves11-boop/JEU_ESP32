@@ -290,9 +290,13 @@ const char MP_CONNECT4_HTML[] PROGMEM = R"rawliteral(
             oppRematch = true;
             if (myRematch) resetGame();
           } else if (d.t === "opp_left") {
-            playing = false;
-            statusEl.textContent = "Adversaire déconnecté";
+            const pName = d.name || "Votre adversaire";
+            statusEl.textContent = "⚠️ " + pName + " s'est déconnecté(e). Mode IA activé !";
             ovActions.style.display = "flex";
+            if (typeof isAi !== 'undefined' && !isAi) {
+              isAi = true;
+              alert("⚠️ " + pName + " s'est déconnecté(e).\nL'IA prend le relais pour terminer la partie !");
+            }
           }
         } catch(err){}
       };

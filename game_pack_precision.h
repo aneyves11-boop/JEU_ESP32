@@ -9,7 +9,7 @@ const char GAME_WIRE_HTML[] PROGMEM = R"rawliteral(
 <style>body{background:#090b12;color:#f0f4fc;font-family:sans-serif;margin:0;display:flex;flex-direction:column;align-items:center;padding:10px;}
 header{width:100%;max-width:340px;display:flex;justify-content:space-between;margin-bottom:8px;font-weight:bold;}
 canvas{border:2px solid #ffe600;border-radius:12px;background:#05070f;width:340px;height:400px;max-width:92vw;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Progression: <span id="s">0</span>%</span></header>
 <canvas id="c" width="340" height="400"></canvas>
 <script>
@@ -51,7 +51,7 @@ const char GAME_SLICE_HTML[] PROGMEM = R"rawliteral(
 <style>body{background:#090b12;color:#f0f4fc;font-family:sans-serif;margin:0;display:flex;flex-direction:column;align-items:center;padding:10px;}
 header{width:100%;max-width:330px;display:flex;justify-content:space-between;margin-bottom:12px;font-weight:bold;}
 canvas{border:2px solid #00f3ff;border-radius:12px;background:#05070f;width:330px;height:380px;max-width:92vw;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Score: <span id="s">0</span></span></header>
 <div style="color:#8b9bb4;font-size:0.85rem;margin-bottom:8px;">Coupe le bloc au centre parfait (50% / 50%) :</div>
 <canvas id="c" width="330" height="380"></canvas>
@@ -84,7 +84,7 @@ const char GAME_COINJAR_HTML[] PROGMEM = R"rawliteral(
 header{width:100%;max-width:340px;display:flex;justify-content:space-between;margin-bottom:8px;font-weight:bold;}
 canvas{border:2px solid #ffe600;border-radius:12px;background:#05070f;width:340px;height:400px;max-width:92vw;}
 button{width:340px;height:48px;background:#ffe600;color:#000;border:none;border-radius:10px;font-weight:bold;margin-top:8px;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Pièces: <span id="s">0</span></span></header>
 <canvas id="c" width="340" height="400"></canvas>
 <button onclick="drop()">LÂCHER LA PIÈCE 🪙</button>
@@ -118,7 +118,7 @@ const char GAME_HOOK_HTML[] PROGMEM = R"rawliteral(
 header{width:100%;max-width:340px;display:flex;justify-content:space-between;margin-bottom:8px;font-weight:bold;}
 canvas{border:2px solid #ff0055;border-radius:12px;background:#05070f;width:340px;height:400px;max-width:92vw;}
 button{width:340px;height:48px;background:#ff0055;color:#fff;border:none;border-radius:10px;font-weight:bold;margin-top:8px;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Diamants: <span id="s">0</span></span></header>
 <canvas id="c" width="340" height="400"></canvas>
 <button onclick="launch()">LANCER LE GRAPPIN 🪝</button>
@@ -155,7 +155,7 @@ header{width:100%;max-width:340px;display:flex;justify-content:space-between;mar
 canvas{border:2px solid #00ff66;border-radius:12px;background:#05070f;width:340px;height:400px;max-width:92vw;}
 .ctrl{display:flex;gap:12px;width:340px;margin-top:8px;}
 button{flex:1;height:48px;background:rgba(255,255,255,0.1);border:1px solid #00ff66;color:#fff;border-radius:10px;font-weight:bold;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Temps: <span id="s">0</span>s</span></header>
 <canvas id="c" width="340" height="400"></canvas>
 <div class="ctrl"><button onclick="tilt-=0.05">◀ INCLINER G</button><button onclick="tilt+=0.05">INCLINER D ▶</button></div>

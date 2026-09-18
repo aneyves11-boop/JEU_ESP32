@@ -149,7 +149,7 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
     }
     .btn-play:active { transform: scale(0.95); }
   </style>
-</head>
+<script src="/pause.js"></script></head>
 <body>
 
 <div id="gameContainer">

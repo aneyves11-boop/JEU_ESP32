@@ -10,7 +10,7 @@ const char GAME_BEATTAP_HTML[] PROGMEM = R"rawliteral(
 header{width:100%;max-width:340px;display:flex;justify-content:space-between;margin-bottom:8px;font-weight:bold;}
 canvas{border:2px solid #00f3ff;border-radius:12px;background:#05070f;width:340px;height:400px;max-width:92vw;}
 button{width:340px;height:50px;background:linear-gradient(135deg,#00f3ff,#ff0055);color:#fff;border:none;border-radius:12px;font-weight:bold;margin-top:8px;font-size:1.1rem;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Score: <span id="s">0</span></span></header>
 <canvas id="c" width="340" height="400"></canvas>
 <button onclick="tap()">TAP EN RYTHME 🥁</button>
@@ -44,7 +44,7 @@ header{width:100%;max-width:320px;display:flex;justify-content:space-between;mar
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:320px;}
 .pad{aspect-ratio:1;border-radius:16px;border:none;cursor:pointer;opacity:0.4;transition:opacity 0.15s;}
 .pad.lit{opacity:1;box-shadow:0 0 25px currentColor;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Niveau: <span id="s">1</span></span></header>
 <div class="grid">
 <div class="pad" id="p0" style="background:#00ff66;color:#00ff66;" onclick="tap(0)"></div>
@@ -82,7 +82,7 @@ const char GAME_NOTEDROP_HTML[] PROGMEM = R"rawliteral(
 <style>body{background:#090b12;color:#f0f4fc;font-family:sans-serif;margin:0;display:flex;flex-direction:column;align-items:center;padding:10px;}
 header{width:100%;max-width:340px;display:flex;justify-content:space-between;margin-bottom:8px;font-weight:bold;}
 canvas{border:2px solid #ffe600;border-radius:12px;background:#060812;width:340px;height:400px;max-width:92vw;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Notes: <span id="s">0</span></span></header>
 <canvas id="c" width="340" height="400"></canvas>
 <script>
@@ -113,7 +113,7 @@ const char GAME_TEMPO_HTML[] PROGMEM = R"rawliteral(
 <style>body{background:#090b12;color:#f0f4fc;font-family:sans-serif;margin:0;display:flex;flex-direction:column;align-items:center;padding:10px;}
 header{width:100%;max-width:320px;display:flex;justify-content:space-between;margin-bottom:14px;font-weight:bold;}
 .circle{width:180px;height:180px;border-radius:50%;background:rgba(0,243,255,0.1);border:4px solid #00f3ff;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:bold;margin:30px 0;cursor:pointer;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>BPM: <span id="s">--</span></span></header>
 <div style="color:#8b9bb4;font-size:0.9rem;">Tape en rythme régulier à 60 BPM :</div>
 <div class="circle" onclick="tap()">TAP 🎵</div>
@@ -138,7 +138,7 @@ header{width:100%;max-width:330px;display:flex;justify-content:space-between;mar
 canvas{border:2px solid #ff0055;border-radius:12px;background:#05070f;width:330px;height:380px;max-width:92vw;}
 .btns{display:flex;gap:8px;width:330px;margin-top:8px;}
 button{flex:1;height:50px;border-radius:10px;border:none;font-weight:bold;font-size:1.2rem;cursor:pointer;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Score: <span id="s">0</span></span></header>
 <canvas id="c" width="330" height="380"></canvas>
 <div class="btns">

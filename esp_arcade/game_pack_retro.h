@@ -11,7 +11,7 @@ header{width:100%;max-width:300px;display:flex;justify-content:space-between;mar
 canvas{border:2px solid #00f3ff;border-radius:10px;background:#05070f;width:240px;height:400px;}
 .ctrl{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;width:240px;margin-top:8px;}
 button{height:46px;background:rgba(255,255,255,0.1);border:1px solid #00f3ff;color:#fff;border-radius:8px;font-weight:bold;font-size:1.1rem;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Lignes: <span id="s">0</span></span></header>
 <canvas id="c" width="200" height="360"></canvas>
 <div class="ctrl">
@@ -55,7 +55,7 @@ header{width:100%;max-width:300px;display:flex;justify-content:space-between;mar
 canvas{border:2px solid #ffe600;border-radius:10px;background:#05070f;width:280px;height:280px;}
 .ctrl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:280px;margin-top:8px;}
 button{height:46px;background:rgba(255,255,255,0.1);border:1px solid #ffe600;color:#fff;border-radius:8px;font-weight:bold;font-size:1.2rem;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Score: <span id="s">0</span></span></header>
 <canvas id="c" width="280" height="280"></canvas>
 <div class="ctrl">
@@ -93,7 +93,7 @@ const char GAME_LUNAR_HTML[] PROGMEM = R"rawliteral(
 header{width:100%;max-width:340px;display:flex;justify-content:space-between;margin-bottom:8px;font-weight:bold;}
 canvas{border:2px solid #fff;border-radius:12px;background:#030408;width:340px;height:400px;max-width:92vw;}
 button{width:340px;height:48px;background:linear-gradient(135deg,#ff5500,#ffe600);color:#000;border:none;border-radius:10px;font-weight:bold;margin-top:8px;font-size:1.1rem;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Vitesse: <span id="s">0</span></span></header>
 <canvas id="c" width="340" height="400"></canvas>
 <button onclick="thrust()">🔥 PROPULSEUR</button>
@@ -126,7 +126,7 @@ const char GAME_CANNON_HTML[] PROGMEM = R"rawliteral(
 header{width:100%;max-width:340px;display:flex;justify-content:space-between;margin-bottom:8px;font-weight:bold;}
 canvas{border:2px solid #ff0055;border-radius:12px;background:#05070f;width:340px;height:400px;max-width:92vw;}
 button{width:340px;height:48px;background:#ff0055;color:#fff;border:none;border-radius:10px;font-weight:bold;margin-top:8px;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Châteaux: <span id="s">0</span></span></header>
 <canvas id="c" width="340" height="400"></canvas>
 <button onclick="fire()">TIRER AU CANON 💣</button>

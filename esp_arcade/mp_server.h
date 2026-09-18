@@ -108,6 +108,7 @@ struct MpPeer {
   WiFiClient client;
   bool active;
   bool handshaken;
+  bool authenticated; // Seuls les pairs ayant validé le code d'accès sont autorisés
   String handshakeBuf;
   String pseudo;
   String state;      // "lobby", "waiting_game", "in_game", "in_room"
@@ -126,7 +127,7 @@ static void broadcastPlayerList() {
   String json = "{\"t\":\"players\",\"list\":[";
   bool first = true;
   for (int i = 0; i < MAX_WS_CLIENTS; i++) {
-    if (mpPeers[i].active && mpPeers[i].handshaken && mpPeers[i].pseudo.length() > 0) {
+    if (mpPeers[i].active && mpPeers[i].handshaken && mpPeers[i].authenticated && mpPeers[i].pseudo.length() > 0) {
       if (!first) json += ",";
       json += "{\"id\":" + String(i) + ",\"name\":\"" + mpPeers[i].pseudo + "\",\"status\":\"" + mpPeers[i].state + "\"}";
       first = false;
@@ -135,7 +136,7 @@ static void broadcastPlayerList() {
   json += "]}";
 
   for (int i = 0; i < MAX_WS_CLIENTS; i++) {
-    if (mpPeers[i].active && mpPeers[i].handshaken && mpPeers[i].state == "lobby") {
+    if (mpPeers[i].active && mpPeers[i].handshaken && mpPeers[i].authenticated && mpPeers[i].state == "lobby") {
       wsSendText(mpPeers[i].client, json);
     }
   }
@@ -148,7 +149,7 @@ static void broadcastRoomState(const String &roomId) {
   bool first = true;
   int hostIdx = -1;
   for (int i = 0; i < MAX_WS_CLIENTS; i++) {
-    if (mpPeers[i].active && mpPeers[i].handshaken && mpPeers[i].roomId == roomId) {
+    if (mpPeers[i].active && mpPeers[i].handshaken && mpPeers[i].authenticated && mpPeers[i].roomId == roomId) {
       if (hostIdx < 0) hostIdx = i;
       if (!first) json += ",";
       json += "{\"id\":" + String(i) + ",\"name\":\"" + mpPeers[i].pseudo + "\",\"host\":" + (hostIdx == i ? "true" : "false") + "}";
@@ -158,7 +159,7 @@ static void broadcastRoomState(const String &roomId) {
   json += "]}";
 
   for (int i = 0; i < MAX_WS_CLIENTS; i++) {
-    if (mpPeers[i].active && mpPeers[i].handshaken && mpPeers[i].roomId == roomId) {
+    if (mpPeers[i].active && mpPeers[i].handshaken && mpPeers[i].authenticated && mpPeers[i].roomId == roomId) {
       wsSendText(mpPeers[i].client, json);
     }
   }
@@ -168,7 +169,7 @@ static void broadcastRoomState(const String &roomId) {
 static void broadcastToRoom(const String &roomId, const String &msg, int senderIdx = -1) {
   if (roomId.length() == 0) return;
   for (int i = 0; i < MAX_WS_CLIENTS; i++) {
-    if (mpPeers[i].active && mpPeers[i].handshaken && mpPeers[i].roomId == roomId) {
+    if (mpPeers[i].active && mpPeers[i].handshaken && mpPeers[i].authenticated && mpPeers[i].roomId == roomId) {
       if (i != senderIdx) {
         wsSendText(mpPeers[i].client, msg);
       }
@@ -186,6 +187,7 @@ static void closePeer(int idx) {
     mpPeers[idx].client.stop();
     mpPeers[idx].active = false;
     mpPeers[idx].handshaken = false;
+    mpPeers[idx].authenticated = false;
     mpPeers[idx].handshakeBuf = "";
     mpPeers[idx].pseudo = "";
     mpPeers[idx].state = "";
@@ -195,7 +197,7 @@ static void closePeer(int idx) {
     mpPeers[idx].roomId = "";
 
     if (opp >= 0 && opp < MAX_WS_CLIENTS && mpPeers[opp].active) {
-      wsSendText(mpPeers[opp].client, "{\"t\":\"opp_left\"}");
+      wsSendText(mpPeers[opp].client, "{\"t\":\"opp_left\",\"name\":\"" + pseudo + "\"}");
       mpPeers[opp].state = "lobby";
       mpPeers[opp].opponentId = -1;
       mpPeers[opp].role = 0;
@@ -232,6 +234,15 @@ static bool tryCompleteHandshake(int idx) {
   sha1_calc((const uint8_t*)magic.c_str(), magic.length(), hash);
   String acceptKey = base64_encode_bytes(hash, 20);
 
+  // VÉRIFICATION STRICTE DU CODE D'ACCÈS :
+  // Le client DOIT impérativement posséder une session IP authentifiée ou le cookie arcade_auth=1
+  bool isAuth = isIpAuthenticated(mpPeers[idx].client.remoteIP()) || (req.indexOf("arcade_auth=1") >= 0);
+  if (!isAuth) {
+    Serial.printf("[MP REFUSÉ] Client non authentifié rejeté : %s\n", mpPeers[idx].client.remoteIP().toString().c_str());
+    closePeer(idx);
+    return false;
+  }
+
   String response = "HTTP/1.1 101 Switching Protocols\r\n";
   response += "Upgrade: websocket\r\n";
   response += "Connection: Upgrade\r\n";
@@ -239,6 +250,8 @@ static bool tryCompleteHandshake(int idx) {
 
   mpPeers[idx].client.print(response);
   mpPeers[idx].handshaken = true;
+  mpPeers[idx].authenticated = true;
+  setIpAuthenticated(mpPeers[idx].client.remoteIP(), true);
   mpPeers[idx].handshakeBuf = "";
   mpPeers[idx].state = "lobby";
   mpPeers[idx].lastSeen = millis();
@@ -460,6 +473,7 @@ static void handleMultiplayer() {
       mpPeers[slot].client = newClient;
       mpPeers[slot].active = true;
       mpPeers[slot].handshaken = false;
+      mpPeers[slot].authenticated = false;
       mpPeers[slot].handshakeBuf = "";
       mpPeers[slot].pseudo = "";
       mpPeers[slot].state = "connecting";

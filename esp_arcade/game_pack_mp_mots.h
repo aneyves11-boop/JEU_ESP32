@@ -380,9 +380,13 @@ const char MP_PETITBAC_HTML[] PROGMEM = R"rawliteral(
             startNewRound(l);
           }
         } else if (d.t === "opp_left") {
-          playing = false;
-          badge.textContent = "Adversaire parti";
-          badge.style.color = "#ff0055";
+          const pName = d.name || "Votre adversaire";
+          badge.textContent = "Adversaire parti (IA active)";
+          badge.style.color = "#ffaa00";
+          if (typeof isAi !== 'undefined' && !isAi) {
+            isAi = true;
+            alert("⚠️ " + pName + " s'est déconnecté(e).\nLa partie continue en mode solo contre l'IA !");
+          }
         }
       } catch(err){}
     };
@@ -690,9 +694,13 @@ const char MP_ANAGRAM_HTML[] PROGMEM = R"rawliteral(
           oppRematch = true;
           if (myRematch) resetGame();
         } else if (d.t === "opp_left") {
-          playing = false;
-          badge.textContent = "Adversaire parti";
-          badge.style.color = "#ff0055";
+          const pName = d.name || "Votre adversaire";
+          badge.textContent = "Adversaire parti (IA active)";
+          badge.style.color = "#ffaa00";
+          if (typeof isAi !== 'undefined' && !isAi) {
+            isAi = true;
+            alert("⚠️ " + pName + " s'est déconnecté(e).\nLa partie continue en mode solo contre l'IA !");
+          }
         }
       } catch(err){}
     };
@@ -980,9 +988,13 @@ const char MP_WORDBOMB_HTML[] PROGMEM = R"rawliteral(
           oppRematch = true;
           if (myRematch) resetGame();
         } else if (d.t === "opp_left") {
-          playing = false;
-          badge.textContent = "Adversaire parti";
-          badge.style.color = "#ff0055";
+          const pName = d.name || "Votre adversaire";
+          badge.textContent = "Adversaire parti (IA active)";
+          badge.style.color = "#ffaa00";
+          if (typeof isAi !== 'undefined' && !isAi) {
+            isAi = true;
+            alert("⚠️ " + pName + " s'est déconnecté(e).\nLa partie continue en mode solo contre l'IA !");
+          }
         }
       } catch(err){}
     };
@@ -1289,9 +1301,13 @@ const char MP_WORDCHAIN_HTML[] PROGMEM = R"rawliteral(
           oppRematch = true;
           if (myRematch) resetGame();
         } else if (d.t === "opp_left") {
-          playing = false;
-          badge.textContent = "Adversaire parti";
-          badge.style.color = "#ff0055";
+          const pName = d.name || "Votre adversaire";
+          badge.textContent = "Adversaire parti (IA active)";
+          badge.style.color = "#ffaa00";
+          if (typeof isAi !== 'undefined' && !isAi) {
+            isAi = true;
+            alert("⚠️ " + pName + " s'est déconnecté(e).\nLa partie continue en mode solo contre l'IA !");
+          }
         }
       } catch(err){}
     };
@@ -1625,9 +1641,13 @@ const char MP_HANGMAN_HTML[] PROGMEM = R"rawliteral(
           oppRematch = true;
           if (myRematch) resetGame();
         } else if (d.t === "opp_left") {
-          playing = false;
-          badge.textContent = "Adversaire parti";
-          badge.style.color = "#ff0055";
+          const pName = d.name || "Votre adversaire";
+          badge.textContent = "Adversaire parti (IA active)";
+          badge.style.color = "#ffaa00";
+          if (typeof isAi !== 'undefined' && !isAi) {
+            isAi = true;
+            alert("⚠️ " + pName + " s'est déconnecté(e).\nLa partie continue en mode solo contre l'IA !");
+          }
         }
       } catch(err){}
     };

@@ -8,7 +8,8 @@ Zéro bibliothèque tierce requise : utilise uniquement le core Arduino officiel
 
 ## 🌟 Fonctionnalités Principales
 
-- **🎮 50 Mini-Jeux Solo Complets :**
+- **🎮 50 Mini-Jeux Solo Complets & Bouton Pause Universel :**
+  - **⏸️ NOUVEAU : Bouton Pause Universel :** Raccourci clavier (P / Échap) ou bouton ⏸️ tactile. Fige instantanément le jeu sans décalage, avec options *Reprendre*, *Recommencer* et *Retour au Salon*.
   - **Arcade & Classiques :** Snake, Flappy Drone, Space Invaders, Cyber Racer, Casse-Briques, 2048, Piano Tiles, Tower Stacker, Knife Master, Démineur, Morpion IA, Pong IA.
   - **Action & Tir :** Asteroids Blaster, Missile Defense, Cyber Turret, Galaxian Dive, Tank 2D Battle, Alien Swarm.
   - **Puzzle & Logique :** Lights Out, Taquin 15, Color Flood, Match-3 Blitz, Code Breaker, Mini Sudoku 4x4.
@@ -18,7 +19,7 @@ Zéro bibliothèque tierce requise : utilise uniquement le core Arduino officiel
   - **Précision & Adresse :** Fil Électrique, Fruit Slice, Coin Jar, Grappin Swing, Balance Ball.
   - **Rétro Iconique :** Tetris Cyber, Pac-Maze, Lunar Lander, Cannon Siege.
 
-- **🕶️ NOUVEAUTÉ : Cyber-FPS 3D Rétro (Moteur WebGL 60 FPS) :**
+- **🕶️ Cyber-FPS 3D Rétro (Moteur WebGL 60 FPS) :**
   - Moteur 3D temps réel fluide sans téléchargement externe.
   - Déplacement immersif, tir blaster plasma, drones ennemis, radar minimap et effets sonores rétro synthétisés Web Audio.
 
@@ -26,21 +27,25 @@ Zéro bibliothèque tierce requise : utilise uniquement le core Arduino officiel
   - Mode entraînement solo jouable hors-ligne contre un bot intelligent avec niveaux de difficulté adaptés sur l'ensemble des 15 jeux multijoueurs.
 
 - **⚔️ Salon Multijoueur 1v1 en Direct (15 Jeux Wi-Fi Local) :**
-  - **Serveur WebSocket Natif (Port 81) :** Handshake RFC 6455 et relai ultra-faible latence (< 5 ms) 100% C++ natif sans bibliothèque externe.
-  - **Lobby en temps réel :** Détection automatique des smartphones connectés, liste des joueurs en direct, envoi et acceptation de défis 1v1.
+  - **Serveur WebSocket Natif (Port 81) Sécurisé :** Filtrage strict par code d'accès, zéro scan parasite.
+  - **Déconnexions Non-Bloquantes :** Si un adversaire quitte la partie, le joueur est notifié et l'IA prend le relais pour lui permettre de terminer son match sans écran noir.
+  - **Lobby en temps réel :** Détection automatique des smartphones authentifiés, liste des joueurs en direct, envoi et acceptation de défis 1v1.
   - **Bouton « 🔄 Rejouer (Revanche) » :** Rematch instantané sans recharger la page ni perdre la connexion socket.
   - **3 Catégories de Jeux 1v1 :**
     - 🧠 **5 Jeux de Réflexion :** Puissance 4, Bataille Navale, Morpion Cyber, Duel de Mémoire (16 cartes), Mastermind Duel (4 couleurs).
     - ⚡ **5 Jeux de Réflexe :** Pong 1v1 Laser, Air Hockey Arcade, Tank Battle 2D, Duel de Réflexes (feux tricolores), Tir à la Corde / Tap Duel.
     - 📝 **5 Jeux de Baccalauréat & Mots :** Le Petit Bac Classic (4 catégories avec bouton STOP), Course aux Anagrammes, La Bombe à Mots (Word Bomb), Chaîne de Mots (Shiritori), Le Pendu Duel.
 
-- **👥 NOUVEAUTÉ : Salle de Groupe Multijoueur (3 à 8 Joueurs) :**
+- **👥 Salle de Groupe Multijoueur (3 à 8 Joueurs) :**
   - **🕵️ Undercover (Déduction & Bluff) :**
     - Jusqu'à 8 joueurs connectés simultanément en Wi-Fi.
     - Distribution secrète des rôles (Civils, Undercovers, Mr. White).
-    - Phases de descriptions orales, tours de table, votes éliminatoires en direct et devinette finale pour Mr. White.
+    - Dépouillement des votes synchronisé en temps réel avec écran de résultat animé pour tous les joueurs.
+    - Gestion fluide des déconnexions (le jeu continue sans se bloquer).
+    - Phase de devinette de Mr. White synchronisée dans toute la salle.
 
-- **🔒 Sécurité, Captive Portal & Personnalisation :**
+- **🔒 Sécurité & Filtrage par Code d'Accès :**
+  - **Filtrage Strict :** Seuls les smartphones ayant saisi le mot de passe d'accès sur `/login` sont admis sur le serveur WebSocket et apparaissent dans la liste des joueurs.
   - Mot de passe d'accès modifiable sauvegardé en mémoire permanente **NVS** (Preferences).
   - Personnalisation du **Pseudo Joueur** dans les paramètres (/settings).
   - Gestion du Wi-Fi (Point d'accès autonome ESP32-Arcade ou connexion au point d'accès du smartphone).
@@ -50,11 +55,12 @@ Zéro bibliothèque tierce requise : utilise uniquement le core Arduino officiel
 
 ## 📁 Architecture du Code
 
-`	ext
+```text
 esp_pages/
 ├── esp_arcade/
 │   ├── esp_arcade.ino              # Serveur Web HTTP (Port 80), DNS Captive Portal, 67 routes
-│   ├── mp_server.h                 # Serveur WebSocket 1v1 & Groupe (Port 81) C++ RFC 6455 natif
+│   ├── mp_server.h                 # Serveur WebSocket 1v1 & Groupe (Port 81) filtré et sécurisé
+│   ├── arcade_pause.h              # Contrôleur universel de Pause pour tous les jeux solo
 │   ├── hub_page.h                  # Hub d'accueil Solo, FPS 3D, Duels IA & Salon Multijoueur
 │   ├── login_page.h                # Page de connexion sécurisée
 │   ├── settings_page.h             # Page de réglages (Pseudo, Mot de passe, Wi-Fi NVS)
@@ -67,13 +73,13 @@ esp_pages/
 │   ├── game_snake.h ...            # Fichiers des 50 jeux solos individuels et packs
 │   └── README.md
 └── README.md
-`
+```
 
 ---
 
 ## 🚀 Configuration & Téléversement (Arduino IDE)
 
-1. Ouvrez le fichier esp_arcade/esp_arcade.ino dans l'Arduino IDE.
+1. Ouvrez le fichier `esp_arcade/esp_arcade.ino` dans l'Arduino IDE.
 2. Connectez votre carte ESP32 en USB.
 3. Dans le menu **Outils (Tools)** :
    - **Type de Carte :** ESP32 Dev Module (ou votre modèle ESP32).
@@ -92,4 +98,4 @@ esp_pages/
    - *(Pas de mot de passe Wi-Fi par défaut)*.
 3. Ouvrez votre navigateur sur **http://192.168.4.1**.
 4. Entrez le mot de passe d'accès : **Arcade123**.
-5. Profitez des 50 jeux solo, lancez le **Cyber-FPS 3D**, entraînez-vous contre l'**IA**, ou rejoignez le **Salon Multijoueur** (1v1 ou salle de groupe Undercover à 8 joueurs) !
+5. Profitez des 50 jeux solo avec **Bouton Pause ⏸️**, lancez le **Cyber-FPS 3D**, entraînez-vous contre l'**IA**, ou rejoignez le **Salon Multijoueur** sécurisé !

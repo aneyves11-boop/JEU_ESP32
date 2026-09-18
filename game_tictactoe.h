@@ -37,7 +37,7 @@ const char GAME_TICTACTOE_HTML[] PROGMEM = R"rawliteral(
     .cell.win { background: rgba(0,255,102,0.25); border-color: var(--green); }
     .btn-reset { width: 100%; max-width: 330px; height: 48px; margin-top: 14px; background: linear-gradient(135deg, var(--cyan), #0077ff); border: none; border-radius: 12px; color: #000; font-weight: 900; font-size: 1rem; cursor: pointer; }
   </style>
-</head>
+<script src="/pause.js"></script></head>
 <body>
   <header>
     <a href="/hub" class="btn-back">◀ Menu</a>

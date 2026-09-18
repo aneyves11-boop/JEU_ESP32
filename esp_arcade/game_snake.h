@@ -81,7 +81,7 @@ const char GAME_SNAKE_HTML[] PROGMEM = R"rawliteral(
     }
     .dpad-btn:active { background: rgba(0, 243, 255, 0.3); border-color: var(--neon-cyan); }
   </style>
-</head>
+<script src="/pause.js"></script></head>
 <body>
   <header>
     <a href="/hub" class="back-btn">◀ Menu</a>

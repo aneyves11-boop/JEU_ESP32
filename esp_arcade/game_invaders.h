@@ -35,7 +35,7 @@ const char GAME_INVADERS_HTML[] PROGMEM = R"rawliteral(
     .btn-fire { flex: 1.5; height: 48px; background: linear-gradient(135deg, #ff0055, #ff5500); border: none; border-radius: 10px; color: #fff; font-weight: 900; font-size: 1rem; }
     .btn-lr:active, .btn-fire:active { transform: scale(0.96); }
   </style>
-</head>
+<script src="/pause.js"></script></head>
 <body>
   <header>
     <a href="/hub" class="btn-back">◀ Menu</a>

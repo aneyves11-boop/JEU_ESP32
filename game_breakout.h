@@ -67,7 +67,7 @@ const char GAME_BREAKOUT_HTML[] PROGMEM = R"rawliteral(
     }
     .btn-lr:active { background: rgba(0, 243, 255, 0.3); }
   </style>
-</head>
+<script src="/pause.js"></script></head>
 <body>
   <header>
     <a href="/hub" class="back-btn">◀ Menu</a>

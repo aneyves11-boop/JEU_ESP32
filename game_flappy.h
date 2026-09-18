@@ -67,7 +67,7 @@ const char GAME_FLAPPY_HTML[] PROGMEM = R"rawliteral(
       color: #fff; font-weight: bold; font-size: 1rem; cursor: pointer;
     }
   </style>
-</head>
+<script src="/pause.js"></script></head>
 <body>
   <header>
     <a href="/hub" class="back-btn">◀ Menu</a>

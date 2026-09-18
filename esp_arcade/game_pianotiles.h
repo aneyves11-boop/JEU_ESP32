@@ -34,7 +34,7 @@ const char GAME_PIANOTILES_HTML[] PROGMEM = R"rawliteral(
     .p-key { height: 50px; background: rgba(0,243,255,0.15); border: 1px solid var(--cyan); border-radius: 10px; color: #fff; font-weight: 900; font-size: 1.1rem; }
     .p-key:active { background: var(--cyan); color: #000; }
   </style>
-</head>
+<script src="/pause.js"></script></head>
 <body>
   <header>
     <a href="/hub" class="btn-back">◀ Menu</a>

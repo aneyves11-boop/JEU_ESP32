@@ -11,7 +11,7 @@ header{width:100%;max-width:330px;display:flex;justify-content:space-between;mar
 .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;width:330px;max-width:92vw;}
 .btn{aspect-ratio:1;border-radius:10px;border:1px solid #00f3ff;background:#0d1120;cursor:pointer;transition:all 0.15s;}
 .btn.on{background:#ffe600;box-shadow:0 0 15px #ffe600;border-color:#ffe600;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Coups: <span id="s">0</span></span></header>
 <div style="color:#8b9bb4;font-size:0.85rem;margin-bottom:12px;text-align:center;">Éteins toutes les lampes jaunes !</div>
 <div class="grid" id="g"></div>
@@ -47,7 +47,7 @@ header{width:100%;max-width:330px;display:flex;justify-content:space-between;mar
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:330px;max-width:92vw;}
 .t{aspect-ratio:1;background:#171d33;border:1px solid #00f3ff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:bold;color:#00f3ff;cursor:pointer;}
 .t.empty{background:transparent;border:none;cursor:default;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Coups: <span id="s">0</span></span></header>
 <div class="grid" id="g"></div>
 <button onclick="init()" style="margin-top:16px;width:330px;height:46px;background:#00f3ff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;">MÉLANGER 🔀</button>
@@ -86,7 +86,7 @@ header{width:100%;max-width:320px;display:flex;justify-content:space-between;mar
 canvas{border:2px solid #00f3ff;border-radius:10px;width:320px;height:320px;max-width:92vw;}
 .pal{display:flex;gap:8px;width:100%;max-width:320px;margin-top:12px;}
 .p-btn{flex:1;height:45px;border-radius:8px;border:2px solid #fff;cursor:pointer;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Coups restants: <span id="s">22</span></span></header>
 <canvas id="c" width="300" height="300"></canvas>
 <div class="pal" id="pal"></div>
@@ -130,7 +130,7 @@ header{width:100%;max-width:320px;display:flex;justify-content:space-between;mar
 .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;width:320px;max-width:92vw;}
 .gem{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;cursor:pointer;background:rgba(255,255,255,0.08);}
 .gem.sel{border:2px solid #fff;box-shadow:0 0 10px #00f3ff;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Score: <span id="s">0</span></span></header>
 <div class="grid" id="g"></div>
 <script>
@@ -175,7 +175,7 @@ const char GAME_CODEBREAKER_HTML[] PROGMEM = R"rawliteral(
 header{width:100%;max-width:320px;display:flex;justify-content:space-between;margin-bottom:10px;font-weight:bold;}
 .slot{display:flex;gap:8px;margin-bottom:8px;}
 .peg{width:40px;height:40px;border-radius:50%;background:#222;border:2px solid #444;cursor:pointer;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Essais: <span id="s">10</span></span></header>
 <div style="font-size:0.85rem;color:#8b9bb4;margin-bottom:12px;">Devine la combinaison de 4 couleurs secrètes !</div>
 <div class="slot" id="guess"></div>
@@ -215,7 +215,7 @@ const char GAME_SUDOKU_HTML[] PROGMEM = R"rawliteral(
 header{width:100%;max-width:300px;display:flex;justify-content:space-between;margin-bottom:12px;font-weight:bold;}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:280px;}
 .c{aspect-ratio:1;background:#171d33;border:2px solid #00f3ff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:bold;color:#ffe600;cursor:pointer;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Sudoku 4x4</span></header>
 <div class="grid" id="g"></div>
 <button onclick="check()" style="margin-top:16px;width:280px;height:45px;background:#00f3ff;border:none;border-radius:10px;font-weight:bold;">VÉRIFIER LA GRILLE ✔</button>

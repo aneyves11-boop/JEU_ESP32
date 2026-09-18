@@ -11,7 +11,7 @@ header{width:100%;max-width:340px;display:flex;justify-content:space-between;mar
 canvas{border:2px solid #00ff66;border-radius:12px;background:#051408;width:340px;height:400px;max-width:92vw;}
 .ctrl{display:flex;gap:8px;width:340px;margin-top:8px;}
 button{flex:1;height:46px;background:rgba(255,255,255,0.1);border:1px solid #00ff66;color:#fff;border-radius:10px;font-weight:bold;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Buts: <span id="s">0</span></span></header>
 <canvas id="c" width="340" height="400"></canvas>
 <div class="ctrl"><button onclick="shoot(-1)">◀ GAUCHE</button><button onclick="shoot(0)">▲ CENTRE</button><button onclick="shoot(1)">DROITE ▶</button></div>
@@ -50,7 +50,7 @@ const char GAME_BASKET_HTML[] PROGMEM = R"rawliteral(
 header{width:100%;max-width:340px;display:flex;justify-content:space-between;margin-bottom:8px;font-weight:bold;}
 canvas{border:2px solid #ff7700;border-radius:12px;background:#060810;width:340px;height:400px;max-width:92vw;}
 button{width:340px;height:46px;background:#ff7700;border:none;border-radius:10px;font-weight:bold;margin-top:8px;font-size:1rem;color:#fff;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Paniers: <span id="s">0</span></span></header>
 <canvas id="c" width="340" height="400"></canvas>
 <button onclick="shoot()">LANCER LE BALLON 🏀</button>
@@ -86,7 +86,7 @@ header{width:100%;max-width:340px;display:flex;justify-content:space-between;mar
 .ctrl{display:flex;gap:12px;width:330px;margin-top:16px;}
 button{flex:1;height:55px;background:rgba(255,255,255,0.1);border:2px solid #00f3ff;color:#fff;border-radius:12px;font-size:1.4rem;}
 button:active{background:#00f3ff;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Chrono: <span id="t">0.00</span>s</span></header>
 <div class="track"><div class="runner" id="r" style="left:10px;">🏃</div></div>
 <div class="ctrl"><button onclick="step('L')">◀ G</button><button onclick="step('R')">D ▶</button></div>
@@ -106,7 +106,7 @@ header{width:100%;max-width:340px;display:flex;justify-content:space-between;mar
 canvas{border:2px solid #00f3ff;border-radius:12px;background:#eef6ff;width:340px;height:400px;max-width:92vw;}
 .ctrl{display:flex;gap:8px;width:340px;margin-top:8px;}
 button{flex:1;height:46px;background:rgba(255,255,255,0.1);border:1px solid #00f3ff;color:#fff;border-radius:10px;font-weight:bold;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Portes: <span id="s">0</span></span></header>
 <canvas id="c" width="340" height="400"></canvas>
 <div class="ctrl"><button onclick="px-=25">◀ GAUCHE</button><button onclick="px+=25">DROITE ▶</button></div>
@@ -135,7 +135,7 @@ const char GAME_ARCHERY_HTML[] PROGMEM = R"rawliteral(
 header{width:100%;max-width:340px;display:flex;justify-content:space-between;margin-bottom:8px;font-weight:bold;}
 canvas{border:2px solid #ffe600;border-radius:12px;background:#05070f;width:340px;height:400px;max-width:92vw;}
 button{width:340px;height:48px;background:#ffe600;color:#000;border:none;border-radius:10px;font-weight:bold;margin-top:8px;font-size:1.1rem;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Score: <span id="s">0</span></span></header>
 <canvas id="c" width="340" height="400"></canvas>
 <button onclick="shoot()">DÉCOCHER LA FLÈCHE 🏹</button>
@@ -167,7 +167,7 @@ const char GAME_AIRHOCKEY_HTML[] PROGMEM = R"rawliteral(
 <style>body{background:#090b12;color:#f0f4fc;font-family:sans-serif;margin:0;display:flex;flex-direction:column;align-items:center;padding:10px;}
 header{width:100%;max-width:340px;display:flex;justify-content:space-between;margin-bottom:8px;font-weight:bold;}
 canvas{border:2px solid #00f3ff;border-radius:12px;background:#070b18;width:340px;height:400px;max-width:92vw;}
-</style></head><body>
+</style><script src="/pause.js"></script></head><body>
 <header><a href="/hub" style="color:#00f3ff;text-decoration:none;">◀ Menu</a><span>Toi: <span id="ps">0</span> | IA: <span id="as">0</span></span></header>
 <canvas id="c" width="340" height="400"></canvas>
 <script>

@@ -68,6 +68,54 @@
 #include "game_fps3d.h"
 #include "game_mp_undercover.h"
 
+// Contrôleur Universel de Pause pour les Jeux Solo
+#include "arcade_pause.h"
+
+// --- SESSIONS & AUTHENTIFICATION STRICTE (ESP32 ARCADE) ---
+#define MAX_SESSIONS 8
+struct Session {
+  IPAddress ip;
+  bool authenticated;
+  unsigned long lastSeen;
+};
+Session sessions[MAX_SESSIONS];
+
+bool isIpAuthenticated(IPAddress ip) {
+  if (ip == IPAddress(0,0,0,0)) return false;
+  for (int i = 0; i < MAX_SESSIONS; i++) {
+    if (sessions[i].ip == ip && sessions[i].authenticated) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void setIpAuthenticated(IPAddress ip, bool auth) {
+  if (ip == IPAddress(0,0,0,0)) return;
+  for (int i = 0; i < MAX_SESSIONS; i++) {
+    if (sessions[i].ip == ip) {
+      sessions[i].authenticated = auth;
+      sessions[i].lastSeen = millis();
+      return;
+    }
+  }
+  for (int i = 0; i < MAX_SESSIONS; i++) {
+    if (sessions[i].ip == IPAddress(0,0,0,0)) {
+      sessions[i].ip = ip;
+      sessions[i].authenticated = auth;
+      sessions[i].lastSeen = millis();
+      return;
+    }
+  }
+  int oldest = 0;
+  for (int i = 1; i < MAX_SESSIONS; i++) {
+    if (sessions[i].lastSeen < sessions[oldest].lastSeen) oldest = i;
+  }
+  sessions[oldest].ip = ip;
+  sessions[oldest].authenticated = auth;
+  sessions[oldest].lastSeen = millis();
+}
+
 // Mode Multijoueur 1v1 (Serveur WebSocket & Packs de Jeux)
 #include "mp_server.h"
 #include "game_pack_multiplayer.h"
@@ -86,14 +134,6 @@ IPAddress netMsk(255, 255, 255, 0);
 
 DNSServer dnsServer;
 WebServer server(80);
-
-#define MAX_SESSIONS 8
-struct Session {
-  IPAddress ip;
-  bool authenticated;
-  unsigned long lastSeen;
-};
-Session sessions[MAX_SESSIONS];
 
 int getSessionIndex(IPAddress ip) {
   for (int i = 0; i < MAX_SESSIONS; i++) {
@@ -120,16 +160,16 @@ int getSessionIndex(IPAddress ip) {
 bool isClientAuthenticated() {
   if (server.hasHeader("Cookie")) {
     String cookie = server.header("Cookie");
-    if (cookie.indexOf("arcade_auth=1") >= 0) return true;
+    if (cookie.indexOf("arcade_auth=1") >= 0) {
+      setIpAuthenticated(server.client().remoteIP(), true);
+      return true;
+    }
   }
-  int idx = getSessionIndex(server.client().remoteIP());
-  return sessions[idx].authenticated;
+  return isIpAuthenticated(server.client().remoteIP());
 }
 
 void setClientAuthenticated(bool auth) {
-  int idx = getSessionIndex(server.client().remoteIP());
-  sessions[idx].authenticated = auth;
-  sessions[idx].lastSeen = millis();
+  setIpAuthenticated(server.client().remoteIP(), auth);
 }
 
 void handleLoginPage(bool showError = false) {

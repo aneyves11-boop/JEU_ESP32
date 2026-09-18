@@ -40,7 +40,7 @@ const char GAME_MINES_HTML[] PROGMEM = R"rawliteral(
     .btn-mode { flex: 1; height: 48px; background: rgba(255,255,255,0.08); border: 1px solid var(--cyan); border-radius: 10px; color: #fff; font-weight: bold; font-size: 0.95rem; cursor: pointer; }
     .btn-mode.active { background: linear-gradient(135deg, var(--cyan), #0077ff); color: #000; font-weight: 900; }
   </style>
-</head>
+<script src="/pause.js"></script></head>
 <body>
   <header>
     <a href="/hub" class="btn-back">◀ Menu</a>
