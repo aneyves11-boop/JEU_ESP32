@@ -64,7 +64,11 @@
 #include "game_pack_precision.h"
 #include "game_pack_retro.h"
 
-// Mode Multijoueur 1v1 (Serveur WebSocket & Pack 7 Jeux)
+// 3D FPS WebGL & Multijoueur 3-8 Joueurs
+#include "game_fps3d.h"
+#include "game_mp_undercover.h"
+
+// Mode Multijoueur 1v1 (Serveur WebSocket & Packs de Jeux)
 #include "mp_server.h"
 #include "game_pack_multiplayer.h"
 
@@ -362,7 +366,13 @@ void setup() {
   ROUTE_GAME("/game_lunar", GAME_LUNAR_HTML);
   ROUTE_GAME("/game_cannon", GAME_CANNON_HTML);
 
-  // --- 15 JEUX MULTIJOUEUR 1V1 TEMPS RÉEL ---
+  // --- NOUVEAUTÉ : FPS 3D WEBGL ---
+  ROUTE_GAME("/game_fps3d", GAME_FPS3D_HTML);
+
+  // --- 15 JEUX MULTIJOUEUR 1V1 TEMPS RÉEL + UNDERCOVER 3-8 JOUEURS ---
+  // Salle de Déduction Multijoueur (3 à 8 Joueurs)
+  ROUTE_GAME("/mp_undercover", MP_UNDERCOVER_HTML);
+
   // Pack 1 : 5 Jeux de Réflexion & Stratégie
   ROUTE_GAME("/mp_connect4", MP_CONNECT4_HTML);
   ROUTE_GAME("/mp_naval", MP_NAVAL_HTML);

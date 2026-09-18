@@ -110,10 +110,11 @@ struct MpPeer {
   bool handshaken;
   String handshakeBuf;
   String pseudo;
-  String state;      // "lobby", "waiting_game", "in_game"
+  String state;      // "lobby", "waiting_game", "in_game", "in_room"
   int opponentId;    // index de l'adversaire jumelé (-1 si aucun)
-  int role;          // 1 (J1) ou 2 (J2)
+  int role;          // 1 (J1) ou 2 (J2) ou slot dans la salle
   String game;       // nom du jeu en cours
+  String roomId;     // Salle de jeu multijoueur de groupe (ex: "undercover")
   unsigned long lastSeen;
 };
 
@@ -140,10 +141,48 @@ static void broadcastPlayerList() {
   }
 }
 
+// Diffusion de la liste des joueurs d'une salle de groupe (ex: Undercover)
+static void broadcastRoomState(const String &roomId) {
+  if (roomId.length() == 0) return;
+  String json = "{\"t\":\"room_state\",\"room\":\"" + roomId + "\",\"players\":[";
+  bool first = true;
+  int hostIdx = -1;
+  for (int i = 0; i < MAX_WS_CLIENTS; i++) {
+    if (mpPeers[i].active && mpPeers[i].handshaken && mpPeers[i].roomId == roomId) {
+      if (hostIdx < 0) hostIdx = i;
+      if (!first) json += ",";
+      json += "{\"id\":" + String(i) + ",\"name\":\"" + mpPeers[i].pseudo + "\",\"host\":" + (hostIdx == i ? "true" : "false") + "}";
+      first = false;
+    }
+  }
+  json += "]}";
+
+  for (int i = 0; i < MAX_WS_CLIENTS; i++) {
+    if (mpPeers[i].active && mpPeers[i].handshaken && mpPeers[i].roomId == roomId) {
+      wsSendText(mpPeers[i].client, json);
+    }
+  }
+}
+
+// Diffusion d'un message à tous les membres d'une même salle
+static void broadcastToRoom(const String &roomId, const String &msg, int senderIdx = -1) {
+  if (roomId.length() == 0) return;
+  for (int i = 0; i < MAX_WS_CLIENTS; i++) {
+    if (mpPeers[i].active && mpPeers[i].handshaken && mpPeers[i].roomId == roomId) {
+      if (i != senderIdx) {
+        wsSendText(mpPeers[i].client, msg);
+      }
+    }
+  }
+}
+
 static void closePeer(int idx) {
   if (idx < 0 || idx >= MAX_WS_CLIENTS) return;
   if (mpPeers[idx].active) {
     int opp = mpPeers[idx].opponentId;
+    String room = mpPeers[idx].roomId;
+    String pseudo = mpPeers[idx].pseudo;
+
     mpPeers[idx].client.stop();
     mpPeers[idx].active = false;
     mpPeers[idx].handshaken = false;
@@ -153,6 +192,7 @@ static void closePeer(int idx) {
     mpPeers[idx].opponentId = -1;
     mpPeers[idx].role = 0;
     mpPeers[idx].game = "";
+    mpPeers[idx].roomId = "";
 
     if (opp >= 0 && opp < MAX_WS_CLIENTS && mpPeers[opp].active) {
       wsSendText(mpPeers[opp].client, "{\"t\":\"opp_left\"}");
@@ -160,6 +200,11 @@ static void closePeer(int idx) {
       mpPeers[opp].opponentId = -1;
       mpPeers[opp].role = 0;
       mpPeers[opp].game = "";
+    }
+
+    if (room.length() > 0) {
+      broadcastToRoom(room, "{\"t\":\"player_left\",\"id\":" + String(idx) + ",\"name\":\"" + pseudo + "\"}");
+      broadcastRoomState(room);
     }
 
     broadcastPlayerList();
@@ -329,7 +374,54 @@ static void processWsMessage(int idx, const String &msg) {
     return;
   }
 
-  // 6. En cours de jeu : relayer instantanément à l'adversaire jumelé
+  // 6. Gestion des salles de groupe (3 à 8 joueurs, ex: Undercover)
+  if (msg.indexOf("\"room_join\"") >= 0) {
+    String room = "undercover";
+    int rPos = msg.indexOf("\"room\":");
+    if (rPos >= 0) {
+      int sQ = msg.indexOf("\"", rPos + 7);
+      int eQ = msg.indexOf("\"", sQ + 1);
+      if (sQ >= 0 && eQ > sQ) room = msg.substring(sQ + 1, eQ);
+    }
+    int nPos = msg.indexOf("\"name\":");
+    if (nPos >= 0) {
+      int sQ = msg.indexOf("\"", nPos + 7);
+      int eQ = msg.indexOf("\"", sQ + 1);
+      if (sQ >= 0 && eQ > sQ) mpPeers[idx].pseudo = msg.substring(sQ + 1, eQ);
+    }
+    if (mpPeers[idx].pseudo.length() == 0) mpPeers[idx].pseudo = "Joueur_" + String(idx + 1);
+    
+    mpPeers[idx].roomId = room;
+    mpPeers[idx].state = "in_room";
+    mpPeers[idx].opponentId = -1;
+    mpPeers[idx].game = room;
+    
+    wsSendText(mpPeers[idx].client, "{\"t\":\"room_joined\",\"my_id\":" + String(idx) + ",\"room\":\"" + room + "\"}");
+    broadcastRoomState(room);
+    broadcastPlayerList();
+    return;
+  }
+
+  if (msg.indexOf("\"room_leave\"") >= 0) {
+    String room = mpPeers[idx].roomId;
+    mpPeers[idx].roomId = "";
+    mpPeers[idx].state = "lobby";
+    mpPeers[idx].game = "";
+    if (room.length() > 0) {
+      broadcastToRoom(room, "{\"t\":\"player_left\",\"id\":" + String(idx) + ",\"name\":\"" + mpPeers[idx].pseudo + "\"}");
+      broadcastRoomState(room);
+    }
+    broadcastPlayerList();
+    return;
+  }
+
+  // 7. Si le joueur est dans une salle de groupe : relayer le message à toute la salle
+  if (mpPeers[idx].roomId.length() > 0) {
+    broadcastToRoom(mpPeers[idx].roomId, msg, idx);
+    return;
+  }
+
+  // 8. En cours de jeu 1v1 : relayer instantanément à l'adversaire jumelé
   int opp = mpPeers[idx].opponentId;
   if (opp >= 0 && opp < MAX_WS_CLIENTS && mpPeers[opp].active && mpPeers[opp].handshaken) {
     wsSendText(mpPeers[opp].client, msg);

@@ -246,18 +246,33 @@ const char HUB_HTML[] PROGMEM = R"rawliteral(
   <main class="container">
     <div class="hero">
       <h1 id="hero-title">🎮 ESP32 ARCADE STATION</h1>
-      <p id="hero-sub">50 Jeux Solo & 15 Jeux Multijoueur 1v1 en Temps Réel !</p>
+      <p id="hero-sub">50+ Jeux Solo, FPS 3D WebGL & Multijoueur 1v1 / 3-8 Joueurs !</p>
       
       <div class="mode-nav">
-        <button class="btn-mode active" id="tab-solo" onclick="setMode('solo')">🕹️ Solo & 15 Duels IA</button>
-        <button class="btn-mode" id="tab-mp" onclick="setMode('mp')">⚔️ Salon Multijoueur (15 Jeux)</button>
+        <button class="btn-mode active" id="tab-solo" onclick="setMode('solo')">🕹️ Solo & FPS 3D</button>
+        <button class="btn-mode" id="tab-mp" onclick="setMode('mp')">⚔️ Salon Multijoueur (1v1 & 3-8J)</button>
       </div>
 
       <input type="text" id="search" class="search-box" placeholder="🔍 Rechercher un jeu solo ou duel IA..." oninput="filterGames()">
     </div>
 
-    <!-- VUE 1 : 50 JEUX SOLO -->
+    <!-- VUE 1 : JEUX SOLO & 3D -->
     <div class="grid" id="game-grid">
+      <!-- NOUVEAUTÉ VEDETTE : FPS 3D WEBGL -->
+      <a href="/game_fps3d" class="game-card" data-title="cyber fps 3d webgl retro doom wolfenstein shooter" style="border-color:var(--cyan); box-shadow: 0 0 20px rgba(0,243,255,0.3); grid-column: 1 / -1;">
+        <div class="card-top">
+          <div class="card-icon" style="color:var(--cyan); border-color:var(--cyan); font-size:1.9rem; background:rgba(0,243,255,0.15);">🕶️</div>
+          <div class="card-info">
+            <h2 style="color:var(--cyan); font-size:1.15rem;">🔥 Cyber-FPS 3D (Moteur WebGL 60 FPS)</h2>
+            <p>FPS 3D Rétro style Doom / Wolfenstein 3D. Drones ennemis, blaster plasma, radar & 60 FPS !</p>
+          </div>
+        </div>
+        <div class="card-bot">
+          <span style="color:var(--cyan); font-weight:bold;">🕶️ Moteur 3D Temps Réel</span>
+          <span class="play-pill" style="background:var(--cyan); color:#000;">Lancer la Mission 3D ▶</span>
+        </div>
+      </a>
+
       <!-- 1-12 LES 12 ORIGINAUX -->
       <a href="/game_snake" class="game-card" data-title="snake retro"><div class="card-top"><div class="card-icon">🐍</div><div class="card-info"><h2>1. Snake Retro</h2><p>Mange les orbes néon et évite les murs.</p></div></div><div class="card-bot"><span>🏆 Arcade</span><span class="play-pill">Jouer ▶</span></div></a>
       <a href="/game_flappy" class="game-card" data-title="flappy drone"><div class="card-top"><div class="card-icon">🐦</div><div class="card-info"><h2>2. Flappy Drone</h2><p>Fais planer le drone entre les pylônes.</p></div></div><div class="card-bot"><span>🏆 Arcade</span><span class="play-pill">Jouer ▶</span></div></a>
@@ -372,13 +387,39 @@ const char HUB_HTML[] PROGMEM = R"rawliteral(
         </div>
       </div>
 
-      <!-- CATALOGUE DES 15 JEUX DISPONIBLES EN MULTIJOUEUR (3 CATÉGORIES) -->
+      <!-- CATALOGUE DES JEUX DISPONIBLES EN MULTIJOUEUR -->
       <div style="margin-top:14px; display:flex; flex-direction:column; gap:16px;">
+
+        <!-- SALLE DE GROUPE : 3 À 8 JOUEURS -->
+        <div style="background:linear-gradient(145deg, rgba(168,85,247,0.18), rgba(0,243,255,0.12)); border:2px solid var(--purple); border-radius:18px; padding:16px; box-shadow: 0 0 25px rgba(168,85,247,0.25);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <h3 style="font-size:1.1rem; color:#fff; display:flex; align-items:center; gap:8px;">
+              👥 SALLE DE GROUPE MULTIJOUEUR (3 À 8 JOUEURS)
+            </h3>
+            <span style="background:var(--purple); color:#fff; font-size:0.75rem; font-weight:900; padding:3px 10px; border-radius:12px;">3-8 JOUEURS</span>
+          </div>
+          <p style="font-size:0.85rem; color:var(--dim); margin-bottom:12px;">
+            Jouez tous ensemble sur vos smartphones connectés au Wi-Fi de l'ESP32 !
+          </p>
+          <a href="/mp_undercover" class="game-card" style="border-color:var(--purple); background:rgba(18,22,38,0.95); text-decoration:none;">
+            <div class="card-top">
+              <div class="card-icon" style="color:var(--purple); border-color:var(--purple); font-size:1.8rem; background:rgba(168,85,247,0.2);">🕵️</div>
+              <div class="card-info">
+                <h2 style="color:#fff;">🕵️ Undercover : Déduction & Bluff</h2>
+                <p>Civils vs Undercovers vs Mr. White. Rôles secrets, votes en direct et devinettes !</p>
+              </div>
+            </div>
+            <div class="card-bot">
+              <span style="color:var(--purple); font-weight:800;">👥 3 à 8 Joueurs Wi-Fi</span>
+              <span class="play-pill" style="background:var(--purple); color:#fff;">Rejoindre la Salle ▶</span>
+            </div>
+          </a>
+        </div>
 
         <!-- PACK 1: REFLEXION -->
         <div>
           <h3 style="font-size:1.05rem; color:#00f3ff; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
-            🧠 5 JEUX DE RÉFLEXION & STRATÉGIE
+            🧠 5 JEUX DE RÉFLEXION & STRATÉGIE (1v1)
           </h3>
           <div class="grid">
             <div class="game-card"><div class="card-top"><div class="card-icon" style="color:#ffe600;border-color:#ffe600;">🔴</div><div class="card-info"><h2>1. Puissance 4</h2><p>Alignez 4 jetons sur grille 7x6.</p></div></div><div class="card-bot"><span style="color:#ffe600;">1v1 Réseau</span></div></div>
