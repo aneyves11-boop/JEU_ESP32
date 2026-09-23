@@ -273,6 +273,22 @@ const char HUB_HTML[] PROGMEM = R"rawliteral(
         </div>
       </a>
 
+      <!-- NOUVEAUTÉ VEDETTE : MOTS CROISÉS CYBER -->
+      <a href="/game_motscroises" class="game-card" data-title="mots croises cyber mots crossword puzzle lettres vocabulaire retro grille" style="border-color:#ffe600; box-shadow: 0 0 20px rgba(255,230,0,0.3); grid-column: 1 / -1;">
+        <div class="card-top">
+          <div class="card-icon" style="color:#ffe600; border-color:#ffe600; font-size:1.9rem; background:rgba(255,230,0,0.15);">📰</div>
+          <div class="card-info">
+            <h2 style="color:#ffe600; font-size:1.15rem;">✨ Mots Croisés Cyber (Grilles Thématiques Françaises)</h2>
+            <p>Mini-mots croisés tactiles avec indices dynamiques, clavier cyber, chrono et 6 grilles complètes !</p>
+          </div>
+        </div>
+        <div class="card-bot">
+          <span style="color:#ffe600; font-weight:bold;">📰 Mots & Vocabulaire</span>
+          <span class="play-pill" style="background:#ffe600; color:#000;">Jouer aux Mots Croisés ▶</span>
+        </div>
+      </a>
+
+
       <!-- 1-12 LES 12 ORIGINAUX -->
       <a href="/game_snake" class="game-card" data-title="snake retro"><div class="card-top"><div class="card-icon">🐍</div><div class="card-info"><h2>1. Snake Retro</h2><p>Mange les orbes néon et évite les murs.</p></div></div><div class="card-bot"><span>🏆 Arcade</span><span class="play-pill">Jouer ▶</span></div></a>
       <a href="/game_flappy" class="game-card" data-title="flappy drone"><div class="card-top"><div class="card-icon">🐦</div><div class="card-info"><h2>2. Flappy Drone</h2><p>Fais planer le drone entre les pylônes.</p></div></div><div class="card-bot"><span>🏆 Arcade</span><span class="play-pill">Jouer ▶</span></div></a>

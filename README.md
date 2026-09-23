@@ -1,4 +1,4 @@
-# 🕹️ ESP32 Arcade Station : 50+ Jeux Solo, FPS 3D & Multijoueur (1v1 & 3-8 Joueurs)
+# 🕹️ ESP32 Arcade Station : 52 Jeux Solo, Mots Croisés, FPS 3D & Multijoueur (1v1 & 3-8 Joueurs)
 
 Plateforme de jeux d'arcade rétro, FPS 3D et multijoueur en temps réel hébergée **100% hors-ligne** dans la mémoire Flash d'un microcontrôleur **ESP32** (ESP32-WROOM-DA ou ESP32 Dev Module).
 
@@ -18,6 +18,11 @@ Zéro bibliothèque tierce requise : utilise uniquement le core Arduino officiel
   - **Rythme & Réflexes :** Beat Tap, Simon Mémoire, Note Drop, Tempo Tap, Guitar Hero Pocket.
   - **Précision & Adresse :** Fil Électrique, Fruit Slice, Coin Jar, Grappin Swing, Balance Ball.
   - **Rétro Iconique :** Tetris Cyber, Pac-Maze, Lunar Lander, Cannon Siege.
+
+- **📰 Mots Croisés Cyber (Grilles Thématiques Françaises) :**
+  - Mini-mots croisés ergonomiques tactiles optimisés pour smartphones et PC.
+  - 6 grilles complètes en français : *Rétro Arcade*, *Cyber & Tech*, *Espace & Énergie*, *Océan & Mystère*, *Forêt & Aventure*, *Carré Magique Express*.
+  - Clavier virtuel Cyber intégré, navigation tactile fluide (sélection automatique du mot horizontal/vertical par tap), vérification instantanée, indices et chronomètre avec sauvegarde des records.
 
 - **🕶️ Cyber-FPS 3D Rétro (Moteur WebGL 60 FPS) :**
   - Moteur 3D temps réel fluide sans téléchargement externe.
