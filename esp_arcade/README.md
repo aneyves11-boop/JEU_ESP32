@@ -1,4 +1,4 @@
-# 🕹️ ESP32 Arcade Station : 52 Jeux Solo, Mots Croisés, FPS 3D & Multijoueur (1v1 & 3-8 Joueurs)
+# 🕹️ ESP32 Arcade Station : 50+ Jeux Solo, Devinettes 500Q, Mots Croisés 100N & Multijoueur (1v1 & 3-8 Joueurs)
 
 Plateforme de jeux d'arcade rétro, FPS 3D et multijoueur en temps réel hébergée **100% hors-ligne** dans la mémoire Flash d'un microcontrôleur **ESP32** (ESP32-WROOM-DA ou ESP32 Dev Module).
 
@@ -27,10 +27,6 @@ Zéro bibliothèque tierce requise : utilise uniquement le core Arduino officiel
   - Mini-mots croisés ergonomiques tactiles optimisés pour smartphones et PC.
   - 100 grilles complètes et indépendantes en français avec sélecteur de niveau 1 à 100, progression sauvegardée, étoiles et navigation rapide.
   - Clavier virtuel Cyber intégré, navigation tactile fluide (sélection automatique du mot horizontal/vertical par tap), vérification instantanée, indices et chronomètre avec sauvegarde des records.
-
-- **🕶️ Cyber-FPS 3D Rétro (Moteur WebGL 60 FPS) :**
-  - Moteur 3D temps réel fluide sans téléchargement externe.
-  - Déplacement immersif, tir blaster plasma, drones ennemis, radar minimap et effets sonores rétro synthétisés Web Audio.
 
 - **🤖 15 Jeux de Duel Solo vs IA :**
   - Mode entraînement solo jouable hors-ligne contre un bot intelligent avec niveaux de difficulté adaptés sur l'ensemble des 15 jeux multijoueurs.

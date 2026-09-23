@@ -246,7 +246,7 @@ const char HUB_HTML[] PROGMEM = R"rawliteral(
   <main class="container">
     <div class="hero">
       <h1 id="hero-title">🎮 ESP32 ARCADE STATION</h1>
-      <p id="hero-sub">50+ Jeux Solo, FPS 3D WebGL & Multijoueur 1v1 / 3-8 Joueurs !</p>
+      <p id="hero-sub">50+ Jeux Solo, Devinettes (500Q), Mots Croisés (100 Niveaux) & Multijoueur !</p>
       
       <div class="mode-nav">
         <button class="btn-mode active" id="tab-solo" onclick="setMode('solo')">🕹️ Solo & FPS 3D</button>
@@ -258,21 +258,6 @@ const char HUB_HTML[] PROGMEM = R"rawliteral(
 
     <!-- VUE 1 : JEUX SOLO & 3D -->
     <div class="grid" id="game-grid">
-      <!-- NOUVEAUTÉ VEDETTE : FPS 3D WEBGL -->
-      <a href="/game_fps3d" class="game-card" data-title="cyber fps 3d webgl retro doom wolfenstein shooter" style="border-color:var(--cyan); box-shadow: 0 0 20px rgba(0,243,255,0.3); grid-column: 1 / -1;">
-        <div class="card-top">
-          <div class="card-icon" style="color:var(--cyan); border-color:var(--cyan); font-size:1.9rem; background:rgba(0,243,255,0.15);">🕶️</div>
-          <div class="card-info">
-            <h2 style="color:var(--cyan); font-size:1.15rem;">🔥 Cyber-FPS 3D (Moteur WebGL 60 FPS)</h2>
-            <p>FPS 3D Rétro style Doom / Wolfenstein 3D. Drones ennemis, blaster plasma, radar & 60 FPS !</p>
-          </div>
-        </div>
-        <div class="card-bot">
-          <span style="color:var(--cyan); font-weight:bold;">🕶️ Moteur 3D Temps Réel</span>
-          <span class="play-pill" style="background:var(--cyan); color:#000;">Lancer la Mission 3D ▶</span>
-        </div>
-      </a>
-
       <!-- NOUVEAUTÉ VEDETTE : MOTS CROISÉS CYBER -->
       <a href="/game_motscroises" class="game-card" data-title="mots croises cyber mots crossword puzzle lettres vocabulaire retro grille" style="border-color:#ffe600; box-shadow: 0 0 20px rgba(255,230,0,0.3); grid-column: 1 / -1;">
         <div class="card-top">

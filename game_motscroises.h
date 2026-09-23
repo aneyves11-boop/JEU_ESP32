@@ -19,19 +19,18 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     --pink: #ff0055;
     --yellow: #ffe600;
     --green: #00ff66;
-    --purple: #a855f7;
     --dim: #8b9bb4;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body {
     background: var(--bg);
     color: #f0f4fc;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    padding: 10px 10px 30px;
+    padding: 8px 10px 24px;
     touch-action: manipulation;
   }
   header {
@@ -47,7 +46,7 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     color: var(--cyan);
     text-decoration: none;
     font-weight: 700;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     padding: 6px 10px;
     border-radius: 8px;
     border: 1px solid rgba(0,243,255,0.3);
@@ -64,9 +63,9 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     border: 1px solid var(--card-border);
     color: var(--cyan);
     font-weight: bold;
-    font-size: 0.9rem;
-    width: 32px;
-    height: 32px;
+    font-size: 0.85rem;
+    width: 30px;
+    height: 30px;
     border-radius: 8px;
     cursor: pointer;
     display: flex;
@@ -78,9 +77,9 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     background: linear-gradient(135deg, rgba(20,26,48,0.9), rgba(11,15,28,0.9));
     border: 1px solid var(--cyan);
     color: #fff;
-    padding: 6px 10px;
+    padding: 5px 10px;
     border-radius: 8px;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 800;
     cursor: pointer;
     display: flex;
@@ -92,10 +91,10 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     background: rgba(255,230,0,0.1);
     border: 1px solid rgba(255,230,0,0.3);
     color: var(--yellow);
-    padding: 6px 8px;
+    padding: 5px 8px;
     border-radius: 8px;
     font-family: monospace;
-    font-size: 0.92rem;
+    font-size: 0.88rem;
     font-weight: bold;
     white-space: nowrap;
   }
@@ -116,7 +115,7 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     box-shadow: 0 4px 15px rgba(0,0,0,0.4);
   }
   .clue-meta {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     color: var(--cyan);
     text-transform: uppercase;
     font-weight: 800;
@@ -124,41 +123,42 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     margin-bottom: 2px;
   }
   .clue-text {
-    font-size: 0.92rem;
+    font-size: 0.88rem;
     color: #fff;
     font-weight: 600;
     line-height: 1.25;
   }
   .board-container {
     width: 100%;
-    max-width: 360px;
+    max-width: 340px;
     background: rgba(14, 18, 34, 0.8);
     border: 1px solid rgba(0, 243, 255, 0.2);
-    border-radius: 16px;
-    padding: 10px;
+    border-radius: 14px;
+    padding: 8px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.6);
     margin-bottom: 8px;
   }
   .cw-grid {
     display: grid;
-    gap: 5px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
     width: 100%;
   }
   .cw-cell {
     aspect-ratio: 1;
     background: #151b30;
     border: 1px solid rgba(0, 243, 255, 0.25);
-    border-radius: 8px;
+    border-radius: 6px;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.35rem;
+    font-size: 1.25rem;
     font-weight: 900;
     color: #fff;
     cursor: pointer;
     user-select: none;
-    transition: all 0.12s ease;
+    transition: all 0.1s ease;
   }
   .cw-cell.black {
     background: #080a12;
@@ -168,8 +168,8 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
   .cw-cell .cell-num {
     position: absolute;
     top: 2px;
-    left: 4px;
-    font-size: 0.62rem;
+    left: 3px;
+    font-size: 0.6rem;
     font-weight: 700;
     color: var(--dim);
     line-height: 1;
@@ -182,7 +182,7 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
   .cw-cell.active-focus {
     background: rgba(255, 230, 0, 0.25) !important;
     border-color: var(--yellow) !important;
-    box-shadow: 0 0 14px rgba(255, 230, 0, 0.5);
+    box-shadow: 0 0 12px rgba(255, 230, 0, 0.5);
     transform: scale(1.02);
     z-index: 2;
   }
@@ -199,14 +199,14 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     width: 100%;
     max-width: 440px;
     display: flex;
-    gap: 8px;
+    gap: 6px;
     margin-bottom: 8px;
   }
   .btn-act {
     flex: 1;
-    padding: 8px 6px;
-    border-radius: 10px;
-    font-size: 0.82rem;
+    padding: 7px 4px;
+    border-radius: 8px;
+    font-size: 0.8rem;
     font-weight: 700;
     border: 1px solid rgba(255,255,255,0.15);
     background: rgba(20, 26, 48, 0.9);
@@ -216,7 +216,6 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     align-items: center;
     justify-content: center;
     gap: 4px;
-    transition: all 0.15s;
   }
   .btn-act:active { transform: scale(0.96); }
   .btn-check { border-color: var(--cyan); color: var(--cyan); }
@@ -230,19 +229,19 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     display: flex;
     flex-direction: column;
     gap: 4px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     user-select: none;
   }
   .kb-row {
     display: flex;
-    gap: 4px;
+    gap: 3px;
     justify-content: center;
     width: 100%;
   }
   .kb-key {
     flex: 1;
-    max-width: 38px;
-    height: 38px;
+    max-width: 36px;
+    height: 36px;
     background: #171d33;
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: 6px;
@@ -253,8 +252,7 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-    transition: background 0.1s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
   }
   .kb-key:active {
     background: var(--cyan);
@@ -263,8 +261,8 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
   }
   .kb-key.wide {
     flex: 1.5;
-    max-width: 58px;
-    font-size: 0.8rem;
+    max-width: 52px;
+    font-size: 0.78rem;
     background: #202742;
   }
 
@@ -274,8 +272,8 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     max-width: 440px;
     background: var(--card);
     border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 8px 12px;
+    border-radius: 10px;
+    padding: 8px 10px;
   }
   .clues-nav {
     display: flex;
@@ -289,8 +287,8 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     border: none;
     color: var(--dim);
     font-weight: 800;
-    font-size: 0.82rem;
-    padding: 4px 8px;
+    font-size: 0.8rem;
+    padding: 3px 6px;
     cursor: pointer;
   }
   .clue-tab-btn.active {
@@ -298,13 +296,13 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     border-bottom: 2px solid var(--cyan);
   }
   .clue-item {
-    font-size: 0.8rem;
-    padding: 5px 8px;
+    font-size: 0.78rem;
+    padding: 4px 6px;
     border-radius: 6px;
     cursor: pointer;
     margin-bottom: 3px;
     display: flex;
-    gap: 6px;
+    gap: 5px;
     color: #c5d1e8;
   }
   .clue-item.active {
@@ -318,7 +316,7 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     opacity: 0.6;
   }
 
-  /* Level Selector Modal (100 Levels) */
+  /* Modal 100 Niveaux */
   .modal-overlay {
     display: none;
     position: fixed;
@@ -333,25 +331,25 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
   .modal-box {
     background: linear-gradient(145deg, #131a33, #0d1224);
     border: 2px solid var(--cyan);
-    border-radius: 20px;
-    padding: 20px 16px;
-    max-width: 440px;
+    border-radius: 18px;
+    padding: 16px 14px;
+    max-width: 420px;
     width: 100%;
     max-height: 85vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 40px rgba(0,243,255,0.35);
+    box-shadow: 0 0 35px rgba(0,243,255,0.35);
   }
   .modal-head {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: 8px;
+    padding-bottom: 6px;
   }
   .modal-head h2 {
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     color: var(--cyan);
     font-weight: 900;
   }
@@ -359,7 +357,7 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     background: none;
     border: none;
     color: var(--dim);
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     cursor: pointer;
   }
   .levels-grid {
@@ -374,67 +372,59 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
     aspect-ratio: 1;
     background: #171d33;
     border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 10px;
+    border-radius: 8px;
     color: #fff;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 800;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    position: relative;
-    transition: all 0.15s;
+    transition: all 0.1s;
   }
   .lvl-btn:active { transform: scale(0.95); }
   .lvl-btn.active {
     border-color: var(--yellow) !important;
     background: rgba(255, 230, 0, 0.2) !important;
     color: var(--yellow);
-    box-shadow: 0 0 10px rgba(255,230,0,0.4);
   }
   .lvl-btn.completed {
     border-color: var(--green);
     background: rgba(0, 255, 102, 0.12);
-  }
-  .lvl-btn .star-mark {
-    font-size: 0.65rem;
-    color: var(--yellow);
-    margin-top: 1px;
   }
 
   /* Victory Modal */
   .victory-box {
     background: linear-gradient(145deg, #131a33, #0d1224);
     border: 2px solid var(--green);
-    border-radius: 20px;
-    padding: 24px;
-    max-width: 360px;
+    border-radius: 18px;
+    padding: 22px 18px;
+    max-width: 340px;
     width: 100%;
     text-align: center;
-    box-shadow: 0 0 40px rgba(0,255,102,0.4);
+    box-shadow: 0 0 35px rgba(0,255,102,0.4);
   }
   .victory-title {
-    font-size: 1.45rem;
+    font-size: 1.35rem;
     color: var(--yellow);
     font-weight: 900;
-    margin-bottom: 8px;
-    text-transform: uppercase;
+    margin-bottom: 6px;
   }
   .victory-text {
     color: var(--dim);
-    font-size: 0.9rem;
-    margin-bottom: 18px;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
   }
   .victory-btn {
     width: 100%;
     padding: 12px;
     background: linear-gradient(135deg, var(--green), #00bbff);
     border: none;
-    border-radius: 12px;
+    border-radius: 10px;
     color: #000;
     font-weight: 900;
-    font-size: 1rem;
+    font-size: 0.95rem;
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(0,255,102,0.4);
   }
@@ -447,11 +437,11 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
   <a href="/hub" class="btn-back">◀ Menu</a>
   
   <div class="lvl-nav-group">
-    <button class="btn-lvl-step" onclick="prevGrid()" title="Niveau précédent">◀</button>
-    <button class="btn-lvl-modal" onclick="openLevelModal()" title="Choisir un niveau">
+    <button class="btn-lvl-step" onclick="prevGrid()">◀</button>
+    <button class="btn-lvl-modal" onclick="openLevelModal()">
       🏆 <span id="cur-lvl-num">1</span>/100 ▾
     </button>
-    <button class="btn-lvl-step" onclick="nextGrid()" title="Niveau suivant">▶</button>
+    <button class="btn-lvl-step" onclick="nextGrid()">▶</button>
   </div>
 
   <div class="timer-pill" id="timer">00:00</div>
@@ -472,7 +462,6 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
   <button class="btn-act btn-next" onclick="nextWord()">⏭️ Suivant</button>
 </div>
 
-<!-- Virtual Keyboard -->
 <div class="v-kb">
   <div class="kb-row">
     <div class="kb-key" onclick="handleVirtualKey('A')">A</div>
@@ -510,7 +499,6 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
   </div>
 </div>
 
-<!-- Clues Accordion/Tabs -->
 <div class="clues-wrapper">
   <div class="clues-nav">
     <button class="clue-tab-btn active" id="tab-across-btn" onclick="setClueTab('across')">➡️ Horizontales</button>
@@ -533,7 +521,7 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
 <!-- Victory Modal -->
 <div class="modal-overlay" id="victory-modal">
   <div class="victory-box">
-    <div style="font-size:3rem;margin-bottom:6px;">🎉</div>
+    <div style="font-size:2.8rem;margin-bottom:6px;">🎉</div>
     <div class="victory-title">Niveau Complété !</div>
     <div class="victory-text" id="victory-stats">Bravo ! Niveau résolu avec succès.</div>
     <button class="victory-btn" onclick="nextGridAfterWin()">Niveau Suivant ⏭️</button>
@@ -541,23 +529,14 @@ const char GAME_MOTSCROISES_HTML[] PROGMEM = R"rawliteral(
 </div>
 
 <script>
-// Base de données complète des 100 niveaux
-const GRIDS_RAW = [{"id": 1, "title": "1. Rétro Arcade", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "SONAR", "Appareil acoustique de localisation sous-marine"], [5, 4, 0, "TASSE", "Récipient à anse pour boisson chaude"]], "d": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [2, 0, 2, "BONUS", "Récompense ou points supplémentaires dans un jeu"], [3, 0, 4, "TERRE", "Notre planète bleue d'origine"]]}, {"id": 2, "title": "2. Cyber & Tech", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "SONAR", "Appareil acoustique de localisation sous-marine"], [5, 4, 0, "TESTE", "Met à l'épreuve pour vérifier"]], "d": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [2, 0, 2, "BONUS", "Récompense ou points supplémentaires dans un jeu"], [3, 0, 4, "TERRE", "Notre planète bleue d'origine"]]}, {"id": 3, "title": "3. Espace & Énergie", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"], [5, 4, 0, "TASSE", "Récipient à anse pour boisson chaude"]], "d": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [2, 0, 2, "BLOCS", "Gros morceaux solides de pierre ou de bois"], [3, 0, 4, "TITRE", "Nom d'une œuvre ou trophée de vainqueur"]]}, {"id": 4, "title": "4. Océan & Mystère", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"], [5, 4, 0, "TESTE", "Met à l'épreuve pour vérifier"]], "d": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [2, 0, 2, "BLOCS", "Gros morceaux solides de pierre ou de bois"], [3, 0, 4, "TITRE", "Nom d'une œuvre ou trophée de vainqueur"]]}, {"id": 5, "title": "5. Forêt & Aventure", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "DELTA", "Embouchure de fleuve ou lettre grecque"], [5, 4, 0, "OUEST", "Point cardinal où le soleil se couche"]], "d": [[1, 0, 0, "RADIO", "Diffusion d'émissions sonores par ondes hertziennes"], [2, 0, 2, "BALLE", "Sphère de jeu rebondissante"], [3, 0, 4, "TRAIT", "Ligne tracée au crayon ou caractéristique"]]}, {"id": 6, "title": "6. Damier Électronique", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "DELTA", "Embouchure de fleuve ou lettre grecque"], [5, 4, 0, "OCEAN", "Immense étendue d'eau salée"]], "d": [[1, 0, 0, "RADIO", "Diffusion d'émissions sonores par ondes hertziennes"], [2, 0, 2, "BALLE", "Sphère de jeu rebondissante"], [3, 0, 4, "TRAIN", "Suite de wagons tractés par une locomotive"]]}, {"id": 7, "title": "7. Vitesse & Circuit", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "DELTA", "Embouchure de fleuve ou lettre grecque"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "RADIS", "Petit légume rouge croquant et piquant"], [2, 0, 2, "BALLE", "Sphère de jeu rebondissante"], [3, 0, 4, "TRACE", "Empreinte laissée par le passage de quelqu'un"]]}, {"id": 8, "title": "8. Laboratoire Secret", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "DELTA", "Embouchure de fleuve ou lettre grecque"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "RADIS", "Petit légume rouge croquant et piquant"], [2, 0, 2, "BALLE", "Sphère de jeu rebondissante"], [3, 0, 4, "TRACE", "Empreinte laissée par le passage de quelqu'un"]]}, {"id": 9, "title": "9. Forteresse Médiévale", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "SCOUT", "Éclaireur dans la nature"], [5, 4, 0, "TASSE", "Récipient à anse pour boisson chaude"]], "d": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [2, 0, 2, "BLOCS", "Gros morceaux solides de pierre ou de bois"], [3, 0, 4, "TITRE", "Nom d'une œuvre ou trophée de vainqueur"]]}, {"id": 10, "title": "10. Galaxie Lointaine", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "SCOUT", "Éclaireur dans la nature"], [5, 4, 0, "TESTE", "Met à l'épreuve pour vérifier"]], "d": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [2, 0, 2, "BLOCS", "Gros morceaux solides de pierre ou de bois"], [3, 0, 4, "TITRE", "Nom d'une œuvre ou trophée de vainqueur"]]}, {"id": 11, "title": "11. Pixel Art", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "DAMES", "Jeu de pions sur damier noir et blanc"], [5, 4, 0, "OCEAN", "Immense étendue d'eau salée"]], "d": [[1, 0, 0, "RADIO", "Diffusion d'émissions sonores par ondes hertziennes"], [2, 0, 2, "BOMBE", "Engin explosif ou arme de jeu rétro"], [3, 0, 4, "TISON", "Morceau de bois qui brûle dans l'âtre"]]}, {"id": 12, "title": "12. Exploration Lunaire", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "DAMES", "Jeu de pions sur damier noir et blanc"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "RADIS", "Petit légume rouge croquant et piquant"], [2, 0, 2, "BOMBE", "Engin explosif ou arme de jeu rétro"], [3, 0, 4, "TASSE", "Récipient à anse pour boisson chaude"]]}, {"id": 13, "title": "13. Alchimie Ancienne", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "DAMES", "Jeu de pions sur damier noir et blanc"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "RADIS", "Petit légume rouge croquant et piquant"], [2, 0, 2, "BOMBE", "Engin explosif ou arme de jeu rétro"], [3, 0, 4, "TESTE", "Met à l'épreuve pour vérifier"]]}, {"id": 14, "title": "14. Mission Spatiale", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "DAMES", "Jeu de pions sur damier noir et blanc"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "RADIS", "Petit légume rouge croquant et piquant"], [2, 0, 2, "BOMBE", "Engin explosif ou arme de jeu rétro"], [3, 0, 4, "TASSE", "Récipient à anse pour boisson chaude"]]}, {"id": 15, "title": "15. Profondeurs Marines", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "DAMES", "Jeu de pions sur damier noir et blanc"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "RADIS", "Petit légume rouge croquant et piquant"], [2, 0, 2, "BOMBE", "Engin explosif ou arme de jeu rétro"], [3, 0, 4, "TESTE", "Met à l'épreuve pour vérifier"]]}, {"id": 16, "title": "16. Île Mystérieuse", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "POIDS", "Force de pesanteur mesurée en kilogrammes"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "BOITE", "Récipient fermé pour ranger des objets"], [3, 0, 4, "TASSE", "Récipient à anse pour boisson chaude"]]}, {"id": 17, "title": "17. Code Source", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "POIDS", "Force de pesanteur mesurée en kilogrammes"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "BOITE", "Récipient fermé pour ranger des objets"], [3, 0, 4, "TESTE", "Met à l'épreuve pour vérifier"]]}, {"id": 18, "title": "18. Réseau Cybernétique", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "POIDS", "Force de pesanteur mesurée en kilogrammes"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "BOITE", "Récipient fermé pour ranger des objets"], [3, 0, 4, "TASSE", "Récipient à anse pour boisson chaude"]]}, {"id": 19, "title": "19. Robotique Avancée", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "POIDS", "Force de pesanteur mesurée en kilogrammes"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "BOITE", "Récipient fermé pour ranger des objets"], [3, 0, 4, "TESTE", "Met à l'épreuve pour vérifier"]]}, {"id": 20, "title": "20. Constellation", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "POINT", "Marque minuscule ou unité gagnée dans un jeu"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "BOITE", "Récipient fermé pour ranger des objets"], [3, 0, 4, "TITRE", "Nom d'une œuvre ou trophée de vainqueur"]]}, {"id": 21, "title": "21. Temple Oublié", "rows": 5, "cols": 5, "a": [[1, 0, 0, "ROBOT", "Machine autonome programmable"], [4, 2, 0, "POINT", "Marque minuscule ou unité gagnée dans un jeu"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "BOITE", "Récipient fermé pour ranger des objets"], [3, 0, 4, "TITRE", "Nom d'une œuvre ou trophée de vainqueur"]]}, {"id": 22, "title": "22. Sanctuaire Zen", "rows": 5, "cols": 5, "a": [[1, 0, 0, "TASSE", "Récipient à anse pour boisson chaude"], [4, 2, 0, "MANGA", "Bande dessinée japonaise"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "TEMPS", "Durée mesurée par les secondes et les heures"], [2, 0, 2, "SINGE", "Primate agile grimpant dans les arbres"], [3, 0, 4, "ETAPE", "Phase d'un voyage ou palier d'un tour"]]}, {"id": 23, "title": "23. Chemin des Étoiles", "rows": 5, "cols": 5, "a": [[1, 0, 0, "TASSE", "Récipient à anse pour boisson chaude"], [4, 2, 0, "MANGA", "Bande dessinée japonaise"], [5, 4, 0, "SERIE", "Suite ordonnée d'éléments ou d'épisodes"]], "d": [[1, 0, 0, "TEMPS", "Durée mesurée par les secondes et les heures"], [2, 0, 2, "SONAR", "Appareil acoustique de localisation sous-marine"], [3, 0, 4, "ETAPE", "Phase d'un voyage ou palier d'un tour"]]}, {"id": 24, "title": "24. Jardin Botanique", "rows": 5, "cols": 5, "a": [[1, 0, 0, "TASSE", "Récipient à anse pour boisson chaude"], [4, 2, 0, "MANGA", "Bande dessinée japonaise"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "TEMPS", "Durée mesurée par les secondes et les heures"], [2, 0, 2, "SINGE", "Primate agile grimpant dans les arbres"], [3, 0, 4, "ETAPE", "Phase d'un voyage ou palier d'un tour"]]}, {"id": 25, "title": "25. Base Polaire", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"], [5, 4, 0, "OUTIL", "Ustensile manuel servant à travailler"]], "d": [[1, 0, 0, "RESTO", "Lieu convivial où l'on partage un repas"], [2, 0, 2, "SCOUT", "Éclaireur dans la nature"], [3, 0, 4, "TOTAL", "Montant cumulé de tous les éléments réunis"]]}, {"id": 26, "title": "26. Vaisseau Mère", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "CANAL", "Bande de fréquence de transmission radio"], [5, 4, 0, "ECRAN", "Surface vitrée diffusant images et jeux"]], "d": [[1, 0, 0, "RUCHE", "Maison des abeilles et du miel"], [2, 0, 2, "SONAR", "Appareil acoustique de localisation sous-marine"], [3, 0, 4, "TALON", "Partie arrière de la chaussure ou du pied"]]}, {"id": 27, "title": "27. Planète Sauvage", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "CANAL", "Bande de fréquence de transmission radio"], [5, 4, 0, "ECRAN", "Surface vitrée diffusant images et jeux"]], "d": [[1, 0, 0, "ROCHE", "Masse minérale solide formant les montagnes"], [2, 0, 2, "SONAR", "Appareil acoustique de localisation sous-marine"], [3, 0, 4, "TALON", "Partie arrière de la chaussure ou du pied"]]}, {"id": 28, "title": "28. Cité Futuriste", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "PIONS", "Pièces déplacées sur un damier"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SCORE", "Total de points enregistrés dans un jeu"], [3, 0, 4, "TASSE", "Récipient à anse pour boisson chaude"]]}, {"id": 29, "title": "29. Royaume des Brumes", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "PIONS", "Pièces déplacées sur un damier"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SCORE", "Total de points enregistrés dans un jeu"], [3, 0, 4, "TESTE", "Met à l'épreuve pour vérifier"]]}, {"id": 30, "title": "30. Énigme d'Orient", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "PIONS", "Pièces déplacées sur un damier"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SCORE", "Total de points enregistrés dans un jeu"], [3, 0, 4, "TASSE", "Récipient à anse pour boisson chaude"]]}, {"id": 31, "title": "31. Puits Quantique", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "PIONS", "Pièces déplacées sur un damier"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SCORE", "Total de points enregistrés dans un jeu"], [3, 0, 4, "TESTE", "Met à l'épreuve pour vérifier"]]}, {"id": 32, "title": "32. Oasis Enchantée", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "DELTA", "Embouchure de fleuve ou lettre grecque"], [5, 4, 0, "OUEST", "Point cardinal où le soleil se couche"]], "d": [[1, 0, 0, "RADIO", "Diffusion d'émissions sonores par ondes hertziennes"], [2, 0, 2, "SALLE", "Pièce fermée d'un bâtiment"], [3, 0, 4, "TRAIT", "Ligne tracée au crayon ou caractéristique"]]}, {"id": 33, "title": "33. Monde Virtuel", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "DELTA", "Embouchure de fleuve ou lettre grecque"], [5, 4, 0, "OUEST", "Point cardinal où le soleil se couche"]], "d": [[1, 0, 0, "RADIO", "Diffusion d'émissions sonores par ondes hertziennes"], [2, 0, 2, "SOLDE", "Prix réduit ou montant restant"], [3, 0, 4, "TRAIT", "Ligne tracée au crayon ou caractéristique"]]}, {"id": 34, "title": "34. Dôme de Cristal", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "DELTA", "Embouchure de fleuve ou lettre grecque"], [5, 4, 0, "OCEAN", "Immense étendue d'eau salée"]], "d": [[1, 0, 0, "RADIO", "Diffusion d'émissions sonores par ondes hertziennes"], [2, 0, 2, "SALLE", "Pièce fermée d'un bâtiment"], [3, 0, 4, "TRAIN", "Suite de wagons tractés par une locomotive"]]}, {"id": 35, "title": "35. Machine à Vapeur", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "DELTA", "Embouchure de fleuve ou lettre grecque"], [5, 4, 0, "OCEAN", "Immense étendue d'eau salée"]], "d": [[1, 0, 0, "RADIO", "Diffusion d'émissions sonores par ondes hertziennes"], [2, 0, 2, "SOLDE", "Prix réduit ou montant restant"], [3, 0, 4, "TRAIN", "Suite de wagons tractés par une locomotive"]]}, {"id": 36, "title": "36. Soleil de Minuit", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "DELTA", "Embouchure de fleuve ou lettre grecque"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "RADIS", "Petit légume rouge croquant et piquant"], [2, 0, 2, "SALLE", "Pièce fermée d'un bâtiment"], [3, 0, 4, "TRACE", "Empreinte laissée par le passage de quelqu'un"]]}, {"id": 37, "title": "37. Canyon Écarlate", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "DELTA", "Embouchure de fleuve ou lettre grecque"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "RADIS", "Petit légume rouge croquant et piquant"], [2, 0, 2, "SOLDE", "Prix réduit ou montant restant"], [3, 0, 4, "TRACE", "Empreinte laissée par le passage de quelqu'un"]]}, {"id": 38, "title": "38. Signal Radio", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "DELTA", "Embouchure de fleuve ou lettre grecque"], [5, 4, 0, "SERIE", "Suite ordonnée d'éléments ou d'épisodes"]], "d": [[1, 0, 0, "RADIS", "Petit légume rouge croquant et piquant"], [2, 0, 2, "SOLAR", "Relatif au soleil et à son rayonnement"], [3, 0, 4, "TRACE", "Empreinte laissée par le passage de quelqu'un"]]}, {"id": 39, "title": "39. Horizon Infini", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "DELTA", "Embouchure de fleuve ou lettre grecque"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "RADIS", "Petit légume rouge croquant et piquant"], [2, 0, 2, "SALLE", "Pièce fermée d'un bâtiment"], [3, 0, 4, "TRACE", "Empreinte laissée par le passage de quelqu'un"]]}, {"id": 40, "title": "40. Aurore Polaire", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "DELTA", "Embouchure de fleuve ou lettre grecque"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "RADIS", "Petit légume rouge croquant et piquant"], [2, 0, 2, "SOLDE", "Prix réduit ou montant restant"], [3, 0, 4, "TRACE", "Empreinte laissée par le passage de quelqu'un"]]}, {"id": 41, "title": "41. Hangar Spatial", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "COURS", "Leçon d'un professeur ou flux d'eau"], [5, 4, 0, "EPICE", "Substance aromatique pour la cuisine"]], "d": [[1, 0, 0, "RUCHE", "Maison des abeilles et du miel"], [2, 0, 2, "SOURI", "Petit rongeur agile"], [3, 0, 4, "TASSE", "Récipient à anse pour boisson chaude"]]}, {"id": 42, "title": "42. Vallée Silencieuse", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "COURS", "Leçon d'un professeur ou flux d'eau"], [5, 4, 0, "EPICE", "Substance aromatique pour la cuisine"]], "d": [[1, 0, 0, "RUCHE", "Maison des abeilles et du miel"], [2, 0, 2, "SOURI", "Petit rongeur agile"], [3, 0, 4, "TESTE", "Met à l'épreuve pour vérifier"]]}, {"id": 43, "title": "43. Labyrinthe d'Or", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "COURS", "Leçon d'un professeur ou flux d'eau"], [5, 4, 0, "EPICE", "Substance aromatique pour la cuisine"]], "d": [[1, 0, 0, "ROCHE", "Masse minérale solide formant les montagnes"], [2, 0, 2, "SOURI", "Petit rongeur agile"], [3, 0, 4, "TASSE", "Récipient à anse pour boisson chaude"]]}, {"id": 44, "title": "44. Récif de Corail", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "COURS", "Leçon d'un professeur ou flux d'eau"], [5, 4, 0, "EPICE", "Substance aromatique pour la cuisine"]], "d": [[1, 0, 0, "ROCHE", "Masse minérale solide formant les montagnes"], [2, 0, 2, "SOURI", "Petit rongeur agile"], [3, 0, 4, "TESTE", "Met à l'épreuve pour vérifier"]]}, {"id": 45, "title": "45. Station Orbitale", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "SMART", "Intelligent, élégant ou connecté"], [5, 4, 0, "OUTIL", "Ustensile manuel servant à travailler"]], "d": [[1, 0, 0, "RESTO", "Lieu convivial où l'on partage un repas"], [2, 0, 2, "START", "Point de départ d'une course"], [3, 0, 4, "TOTAL", "Montant cumulé de tous les éléments réunis"]]}, {"id": 46, "title": "46. Mine de Diamant", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "PLOMB", "Métal gris très lourd"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SCORE", "Total de points enregistrés dans un jeu"], [3, 0, 4, "TABLE", "Meuble à plateau plat reposant sur des pieds"]]}, {"id": 47, "title": "47. Forêt d'Émeraude", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "PLOMB", "Métal gris très lourd"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SCORE", "Total de points enregistrés dans un jeu"], [3, 0, 4, "TABLE", "Meuble à plateau plat reposant sur des pieds"]]}, {"id": 48, "title": "48. Bouclier Plasma", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "SOEUR", "Fille née des mêmes parents"], [5, 4, 0, "ORDRE", "Organisation méthodique ou commandement"]], "d": [[1, 0, 0, "RESTO", "Lieu convivial où l'on partage un repas"], [2, 0, 2, "SPEED", "Vitesse vive et soutenue dans l'action"], [3, 0, 4, "TERRE", "Notre planète bleue d'origine"]]}, {"id": 49, "title": "49. Vortex Temporel", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "PAGES", "Feuilles reliées d'un livre"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SIGNE", "Geste ou symbole porteur de signification"], [3, 0, 4, "TASSE", "Récipient à anse pour boisson chaude"]]}, {"id": 50, "title": "50. Sommet Enneigé", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "PAGES", "Feuilles reliées d'un livre"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SIGNE", "Geste ou symbole porteur de signification"], [3, 0, 4, "TESTE", "Met à l'épreuve pour vérifier"]]}, {"id": 51, "title": "51. Cœur d'Énergie", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "PAGES", "Feuilles reliées d'un livre"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SIGNE", "Geste ou symbole porteur de signification"], [3, 0, 4, "TASSE", "Récipient à anse pour boisson chaude"]]}, {"id": 52, "title": "52. Ruines Antiques", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "PAGES", "Feuilles reliées d'un livre"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SIGNE", "Geste ou symbole porteur de signification"], [3, 0, 4, "TESTE", "Met à l'épreuve pour vérifier"]]}, {"id": 53, "title": "53. Rivage Bleu", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "MANGA", "Bande dessinée japonaise"], [5, 4, 0, "ECRAN", "Surface vitrée diffusant images et jeux"]], "d": [[1, 0, 0, "RAMPE", "Plan incliné facilitant la montée"], [2, 0, 2, "SONAR", "Appareil acoustique de localisation sous-marine"], [3, 0, 4, "TRAIN", "Suite de wagons tractés par une locomotive"]]}, {"id": 54, "title": "54. Sphère Céleste", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "POIDS", "Force de pesanteur mesurée en kilogrammes"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SUITE", "Succession logique d'éléments coordonnés"], [3, 0, 4, "TASSE", "Récipient à anse pour boisson chaude"]]}, {"id": 55, "title": "55. Sentier Perdu", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "POIDS", "Force de pesanteur mesurée en kilogrammes"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SUITE", "Succession logique d'éléments coordonnés"], [3, 0, 4, "TESTE", "Met à l'épreuve pour vérifier"]]}, {"id": 56, "title": "56. Satellite Secret", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "POIDS", "Force de pesanteur mesurée en kilogrammes"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SUITE", "Succession logique d'éléments coordonnés"], [3, 0, 4, "TASSE", "Récipient à anse pour boisson chaude"]]}, {"id": 57, "title": "57. Terre d'Aventure", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "POIDS", "Force de pesanteur mesurée en kilogrammes"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SUITE", "Succession logique d'éléments coordonnés"], [3, 0, 4, "TESTE", "Met à l'épreuve pour vérifier"]]}, {"id": 58, "title": "58. Passage Secret", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "POINT", "Marque minuscule ou unité gagnée dans un jeu"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SUITE", "Succession logique d'éléments coordonnés"], [3, 0, 4, "TITRE", "Nom d'une œuvre ou trophée de vainqueur"]]}, {"id": 59, "title": "59. Désert Doré", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "POINT", "Marque minuscule ou unité gagnée dans un jeu"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "REPAS", "Nourriture prise à des heures régulières"], [2, 0, 2, "SUITE", "Succession logique d'éléments coordonnés"], [3, 0, 4, "TITRE", "Nom d'une œuvre ou trophée de vainqueur"]]}, {"id": 60, "title": "60. Cratère Lunaire", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "STEAM", "Vapeur d'eau sous pression ou boutique de jeux"], [5, 4, 0, "OREES", "Lisières d'une forêt"]], "d": [[1, 0, 0, "RESTO", "Lieu convivial où l'on partage un repas"], [2, 0, 2, "SCENE", "Plateau de théâtre ou espace de jeu"], [3, 0, 4, "TEMPS", "Durée mesurée par les secondes et les heures"]]}, {"id": 61, "title": "61. Flamme Éternelle", "rows": 5, "cols": 5, "a": [[1, 0, 0, "RESET", "Réinitialisation d'un système à son départ"], [4, 2, 0, "STEAM", "Vapeur d'eau sous pression ou boutique de jeux"], [5, 4, 0, "OREES", "Lisières d'une forêt"]], "d": [[1, 0, 0, "RESTO", "Lieu convivial où l'on partage un repas"], [2, 0, 2, "SIEGE", "Meuble fait pour s'asseoir"], [3, 0, 4, "TEMPS", "Durée mesurée par les secondes et les heures"]]}, {"id": 62, "title": "62. Jungle Tropicale", "rows": 5, "cols": 5, "a": [[1, 0, 0, "BONUS", "Récompense ou points supplémentaires dans un jeu"], [4, 2, 0, "OMBRE", "Zone obscure protégée de la lumière"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "BLOCS", "Gros morceaux solides de pierre ou de bois"], [2, 0, 2, "NOBLE", "De sang aristocratique ou d'esprit élevé"], [3, 0, 4, "SIEGE", "Meuble fait pour s'asseoir"]]}, {"id": 63, "title": "63. Porte des Mondes", "rows": 5, "cols": 5, "a": [[1, 0, 0, "BONUS", "Récompense ou points supplémentaires dans un jeu"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "BETES", "Animaux vivants ou personnes peu avisées"], [2, 0, 2, "NOBLE", "De sang aristocratique ou d'esprit élevé"], [3, 0, 4, "STAGE", "Niveau de progression dans un jeu vidéo"]]}, {"id": 64, "title": "64. Titan d'Acier", "rows": 5, "cols": 5, "a": [[1, 0, 0, "BONUS", "Récompense ou points supplémentaires dans un jeu"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "BETES", "Animaux vivants ou personnes peu avisées"], [2, 0, 2, "NOBLE", "De sang aristocratique ou d'esprit élevé"], [3, 0, 4, "STAGE", "Niveau de progression dans un jeu vidéo"]]}, {"id": 65, "title": "65. Comète Brillante", "rows": 5, "cols": 5, "a": [[1, 0, 0, "BONUS", "Récompense ou points supplémentaires dans un jeu"], [4, 2, 0, "TABLE", "Meuble à plateau plat reposant sur des pieds"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "BETES", "Animaux vivants ou personnes peu avisées"], [2, 0, 2, "NOBLE", "De sang aristocratique ou d'esprit élevé"], [3, 0, 4, "SIEGE", "Meuble fait pour s'asseoir"]]}, {"id": 66, "title": "66. Boussole Magique", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TERRE", "Notre planète bleue d'origine"], [5, 4, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"]], "d": [[1, 0, 0, "MOTOS", "Véhicules rapides à deux roues"], [2, 0, 2, "CARGO", "Grand navire de transport de fret"], [3, 0, 4, "OUEST", "Point cardinal où le soleil se couche"]]}, {"id": 67, "title": "67. Royaume Aquatique", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TERRE", "Notre planète bleue d'origine"], [5, 4, 0, "SCOUT", "Éclaireur dans la nature"]], "d": [[1, 0, 0, "MOTOS", "Véhicules rapides à deux roues"], [2, 0, 2, "CARGO", "Grand navire de transport de fret"], [3, 0, 4, "OUEST", "Point cardinal où le soleil se couche"]]}, {"id": 68, "title": "68. Volcan Actif", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "FARCE", "Tour comique ou petite plaisanterie"]], "d": [[1, 0, 0, "MOTIF", "Dessin répété ou raison d'agir"], [2, 0, 2, "CYBER", "Relatif à l'informatique et aux réseaux"], [3, 0, 4, "ORAGE", "Perturbation météo avec éclairs et tonnerre"]]}, {"id": 69, "title": "69. Ciel Étoilé", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "FARCE", "Tour comique ou petite plaisanterie"]], "d": [[1, 0, 0, "MOTIF", "Dessin répété ou raison d'agir"], [2, 0, 2, "CYBER", "Relatif à l'informatique et aux réseaux"], [3, 0, 4, "OVALE", "En forme d'œuf allongé"]]}, {"id": 70, "title": "70. Îlot Isolé", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "MOTOS", "Véhicules rapides à deux roues"], [2, 0, 2, "CABLE", "Faisceau de fils conducteurs sous gaine"], [3, 0, 4, "ORAGE", "Perturbation météo avec éclairs et tonnerre"]]}, {"id": 71, "title": "71. Sentinelle Cyber", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "SCENE", "Plateau de théâtre ou espace de jeu"]], "d": [[1, 0, 0, "MOTOS", "Véhicules rapides à deux roues"], [2, 0, 2, "CABLE", "Faisceau de fils conducteurs sous gaine"], [3, 0, 4, "OVALE", "En forme d'œuf allongé"]]}, {"id": 72, "title": "72. Archipel Éloigné", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "SERIE", "Suite ordonnée d'éléments ou d'épisodes"]], "d": [[1, 0, 0, "MOTOS", "Véhicules rapides à deux roues"], [2, 0, 2, "CYBER", "Relatif à l'informatique et aux réseaux"], [3, 0, 4, "ORAGE", "Perturbation météo avec éclairs et tonnerre"]]}, {"id": 73, "title": "73. Canyon Profond", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "SERIE", "Suite ordonnée d'éléments ou d'épisodes"]], "d": [[1, 0, 0, "MOTOS", "Véhicules rapides à deux roues"], [2, 0, 2, "CYBER", "Relatif à l'informatique et aux réseaux"], [3, 0, 4, "OVALE", "En forme d'œuf allongé"]]}, {"id": 74, "title": "74. Cascade Cachée", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "MOTOS", "Véhicules rapides à deux roues"], [2, 0, 2, "CABLE", "Faisceau de fils conducteurs sous gaine"], [3, 0, 4, "ORAGE", "Perturbation météo avec éclairs et tonnerre"]]}, {"id": 75, "title": "75. Matrice Neuronale", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "SIEGE", "Meuble fait pour s'asseoir"]], "d": [[1, 0, 0, "MOTOS", "Véhicules rapides à deux roues"], [2, 0, 2, "CABLE", "Faisceau de fils conducteurs sous gaine"], [3, 0, 4, "OVALE", "En forme d'œuf allongé"]]}, {"id": 76, "title": "76. Station Sous-Marine", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "HERBE", "Végétation verte des prairies"]], "d": [[1, 0, 0, "MATCH", "Rencontre sportive ou duel de jeu"], [2, 0, 2, "CYBER", "Relatif à l'informatique et aux réseaux"], [3, 0, 4, "ORAGE", "Perturbation météo avec éclairs et tonnerre"]]}, {"id": 77, "title": "77. Cité Suspendue", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "HERBE", "Végétation verte des prairies"]], "d": [[1, 0, 0, "MATCH", "Rencontre sportive ou duel de jeu"], [2, 0, 2, "CYBER", "Relatif à l'informatique et aux réseaux"], [3, 0, 4, "OVALE", "En forme d'œuf allongé"]]}, {"id": 78, "title": "78. Brume Mystique", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "FORCE", "Puissance musculaire ou physique"]], "d": [[1, 0, 0, "MOTIF", "Dessin répété ou raison d'agir"], [2, 0, 2, "CYBER", "Relatif à l'informatique et aux réseaux"], [3, 0, 4, "ORAGE", "Perturbation météo avec éclairs et tonnerre"]]}, {"id": 79, "title": "79. Grotte de Cristal", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "FORCE", "Puissance musculaire ou physique"]], "d": [[1, 0, 0, "MOTIF", "Dessin répété ou raison d'agir"], [2, 0, 2, "CYBER", "Relatif à l'informatique et aux réseaux"], [3, 0, 4, "OVALE", "En forme d'œuf allongé"]]}, {"id": 80, "title": "80. Étoile Filante", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "FORME", "Contour géométrique d'un corps"]], "d": [[1, 0, 0, "MOTIF", "Dessin répété ou raison d'agir"], [2, 0, 2, "CYBER", "Relatif à l'informatique et aux réseaux"], [3, 0, 4, "ORAGE", "Perturbation météo avec éclairs et tonnerre"]]}, {"id": 81, "title": "81. Forêt de Séquoias", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TIBIA", "Grand os de la jambe"], [5, 4, 0, "FORME", "Contour géométrique d'un corps"]], "d": [[1, 0, 0, "MOTIF", "Dessin répété ou raison d'agir"], [2, 0, 2, "CYBER", "Relatif à l'informatique et aux réseaux"], [3, 0, 4, "OVALE", "En forme d'œuf allongé"]]}, {"id": 82, "title": "82. Château Fort", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TRAIT", "Ligne tracée au crayon ou caractéristique"], [5, 4, 0, "HOTEL", "Établissement offrant des chambres aux voyageurs"]], "d": [[1, 0, 0, "MATCH", "Rencontre sportive ou duel de jeu"], [2, 0, 2, "CHANT", "Émission musicale de la voix"], [3, 0, 4, "OUTIL", "Ustensile manuel servant à travailler"]]}, {"id": 83, "title": "83. Phare de la Nuit", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "NOBLE", "De sang aristocratique ou d'esprit élevé"], [5, 4, 0, "ECRAN", "Surface vitrée diffusant images et jeux"]], "d": [[1, 0, 0, "MONDE", "La planète Terre et l'humanité"], [2, 0, 2, "CYBER", "Relatif à l'informatique et aux réseaux"], [3, 0, 4, "OCEAN", "Immense étendue d'eau salée"]]}, {"id": 84, "title": "84. Ciel Boréal", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MICRO", "Microprocesseur ou capteur de son"], [4, 2, 0, "TABLE", "Meuble à plateau plat reposant sur des pieds"], [5, 4, 0, "FORET", "Vaste espace boisé peuplé d'arbres"]], "d": [[1, 0, 0, "MOTIF", "Dessin répété ou raison d'agir"], [2, 0, 2, "CYBER", "Relatif à l'informatique et aux réseaux"], [3, 0, 4, "OUEST", "Point cardinal où le soleil se couche"]]}, {"id": 85, "title": "85. Monde Sous-Marin", "rows": 5, "cols": 5, "a": [[1, 0, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"], [4, 2, 0, "OUEST", "Point cardinal où le soleil se couche"], [5, 4, 0, "TASSE", "Récipient à anse pour boisson chaude"]], "d": [[1, 0, 0, "SCOUT", "Éclaireur dans la nature"], [2, 0, 2, "OREES", "Lisières d'une forêt"], [3, 0, 4, "TITRE", "Nom d'une œuvre ou trophée de vainqueur"]]}, {"id": 86, "title": "86. Dune Infinie", "rows": 5, "cols": 5, "a": [[1, 0, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"], [4, 2, 0, "OUEST", "Point cardinal où le soleil se couche"], [5, 4, 0, "TESTE", "Met à l'épreuve pour vérifier"]], "d": [[1, 0, 0, "SCOUT", "Éclaireur dans la nature"], [2, 0, 2, "OREES", "Lisières d'une forêt"], [3, 0, 4, "TITRE", "Nom d'une œuvre ou trophée de vainqueur"]]}, {"id": 87, "title": "87. Miroir d'Eau", "rows": 5, "cols": 5, "a": [[1, 0, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"], [4, 2, 0, "OUEST", "Point cardinal où le soleil se couche"], [5, 4, 0, "ETAPE", "Phase d'un voyage ou palier d'un tour"]], "d": [[1, 0, 0, "SCORE", "Total de points enregistrés dans un jeu"], [2, 0, 2, "OPERA", "Spectacle musical grandiose théâtral"], [3, 0, 4, "TITRE", "Nom d'une œuvre ou trophée de vainqueur"]]}, {"id": 88, "title": "88. Chemin de Fer", "rows": 5, "cols": 5, "a": [[1, 0, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"], [4, 2, 0, "OUEST", "Point cardinal où le soleil se couche"], [5, 4, 0, "TRACE", "Empreinte laissée par le passage de quelqu'un"]], "d": [[1, 0, 0, "SCOUT", "Éclaireur dans la nature"], [2, 0, 2, "OPERA", "Spectacle musical grandiose théâtral"], [3, 0, 4, "TITRE", "Nom d'une œuvre ou trophée de vainqueur"]]}, {"id": 89, "title": "89. Tour d'Ivoire", "rows": 5, "cols": 5, "a": [[1, 0, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"], [4, 2, 0, "OPERA", "Spectacle musical grandiose théâtral"], [5, 4, 0, "TASSE", "Récipient à anse pour boisson chaude"]], "d": [[1, 0, 0, "SCOUT", "Éclaireur dans la nature"], [2, 0, 2, "OREES", "Lisières d'une forêt"], [3, 0, 4, "TRACE", "Empreinte laissée par le passage de quelqu'un"]]}, {"id": 90, "title": "90. Horloge Céleste", "rows": 5, "cols": 5, "a": [[1, 0, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"], [4, 2, 0, "OPERA", "Spectacle musical grandiose théâtral"], [5, 4, 0, "TISON", "Morceau de bois qui brûle dans l'âtre"]], "d": [[1, 0, 0, "SCOUT", "Éclaireur dans la nature"], [2, 0, 2, "OREES", "Lisières d'une forêt"], [3, 0, 4, "TRAIN", "Suite de wagons tractés par une locomotive"]]}, {"id": 91, "title": "91. Sphère d'Énergie", "rows": 5, "cols": 5, "a": [[1, 0, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"], [4, 2, 0, "OPERA", "Spectacle musical grandiose théâtral"], [5, 4, 0, "TESTE", "Met à l'épreuve pour vérifier"]], "d": [[1, 0, 0, "SCOUT", "Éclaireur dans la nature"], [2, 0, 2, "OREES", "Lisières d'une forêt"], [3, 0, 4, "TRACE", "Empreinte laissée par le passage de quelqu'un"]]}, {"id": 92, "title": "92. Cœur de Lion", "rows": 5, "cols": 5, "a": [[1, 0, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"], [4, 2, 0, "OREES", "Lisières d'une forêt"], [5, 4, 0, "ETAPE", "Phase d'un voyage ou palier d'un tour"]], "d": [[1, 0, 0, "SCORE", "Total de points enregistrés dans un jeu"], [2, 0, 2, "OPERA", "Spectacle musical grandiose théâtral"], [3, 0, 4, "TASSE", "Récipient à anse pour boisson chaude"]]}, {"id": 93, "title": "93. Fleur de Lotus", "rows": 5, "cols": 5, "a": [[1, 0, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"], [4, 2, 0, "OREES", "Lisières d'une forêt"], [5, 4, 0, "ETAPE", "Phase d'un voyage ou palier d'un tour"]], "d": [[1, 0, 0, "SCORE", "Total de points enregistrés dans un jeu"], [2, 0, 2, "OPERA", "Spectacle musical grandiose théâtral"], [3, 0, 4, "TESTE", "Met à l'épreuve pour vérifier"]]}, {"id": 94, "title": "94. Vapeur Cyber", "rows": 5, "cols": 5, "a": [[1, 0, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"], [4, 2, 0, "ACTES", "Actions réelles ou parties d'une pièce de théâtre"], [5, 4, 0, "TALON", "Partie arrière de la chaussure ou du pied"]], "d": [[1, 0, 0, "SMART", "Intelligent, élégant ou connecté"], [2, 0, 2, "OUTIL", "Ustensile manuel servant à travailler"], [3, 0, 4, "TISON", "Morceau de bois qui brûle dans l'âtre"]]}, {"id": 95, "title": "95. Sanctuaire Sacré", "rows": 5, "cols": 5, "a": [[1, 0, 0, "SPORT", "Activité physique ou compétition comme l'e-sport"], [4, 2, 0, "ACTES", "Actions réelles ou parties d'une pièce de théâtre"], [5, 4, 0, "TALON", "Partie arrière de la chaussure ou du pied"]], "d": [[1, 0, 0, "START", "Point de départ d'une course"], [2, 0, 2, "OUTIL", "Ustensile manuel servant à travailler"], [3, 0, 4, "TISON", "Morceau de bois qui brûle dans l'âtre"]]}, {"id": 96, "title": "96. Boussole Dorée", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MOTOS", "Véhicules rapides à deux roues"], [4, 2, 0, "CARGO", "Grand navire de transport de fret"], [5, 4, 0, "OUEST", "Point cardinal où le soleil se couche"]], "d": [[1, 0, 0, "MACRO", "De grande dimension ou commande groupée"], [2, 0, 2, "TERRE", "Notre planète bleue d'origine"], [3, 0, 4, "SPORT", "Activité physique ou compétition comme l'e-sport"]]}, {"id": 97, "title": "97. Vague Géante", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MOTOS", "Véhicules rapides à deux roues"], [4, 2, 0, "CARGO", "Grand navire de transport de fret"], [5, 4, 0, "OUEST", "Point cardinal où le soleil se couche"]], "d": [[1, 0, 0, "MACRO", "De grande dimension ou commande groupée"], [2, 0, 2, "TERRE", "Notre planète bleue d'origine"], [3, 0, 4, "SCOUT", "Éclaireur dans la nature"]]}, {"id": 98, "title": "98. Couronne Royale", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MOTOS", "Véhicules rapides à deux roues"], [4, 2, 0, "CYBER", "Relatif à l'informatique et aux réseaux"], [5, 4, 0, "ORAGE", "Perturbation météo avec éclairs et tonnerre"]], "d": [[1, 0, 0, "MACRO", "De grande dimension ou commande groupée"], [2, 0, 2, "TIBIA", "Grand os de la jambe"], [3, 0, 4, "SERIE", "Suite ordonnée d'éléments ou d'épisodes"]]}, {"id": 99, "title": "99. Éclipse Solaire", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MOTOS", "Véhicules rapides à deux roues"], [4, 2, 0, "CYBER", "Relatif à l'informatique et aux réseaux"], [5, 4, 0, "OVALE", "En forme d'œuf allongé"]], "d": [[1, 0, 0, "MACRO", "De grande dimension ou commande groupée"], [2, 0, 2, "TIBIA", "Grand os de la jambe"], [3, 0, 4, "SERIE", "Suite ordonnée d'éléments ou d'épisodes"]]}, {"id": 100, "title": "100. Maître des Mots", "rows": 5, "cols": 5, "a": [[1, 0, 0, "MOTOS", "Véhicules rapides à deux roues"], [4, 2, 0, "CABLE", "Faisceau de fils conducteurs sous gaine"], [5, 4, 0, "ORAGE", "Perturbation météo avec éclairs et tonnerre"]], "d": [[1, 0, 0, "MACRO", "De grande dimension ou commande groupée"], [2, 0, 2, "TIBIA", "Grand os de la jambe"], [3, 0, 4, "SCENE", "Plateau de théâtre ou espace de jeu"]]}];
+const DICT = {"ACTES": "Actions réelles ou parties d'une pièce de théâtre", "BALLE": "Sphère de jeu rebondissante", "BETES": "Animaux vivants ou personnes peu avisées", "BLOCS": "Gros morceaux solides de pierre ou de bois", "BOITE": "Récipient fermé pour ranger des objets", "BOMBE": "Engin explosif ou arme de jeu rétro", "BONUS": "Récompense ou points supplémentaires dans un jeu", "CABLE": "Faisceau de fils conducteurs sous gaine", "CANAL": "Bande de fréquence de transmission radio", "CARGO": "Grand navire de transport de fret", "CHANT": "Émission musicale de la voix", "COURS": "Leçon d'un professeur ou flux d'eau", "CYBER": "Relatif à l'informatique et aux réseaux", "DAMES": "Jeu de pions sur damier noir et blanc", "DELTA": "Embouchure de fleuve ou lettre grecque", "ECRAN": "Surface vitrée diffusant images et jeux", "EPICE": "Substance aromatique pour la cuisine", "ETAPE": "Phase d'un voyage ou palier d'un tour", "FARCE": "Tour comique ou petite plaisanterie", "FORCE": "Puissance musculaire ou physique", "FORET": "Vaste espace boisé peuplé d'arbres", "FORME": "Contour géométrique d'un corps", "HERBE": "Végétation verte des prairies", "HOTEL": "Établissement offrant des chambres aux voyageurs", "MACRO": "De grande dimension ou commande groupée", "MANGA": "Bande dessinée japonaise", "MATCH": "Rencontre sportive ou duel de jeu", "MICRO": "Microprocesseur ou capteur de son", "MONDE": "La planète Terre et l'humanité", "MOTIF": "Dessin répété ou raison d'agir", "MOTOS": "Véhicules rapides à deux roues", "NOBLE": "De sang aristocratique ou d'esprit élevé", "OCEAN": "Immense étendue d'eau salée", "OMBRE": "Zone obscure protégée de la lumière", "OPERA": "Spectacle musical grandiose théâtral", "ORAGE": "Perturbation météo avec éclairs et tonnerre", "ORDRE": "Organisation méthodique ou commandement", "OREES": "Lisières d'une forêt", "OUEST": "Point cardinal où le soleil se couche", "OUTIL": "Ustensile manuel servant à travailler", "OVALE": "En forme d'œuf allongé", "PAGES": "Feuilles reliées d'un livre", "PIONS": "Pièces déplacées sur un damier", "PLOMB": "Métal gris très lourd", "POIDS": "Force de pesanteur mesurée en kilogrammes", "POINT": "Marque minuscule ou unité gagnée dans un jeu", "RADIO": "Diffusion d'émissions sonores par ondes hertziennes", "RADIS": "Petit légume rouge croquant et piquant", "RAMPE": "Plan incliné facilitant la montée", "REPAS": "Nourriture prise à des heures régulières", "RESET": "Réinitialisation d'un système à son départ", "RESTO": "Lieu convivial où l'on partage un repas", "ROBOT": "Machine autonome programmable", "ROCHE": "Masse minérale solide formant les montagnes", "RUCHE": "Maison des abeilles et du miel", "SALLE": "Pièce fermée d'un bâtiment", "SCENE": "Plateau de théâtre ou espace de jeu", "SCORE": "Total de points enregistrés dans un jeu", "SCOUT": "Éclaireur dans la nature", "SERIE": "Suite ordonnée d'éléments ou d'épisodes", "SIEGE": "Meuble fait pour s'asseoir", "SIGNE": "Geste ou symbole porteur de signification", "SINGE": "Primate agile grimpant dans les arbres", "SMART": "Intelligent, élégant ou connecté", "SOEUR": "Fille née des mêmes parents", "SOLAR": "Relatif au soleil et à son rayonnement", "SOLDE": "Prix réduit ou montant restant", "SONAR": "Appareil acoustique de localisation sous-marine", "SOURI": "Petit rongeur agile", "SPEED": "Vitesse vive et soutenue dans l'action", "SPORT": "Activité physique ou compétition comme l'e-sport", "STAGE": "Niveau de progression dans un jeu vidéo", "START": "Point de départ d'une course", "STEAM": "Vapeur d'eau sous pression ou boutique de jeux", "SUITE": "Succession logique d'éléments coordonnés", "TABLE": "Meuble à plateau plat reposant sur des pieds", "TALON": "Partie arrière de la chaussure ou du pied", "TASSE": "Récipient à anse pour boisson chaude", "TEMPS": "Durée mesurée par les secondes et les heures", "TERRE": "Notre planète bleue d'origine", "TESTE": "Met à l'épreuve pour vérifier", "TIBIA": "Grand os de la jambe", "TISON": "Morceau de bois qui brûle dans l'âtre", "TITRE": "Nom d'une œuvre ou trophée de vainqueur", "TOTAL": "Montant cumulé de tous les éléments réunis", "TRACE": "Empreinte laissée par le passage de quelqu'un", "TRAIN": "Suite de wagons tractés par une locomotive", "TRAIT": "Ligne tracée au crayon ou caractéristique"};
+const RAW_LEVELS = [[["ROBOT", "SONAR", "TASSE"], ["RESET", "BONUS", "TERRE"]], [["ROBOT", "SONAR", "TESTE"], ["RESET", "BONUS", "TERRE"]], [["ROBOT", "SPORT", "TASSE"], ["RESET", "BLOCS", "TITRE"]], [["ROBOT", "SPORT", "TESTE"], ["RESET", "BLOCS", "TITRE"]], [["ROBOT", "DELTA", "OUEST"], ["RADIO", "BALLE", "TRAIT"]], [["ROBOT", "DELTA", "OCEAN"], ["RADIO", "BALLE", "TRAIN"]], [["ROBOT", "DELTA", "SCENE"], ["RADIS", "BALLE", "TRACE"]], [["ROBOT", "DELTA", "SIEGE"], ["RADIS", "BALLE", "TRACE"]], [["ROBOT", "SCOUT", "TASSE"], ["RESET", "BLOCS", "TITRE"]], [["ROBOT", "SCOUT", "TESTE"], ["RESET", "BLOCS", "TITRE"]], [["ROBOT", "DAMES", "OCEAN"], ["RADIO", "BOMBE", "TISON"]], [["ROBOT", "DAMES", "SCENE"], ["RADIS", "BOMBE", "TASSE"]], [["ROBOT", "DAMES", "SCENE"], ["RADIS", "BOMBE", "TESTE"]], [["ROBOT", "DAMES", "SIEGE"], ["RADIS", "BOMBE", "TASSE"]], [["ROBOT", "DAMES", "SIEGE"], ["RADIS", "BOMBE", "TESTE"]], [["ROBOT", "POIDS", "SCENE"], ["REPAS", "BOITE", "TASSE"]], [["ROBOT", "POIDS", "SCENE"], ["REPAS", "BOITE", "TESTE"]], [["ROBOT", "POIDS", "SIEGE"], ["REPAS", "BOITE", "TASSE"]], [["ROBOT", "POIDS", "SIEGE"], ["REPAS", "BOITE", "TESTE"]], [["ROBOT", "POINT", "SCENE"], ["REPAS", "BOITE", "TITRE"]], [["ROBOT", "POINT", "SIEGE"], ["REPAS", "BOITE", "TITRE"]], [["TASSE", "MANGA", "SCENE"], ["TEMPS", "SINGE", "ETAPE"]], [["TASSE", "MANGA", "SERIE"], ["TEMPS", "SONAR", "ETAPE"]], [["TASSE", "MANGA", "SIEGE"], ["TEMPS", "SINGE", "ETAPE"]], [["RESET", "SPORT", "OUTIL"], ["RESTO", "SCOUT", "TOTAL"]], [["RESET", "CANAL", "ECRAN"], ["RUCHE", "SONAR", "TALON"]], [["RESET", "CANAL", "ECRAN"], ["ROCHE", "SONAR", "TALON"]], [["RESET", "PIONS", "SCENE"], ["REPAS", "SCORE", "TASSE"]], [["RESET", "PIONS", "SCENE"], ["REPAS", "SCORE", "TESTE"]], [["RESET", "PIONS", "SIEGE"], ["REPAS", "SCORE", "TASSE"]], [["RESET", "PIONS", "SIEGE"], ["REPAS", "SCORE", "TESTE"]], [["RESET", "DELTA", "OUEST"], ["RADIO", "SALLE", "TRAIT"]], [["RESET", "DELTA", "OUEST"], ["RADIO", "SOLDE", "TRAIT"]], [["RESET", "DELTA", "OCEAN"], ["RADIO", "SALLE", "TRAIN"]], [["RESET", "DELTA", "OCEAN"], ["RADIO", "SOLDE", "TRAIN"]], [["RESET", "DELTA", "SCENE"], ["RADIS", "SALLE", "TRACE"]], [["RESET", "DELTA", "SCENE"], ["RADIS", "SOLDE", "TRACE"]], [["RESET", "DELTA", "SERIE"], ["RADIS", "SOLAR", "TRACE"]], [["RESET", "DELTA", "SIEGE"], ["RADIS", "SALLE", "TRACE"]], [["RESET", "DELTA", "SIEGE"], ["RADIS", "SOLDE", "TRACE"]], [["RESET", "COURS", "EPICE"], ["RUCHE", "SOURI", "TASSE"]], [["RESET", "COURS", "EPICE"], ["RUCHE", "SOURI", "TESTE"]], [["RESET", "COURS", "EPICE"], ["ROCHE", "SOURI", "TASSE"]], [["RESET", "COURS", "EPICE"], ["ROCHE", "SOURI", "TESTE"]], [["RESET", "SMART", "OUTIL"], ["RESTO", "START", "TOTAL"]], [["RESET", "PLOMB", "SCENE"], ["REPAS", "SCORE", "TABLE"]], [["RESET", "PLOMB", "SIEGE"], ["REPAS", "SCORE", "TABLE"]], [["RESET", "SOEUR", "ORDRE"], ["RESTO", "SPEED", "TERRE"]], [["RESET", "PAGES", "SCENE"], ["REPAS", "SIGNE", "TASSE"]], [["RESET", "PAGES", "SCENE"], ["REPAS", "SIGNE", "TESTE"]], [["RESET", "PAGES", "SIEGE"], ["REPAS", "SIGNE", "TASSE"]], [["RESET", "PAGES", "SIEGE"], ["REPAS", "SIGNE", "TESTE"]], [["RESET", "MANGA", "ECRAN"], ["RAMPE", "SONAR", "TRAIN"]], [["RESET", "POIDS", "SCENE"], ["REPAS", "SUITE", "TASSE"]], [["RESET", "POIDS", "SCENE"], ["REPAS", "SUITE", "TESTE"]], [["RESET", "POIDS", "SIEGE"], ["REPAS", "SUITE", "TASSE"]], [["RESET", "POIDS", "SIEGE"], ["REPAS", "SUITE", "TESTE"]], [["RESET", "POINT", "SCENE"], ["REPAS", "SUITE", "TITRE"]], [["RESET", "POINT", "SIEGE"], ["REPAS", "SUITE", "TITRE"]], [["RESET", "STEAM", "OREES"], ["RESTO", "SCENE", "TEMPS"]], [["RESET", "STEAM", "OREES"], ["RESTO", "SIEGE", "TEMPS"]], [["BONUS", "OMBRE", "SCENE"], ["BLOCS", "NOBLE", "SIEGE"]], [["BONUS", "TIBIA", "SCENE"], ["BETES", "NOBLE", "STAGE"]], [["BONUS", "TIBIA", "SIEGE"], ["BETES", "NOBLE", "STAGE"]], [["BONUS", "TABLE", "SCENE"], ["BETES", "NOBLE", "SIEGE"]], [["MICRO", "TERRE", "SPORT"], ["MOTOS", "CARGO", "OUEST"]], [["MICRO", "TERRE", "SCOUT"], ["MOTOS", "CARGO", "OUEST"]], [["MICRO", "TIBIA", "FARCE"], ["MOTIF", "CYBER", "ORAGE"]], [["MICRO", "TIBIA", "FARCE"], ["MOTIF", "CYBER", "OVALE"]], [["MICRO", "TIBIA", "SCENE"], ["MOTOS", "CABLE", "ORAGE"]], [["MICRO", "TIBIA", "SCENE"], ["MOTOS", "CABLE", "OVALE"]], [["MICRO", "TIBIA", "SERIE"], ["MOTOS", "CYBER", "ORAGE"]], [["MICRO", "TIBIA", "SERIE"], ["MOTOS", "CYBER", "OVALE"]], [["MICRO", "TIBIA", "SIEGE"], ["MOTOS", "CABLE", "ORAGE"]], [["MICRO", "TIBIA", "SIEGE"], ["MOTOS", "CABLE", "OVALE"]], [["MICRO", "TIBIA", "HERBE"], ["MATCH", "CYBER", "ORAGE"]], [["MICRO", "TIBIA", "HERBE"], ["MATCH", "CYBER", "OVALE"]], [["MICRO", "TIBIA", "FORCE"], ["MOTIF", "CYBER", "ORAGE"]], [["MICRO", "TIBIA", "FORCE"], ["MOTIF", "CYBER", "OVALE"]], [["MICRO", "TIBIA", "FORME"], ["MOTIF", "CYBER", "ORAGE"]], [["MICRO", "TIBIA", "FORME"], ["MOTIF", "CYBER", "OVALE"]], [["MICRO", "TRAIT", "HOTEL"], ["MATCH", "CHANT", "OUTIL"]], [["MICRO", "NOBLE", "ECRAN"], ["MONDE", "CYBER", "OCEAN"]], [["MICRO", "TABLE", "FORET"], ["MOTIF", "CYBER", "OUEST"]], [["SPORT", "OUEST", "TASSE"], ["SCOUT", "OREES", "TITRE"]], [["SPORT", "OUEST", "TESTE"], ["SCOUT", "OREES", "TITRE"]], [["SPORT", "OUEST", "ETAPE"], ["SCORE", "OPERA", "TITRE"]], [["SPORT", "OUEST", "TRACE"], ["SCOUT", "OPERA", "TITRE"]], [["SPORT", "OPERA", "TASSE"], ["SCOUT", "OREES", "TRACE"]], [["SPORT", "OPERA", "TISON"], ["SCOUT", "OREES", "TRAIN"]], [["SPORT", "OPERA", "TESTE"], ["SCOUT", "OREES", "TRACE"]], [["SPORT", "OREES", "ETAPE"], ["SCORE", "OPERA", "TASSE"]], [["SPORT", "OREES", "ETAPE"], ["SCORE", "OPERA", "TESTE"]], [["SPORT", "ACTES", "TALON"], ["SMART", "OUTIL", "TISON"]], [["SPORT", "ACTES", "TALON"], ["START", "OUTIL", "TISON"]], [["MOTOS", "CARGO", "OUEST"], ["MACRO", "TERRE", "SPORT"]], [["MOTOS", "CARGO", "OUEST"], ["MACRO", "TERRE", "SCOUT"]], [["MOTOS", "CYBER", "ORAGE"], ["MACRO", "TIBIA", "SERIE"]], [["MOTOS", "CYBER", "OVALE"], ["MACRO", "TIBIA", "SERIE"]], [["MOTOS", "CABLE", "ORAGE"], ["MACRO", "TIBIA", "SCENE"]]];
+const THEMES = ["Rétro Arcade", "Cyber & Tech", "Espace & Énergie", "Océan & Mystère", "Forêt & Aventure", "Damier Électronique", "Vitesse & Circuit", "Laboratoire Secret", "Forteresse Médiévale", "Galaxie Lointaine", "Pixel Art", "Exploration Lunaire", "Alchimie Ancienne", "Mission Spatiale", "Profondeurs Marines", "Île Mystérieuse", "Code Source", "Réseau Cybernétique", "Robotique Avancée", "Constellation", "Temple Oublié", "Sanctuaire Zen", "Chemin des Étoiles", "Jardin Botanique", "Base Polaire", "Vaisseau Mère", "Planète Sauvage", "Cité Futuriste", "Royaume des Brumes", "Énigme d'Orient", "Puits Quantique", "Oasis Enchantée", "Monde Virtuel", "Dôme de Cristal", "Machine à Vapeur", "Soleil de Minuit", "Canyon Écarlate", "Signal Radio", "Horizon Infini", "Aurore Polaire", "Hangar Spatial", "Vallée Silencieuse", "Labyrinthe d'Or", "Récif de Corail", "Station Orbitale", "Mine de Diamant", "Forêt d'Émeraude", "Bouclier Plasma", "Vortex Temporel", "Sommet Enneigé", "Cœur d'Énergie", "Ruines Antiques", "Rivage Bleu", "Sphère Céleste", "Sentier Perdu", "Satellite Secret", "Terre d'Aventure", "Passage Secret", "Désert Doré", "Cratère Lunaire", "Flamme Éternelle", "Jungle Tropicale", "Porte des Mondes", "Titan d'Acier", "Comète Brillante", "Boussole Magique", "Royaume Aquatique", "Volcan Actif", "Ciel Étoilé", "Îlot Isolé", "Sentinelle Cyber", "Archipel Éloigné", "Canyon Profond", "Cascade Cachée", "Matrice Neuronale", "Station Sous-Marine", "Cité Suspendue", "Brume Mystique", "Grotte de Cristal", "Étoile Filante", "Forêt de Séquoias", "Château Fort", "Phare de la Nuit", "Ciel Boréal", "Monde Sous-Marin", "Dune Infinie", "Miroir d'Eau", "Chemin de Fer", "Tour d'Ivoire", "Horloge Céleste", "Sphère d'Énergie", "Cœur de Lion", "Fleur de Lotus", "Vapeur Cyber", "Sanctuaire Sacré", "Boussole Dorée", "Vague Géante", "Couronne Royale", "Éclipse Solaire", "Maître des Mots"];
 
-// Mapping vers le format standard
-const GRIDS = GRIDS_RAW.map(g => ({
-  id: g.id,
-  title: g.title,
-  rows: g.rows,
-  cols: g.cols,
-  across: g.a.map(item => ({ num: item[0], r: item[1], c: item[2], word: item[3], clue: item[4] })),
-  down: g.d.map(item => ({ num: item[0], r: item[1], c: item[2], word: item[3], clue: item[4] }))
-}));
+let curLvlIdx = parseInt(localStorage.getItem('cw_last_lvl') || '0');
+if (curLvlIdx >= 100) curLvlIdx = 0;
 
-let curGridIdx = parseInt(localStorage.getItem('cw_last_level') || '0');
-if (curGridIdx >= GRIDS.length) curGridIdx = 0;
-let curGrid = GRIDS[curGridIdx];
-
+let curGrid = null;
 let boardLetters = [];
 let solutionLetters = [];
 let cellNumbers = [];
@@ -587,21 +566,41 @@ function playTone(freq, dur, type='sine') {
 }
 
 function playWinSound() {
-  const notes = [523.25, 659.25, 783.99, 1046.50];
-  notes.forEach((freq, idx) => {
-    setTimeout(() => playTone(freq, 0.28, 'triangle'), idx * 120);
+  [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+    setTimeout(() => playTone(freq, 0.25, 'triangle'), i * 110);
   });
 }
 
+function buildGrid(idx) {
+  const pair = RAW_LEVELS[idx];
+  const aWords = pair[0];
+  const dWords = pair[1];
+  return {
+    id: idx + 1,
+    title: (idx + 1) + '. ' + THEMES[idx],
+    rows: 5,
+    cols: 5,
+    across: [
+      { num: 1, r: 0, c: 0, word: aWords[0], clue: DICT[aWords[0]] },
+      { num: 4, r: 2, c: 0, word: aWords[1], clue: DICT[aWords[1]] },
+      { num: 5, r: 4, c: 0, word: aWords[2], clue: DICT[aWords[2]] }
+    ],
+    down: [
+      { num: 1, r: 0, c: 0, word: dWords[0], clue: DICT[dWords[0]] },
+      { num: 2, r: 0, c: 2, word: dWords[1], clue: DICT[dWords[1]] },
+      { num: 3, r: 0, c: 4, word: dWords[2], clue: DICT[dWords[2]] }
+    ]
+  };
+}
+
 function initGrid() {
-  curGrid = GRIDS[curGridIdx];
-  localStorage.setItem('cw_last_level', curGridIdx);
+  curGrid = buildGrid(curLvlIdx);
+  localStorage.setItem('cw_last_lvl', curLvlIdx);
   document.getElementById('cur-lvl-num').textContent = curGrid.id;
 
-  const R = curGrid.rows, C = curGrid.cols;
-  boardLetters = Array(R).fill(null).map(() => Array(C).fill(null));
-  solutionLetters = Array(R).fill(null).map(() => Array(C).fill(null));
-  cellNumbers = Array(R).fill(null).map(() => Array(C).fill(null));
+  boardLetters = Array(5).fill(null).map(() => Array(5).fill(null));
+  solutionLetters = Array(5).fill(null).map(() => Array(5).fill(null));
+  cellNumbers = Array(5).fill(null).map(() => Array(5).fill(null));
   gameWon = false;
 
   curGrid.across.forEach(item => {
@@ -620,16 +619,8 @@ function initGrid() {
     }
   });
 
-  outer: for (let r = 0; r < R; r++) {
-    for (let c = 0; c < C; c++) {
-      if (solutionLetters[r][c] !== null) {
-        activeRow = r;
-        activeCol = c;
-        break outer;
-      }
-    }
-  }
-
+  activeRow = 0;
+  activeCol = 0;
   activeDir = 'across';
   renderBoard();
   renderClues();
@@ -651,12 +642,12 @@ function updateTimerDisplay() {
 }
 
 function prevGrid() {
-  curGridIdx = (curGridIdx - 1 + GRIDS.length) % GRIDS.length;
+  curLvlIdx = (curLvlIdx - 1 + 100) % 100;
   initGrid();
 }
 
 function nextGrid() {
-  curGridIdx = (curGridIdx + 1) % GRIDS.length;
+  curLvlIdx = (curLvlIdx + 1) % 100;
   initGrid();
 }
 
@@ -666,7 +657,7 @@ function nextGridAfterWin() {
 }
 
 function selectGrid(idx) {
-  curGridIdx = idx;
+  curLvlIdx = idx;
   closeLevelModal();
   initGrid();
 }
@@ -674,19 +665,18 @@ function selectGrid(idx) {
 function openLevelModal() {
   const grid = document.getElementById('levels-grid');
   grid.innerHTML = '';
-  const completed = JSON.parse(localStorage.getItem('cw_completed_levels') || '[]');
+  const completed = JSON.parse(localStorage.getItem('cw_done') || '[]');
 
-  GRIDS.forEach((g, idx) => {
+  for (let i = 0; i < 100; i++) {
     const btn = document.createElement('button');
     btn.className = 'lvl-btn';
-    if (idx === curGridIdx) btn.classList.add('active');
-    const isDone = completed.includes(g.id);
+    if (i === curLvlIdx) btn.classList.add('active');
+    const isDone = completed.includes(i + 1);
     if (isDone) btn.classList.add('completed');
-
-    btn.innerHTML = `<span>${g.id}</span>${isDone ? '<span class="star-mark">⭐</span>' : ''}`;
-    btn.onclick = () => selectGrid(idx);
+    btn.innerHTML = `<span>${i + 1}</span>${isDone ? '<span style="color:#00ff66;font-size:0.6rem;">✓</span>' : ''}`;
+    btn.onclick = () => selectGrid(i);
     grid.appendChild(btn);
-  });
+  }
 
   document.getElementById('levels-modal').style.display = 'flex';
 }
@@ -733,23 +723,15 @@ function handleCellClick(r, c) {
     }
   }
 
-  playTone(400, 0.05, 'triangle');
+  playTone(400, 0.04, 'triangle');
   renderBoard();
   updateClueBanner();
   renderClues();
 }
 
 function toggleDirection() {
-  const hasAcross = getWordAt(activeRow, activeCol, 'across') !== null;
-  const hasDown = getWordAt(activeRow, activeCol, 'down') !== null;
-  if (hasAcross && hasDown) {
-    activeDir = (activeDir === 'across') ? 'down' : 'across';
-  } else if (hasAcross) {
-    activeDir = 'across';
-  } else if (hasDown) {
-    activeDir = 'down';
-  }
-  playTone(450, 0.05, 'sine');
+  activeDir = (activeDir === 'across') ? 'down' : 'across';
+  playTone(440, 0.04, 'sine');
   renderBoard();
   updateClueBanner();
   renderClues();
@@ -764,16 +746,14 @@ function updateClueBanner() {
 }
 
 function renderBoard() {
-  const R = curGrid.rows, C = curGrid.cols;
   const gridEl = document.getElementById('cw-grid');
-  gridEl.style.gridTemplateColumns = `repeat(${C}, 1fr)`;
   gridEl.innerHTML = '';
 
   const curWord = getWordAt(activeRow, activeCol, activeDir);
   const wordCells = curWord ? getWordCells(curWord, activeDir) : [];
 
-  for (let r = 0; r < R; r++) {
-    for (let c = 0; c < C; c++) {
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
       const cell = document.createElement('div');
       cell.className = 'cw-cell';
 
@@ -818,12 +798,12 @@ function renderClues() {
     const userStr = cells.map(pt => boardLetters[pt.r][pt.c]).join('');
     if (userStr === item.word) div.classList.add('solved');
 
-    div.innerHTML = `<strong>${item.num}.</strong> <span>${item.clue}</span> <span style="margin-left:auto;color:var(--dim);font-size:0.75rem;">(${item.word.length})</span>`;
+    div.innerHTML = `<strong>${item.num}.</strong> <span>${item.clue}</span> <span style="margin-left:auto;color:var(--dim);font-size:0.75rem;">(5)</span>`;
     div.onclick = () => {
       activeRow = item.r;
       activeCol = item.c;
       activeDir = curClueTab;
-      playTone(420, 0.05, 'triangle');
+      playTone(420, 0.04, 'triangle');
       renderBoard();
       updateClueBanner();
       renderClues();
@@ -848,14 +828,14 @@ function handleVirtualKey(key) {
       stepCell(-1);
     }
     boardLetters[activeRow][activeCol] = '';
-    playTone(250, 0.06, 'square');
+    playTone(250, 0.05, 'square');
     renderBoard();
     return;
   }
 
   const char = key.toUpperCase();
   boardLetters[activeRow][activeCol] = char;
-  playTone(550, 0.05, 'sine');
+  playTone(550, 0.04, 'sine');
   renderBoard();
 
   stepCell(1);
@@ -909,20 +889,19 @@ function revealCurrentCell() {
   if (gameWon) return;
   if (solutionLetters[activeRow][activeCol] === null) return;
   boardLetters[activeRow][activeCol] = solutionLetters[activeRow][activeCol];
-  playTone(600, 0.1, 'sine');
+  playTone(600, 0.08, 'sine');
   renderBoard();
   stepCell(1);
   checkFullWin();
 }
 
 function checkAnswers() {
-  const R = curGrid.rows, C = curGrid.cols;
   const gridCells = document.querySelectorAll('.cw-cell:not(.black)');
   let idx = 0;
   let allCorrect = true;
 
-  for (let r = 0; r < R; r++) {
-    for (let c = 0; c < C; c++) {
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
       if (solutionLetters[r][c] !== null) {
         const domCell = gridCells[idx];
         const val = boardLetters[r][c];
@@ -944,19 +923,18 @@ function checkAnswers() {
   if (allCorrect) {
     triggerWin();
   } else {
-    playTone(200, 0.2, 'sawtooth');
+    playTone(200, 0.15, 'sawtooth');
     setTimeout(() => {
       document.querySelectorAll('.cell-correct, .cell-wrong').forEach(el => {
         el.classList.remove('cell-correct', 'cell-wrong');
       });
-    }, 1800);
+    }, 1600);
   }
 }
 
 function checkFullWin() {
-  const R = curGrid.rows, C = curGrid.cols;
-  for (let r = 0; r < R; r++) {
-    for (let c = 0; c < C; c++) {
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
       if (solutionLetters[r][c] !== null) {
         if (boardLetters[r][c] !== solutionLetters[r][c]) return;
       }
@@ -971,16 +949,15 @@ function triggerWin() {
   clearInterval(timerTimer);
   playWinSound();
 
-  // Save completion
-  const completed = JSON.parse(localStorage.getItem('cw_completed_levels') || '[]');
+  const completed = JSON.parse(localStorage.getItem('cw_done') || '[]');
   if (!completed.includes(curGrid.id)) {
     completed.push(curGrid.id);
-    localStorage.setItem('cw_completed_levels', JSON.stringify(completed));
+    localStorage.setItem('cw_done', JSON.stringify(completed));
   }
 
   const m = String(Math.floor(timerSec / 60)).padStart(2, '0');
   const s = String(timerSec % 60).padStart(2, '0');
-  document.getElementById('victory-stats').textContent = `Félicitations ! Vous avez résolu le niveau ${curGrid.title} en ${m}:${s}.`;
+  document.getElementById('victory-stats').textContent = `Félicitations ! Vous avez résolu « ${curGrid.title} » en ${m}:${s}.`;
   document.getElementById('victory-modal').style.display = 'flex';
 }
 
@@ -1006,7 +983,7 @@ window.addEventListener('keydown', (e) => {
     }
     e.preventDefault();
   } else if (k === 'ArrowRight') {
-    if (activeCol < curGrid.cols - 1 && solutionLetters[activeRow][activeCol + 1] !== null) {
+    if (activeCol < 4 && solutionLetters[activeRow][activeCol + 1] !== null) {
       activeCol++;
       renderBoard(); updateClueBanner(); renderClues();
     }
@@ -1018,7 +995,7 @@ window.addEventListener('keydown', (e) => {
     }
     e.preventDefault();
   } else if (k === 'ArrowDown') {
-    if (activeRow < curGrid.rows - 1 && solutionLetters[activeRow + 1][activeCol] !== null) {
+    if (activeRow < 4 && solutionLetters[activeRow + 1][activeCol] !== null) {
       activeRow++;
       renderBoard(); updateClueBanner(); renderClues();
     }

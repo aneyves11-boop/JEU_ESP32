@@ -64,8 +64,6 @@
 #include "game_pack_precision.h"
 #include "game_pack_retro.h"
 
-// 3D FPS WebGL & Multijoueur 3-8 Joueurs
-#include "game_fps3d.h"
 #include "game_mp_undercover.h"
 
 // Jeu de Mots Croisés Cyber
@@ -212,14 +210,14 @@ void handleRoot() {
     handleLoginPage(false);
     return;
   }
-  server.send(200, "text/html; charset=utf-8", HUB_HTML);
+  server.send_P(200, "text/html; charset=utf-8", HUB_HTML);
 }
 
 // Helper macro for game route
 #define ROUTE_GAME(path, html_var) \
   server.on(path, HTTP_GET, []() { \
     if (!isClientAuthenticated()) { handleLoginPage(false); return; } \
-    server.send(200, "text/html; charset=utf-8", html_var); \
+    server.send_P(200, "text/html; charset=utf-8", html_var); \
   });
 
 // Settings Handlers
@@ -293,7 +291,7 @@ void handleNotFound() {
   if (!isClientAuthenticated()) {
     handleLoginPage(false);
   } else {
-    server.send(200, "text/html; charset=utf-8", HUB_HTML);
+    server.send_P(200, "text/html; charset=utf-8", HUB_HTML);
   }
 }
 
@@ -412,9 +410,7 @@ void setup() {
   ROUTE_GAME("/game_lunar", GAME_LUNAR_HTML);
   ROUTE_GAME("/game_cannon", GAME_CANNON_HTML);
 
-  // --- NOUVEAUTÉ : FPS 3D WEBGL ---
-  ROUTE_GAME("/game_fps3d", GAME_FPS3D_HTML);
-  ROUTE_GAME("/game_motscroises", GAME_MOTSCROISES_HTML);
+    ROUTE_GAME("/game_motscroises", GAME_MOTSCROISES_HTML);
   ROUTE_GAME("/game_devinettes", GAME_DEVINETTES_HTML);
 
   // --- 15 JEUX MULTIJOUEUR 1V1 TEMPS RÉEL + UNDERCOVER 3-8 JOUEURS ---
