@@ -71,6 +71,9 @@
 // Jeu de Mots Croisés Cyber
 #include "game_motscroises.h"
 
+// Jeu de Devinettes 500 Questions
+#include "game_devinettes.h"
+
 // Contrôleur Universel de Pause pour les Jeux Solo
 #include "arcade_pause.h"
 
@@ -412,6 +415,7 @@ void setup() {
   // --- NOUVEAUTÉ : FPS 3D WEBGL ---
   ROUTE_GAME("/game_fps3d", GAME_FPS3D_HTML);
   ROUTE_GAME("/game_motscroises", GAME_MOTSCROISES_HTML);
+  ROUTE_GAME("/game_devinettes", GAME_DEVINETTES_HTML);
 
   // --- 15 JEUX MULTIJOUEUR 1V1 TEMPS RÉEL + UNDERCOVER 3-8 JOUEURS ---
   // Salle de Déduction Multijoueur (3 à 8 Joueurs)

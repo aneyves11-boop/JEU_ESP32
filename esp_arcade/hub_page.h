@@ -278,8 +278,8 @@ const char HUB_HTML[] PROGMEM = R"rawliteral(
         <div class="card-top">
           <div class="card-icon" style="color:#ffe600; border-color:#ffe600; font-size:1.9rem; background:rgba(255,230,0,0.15);">📰</div>
           <div class="card-info">
-            <h2 style="color:#ffe600; font-size:1.15rem;">✨ Mots Croisés Cyber (Grilles Thématiques Françaises)</h2>
-            <p>Mini-mots croisés tactiles avec indices dynamiques, clavier cyber, chrono et 6 grilles complètes !</p>
+            <h2 style="color:#ffe600; font-size:1.15rem;">✨ Mots Croisés Cyber (100 Niveaux Complets)</h2>
+            <p>Mini-mots croisés tactiles avec indices dynamiques, clavier cyber, sélecteur de 100 niveaux et chrono !</p>
           </div>
         </div>
         <div class="card-bot">
@@ -287,6 +287,22 @@ const char HUB_HTML[] PROGMEM = R"rawliteral(
           <span class="play-pill" style="background:#ffe600; color:#000;">Jouer aux Mots Croisés ▶</span>
         </div>
       </a>
+
+      <!-- NOUVEAUTÉ VEDETTE : CYBER DEVINETTES 500 -->
+      <a href="/game_devinettes" class="game-card" data-title="devinette enigme quiz cyber questions aleatoires culture reflexion" style="border-color:#a855f7; box-shadow: 0 0 20px rgba(168,85,247,0.3); grid-column: 1 / -1;">
+        <div class="card-top">
+          <div class="card-icon" style="color:#a855f7; border-color:#a855f7; font-size:1.9rem; background:rgba(168,85,247,0.15);">❓</div>
+          <div class="card-info">
+            <h2 style="color:#c084fc; font-size:1.15rem;">⚡ Cyber Devinettes (500 Questions Aléatoires)</h2>
+            <p>500 énigmes & questions variées : Énigmes, Geek, Nature, Histoire & Jeux de Mots avec QCM tactile et jokers 50/50 !</p>
+          </div>
+        </div>
+        <div class="card-bot">
+          <span style="color:#c084fc; font-weight:bold;">❓ Énigmes & Quiz</span>
+          <span class="play-pill" style="background:#a855f7; color:#fff;">Jouer aux Devinettes ▶</span>
+        </div>
+      </a>
+
 
 
       <!-- 1-12 LES 12 ORIGINAUX -->

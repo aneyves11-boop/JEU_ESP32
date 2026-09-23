@@ -19,9 +19,13 @@ Zéro bibliothèque tierce requise : utilise uniquement le core Arduino officiel
   - **Précision & Adresse :** Fil Électrique, Fruit Slice, Coin Jar, Grappin Swing, Balance Ball.
   - **Rétro Iconique :** Tetris Cyber, Pac-Maze, Lunar Lander, Cannon Siege.
 
-- **📰 Mots Croisés Cyber (Grilles Thématiques Françaises) :**
+- **❓ Cyber Devinettes (500 Questions Aléatoires) :**
+  - Grand jeu d'énigmes et de devinettes à 500 questions uniques en français réparties en 5 grandes catégories : *Énigmes & Mystères*, *Sciences & Geek*, *Nature & Animaux*, *Culture Générale & Histoire*, *Jeux de Mots & Logique*.
+  - Tirage aléatoire sans répétition, interface QCM tactile, système de multiplicateurs de série (Streak), joker 50/50 éliminant deux mauvaises réponses, et sauvegarde des meilleurs records.
+
+- **📰 Mots Croisés Cyber (100 Niveaux Complets) :**
   - Mini-mots croisés ergonomiques tactiles optimisés pour smartphones et PC.
-  - 6 grilles complètes en français : *Rétro Arcade*, *Cyber & Tech*, *Espace & Énergie*, *Océan & Mystère*, *Forêt & Aventure*, *Carré Magique Express*.
+  - 100 grilles complètes et indépendantes en français avec sélecteur de niveau 1 à 100, progression sauvegardée, étoiles et navigation rapide.
   - Clavier virtuel Cyber intégré, navigation tactile fluide (sélection automatique du mot horizontal/vertical par tap), vérification instantanée, indices et chronomètre avec sauvegarde des records.
 
 - **🕶️ Cyber-FPS 3D Rétro (Moteur WebGL 60 FPS) :**
