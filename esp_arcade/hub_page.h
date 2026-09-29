@@ -236,7 +236,7 @@ const char HUB_HTML[] PROGMEM = R"rawliteral(
 </head>
 <body>
   <header>
-    <div class="logo">🕹️ ESP32 Arcade</div>
+    <div class="logo">🕹️ ESP32 Arcade %SD_BADGE%</div>
     <div class="header-btns">
       <a href="/settings" class="btn-h">⚙️ Réglages</a>
       <a href="/logout" class="btn-h" style="border-color:var(--pink);color:#ff4d79;">🔒 Quitter</a>
@@ -246,7 +246,7 @@ const char HUB_HTML[] PROGMEM = R"rawliteral(
   <main class="container">
     <div class="hero">
       <h1 id="hero-title">🎮 ESP32 ARCADE STATION</h1>
-      <p id="hero-sub">50+ Jeux Solo, Devinettes (500Q), Mots Croisés (100 Niveaux) & Multijoueur !</p>
+      <p id="hero-sub">Cyber-FPS 3D WebGL, 50+ Jeux Solo, Devinettes, Mots Croisés & Multijoueur !</p>
       
       <div class="mode-nav">
         <button class="btn-mode active" id="tab-solo" onclick="setMode('solo')">🕹️ Solo & FPS 3D</button>
@@ -258,6 +258,21 @@ const char HUB_HTML[] PROGMEM = R"rawliteral(
 
     <!-- VUE 1 : JEUX SOLO & 3D -->
     <div class="grid" id="game-grid">
+      <!-- NOUVEAUTÉ VEDETTE : CYBER-FPS 3D WEBGL -->
+      <a href="/game_fps3d" class="game-card" data-title="cyber fps 3d webgl retro doom wolfenstein shooter action tir arme" style="border-color:var(--cyan); box-shadow: 0 0 25px rgba(0,243,255,0.45); grid-column: 1 / -1; background: linear-gradient(135deg, rgba(0,243,255,0.12), rgba(255,0,85,0.12));">
+        <div class="card-top">
+          <div class="card-icon" style="color:var(--cyan); border-color:var(--cyan); font-size:2rem; background:rgba(0,243,255,0.2);">🕶️</div>
+          <div class="card-info">
+            <h2 style="color:var(--cyan); font-size:1.25rem;">🔥 Cyber-FPS 3D (Moteur 3D Temps Réel 60 FPS)</h2>
+            <p>Jeu de tir 3D immersif style Doom / Wolfenstein 3D ! Drones ennemis, blaster plasma, radar minimap, textures & 60 FPS fluide !</p>
+          </div>
+        </div>
+        <div class="card-bot">
+          <span style="color:var(--cyan); font-weight:bold;">🕹️ Moteur 3D Raycasting</span>
+          <span class="play-pill" style="background:var(--cyan); color:#000;">Lancer la Mission 3D ▶</span>
+        </div>
+      </a>
+
       <!-- NOUVEAUTÉ VEDETTE : MOTS CROISÉS CYBER -->
       <a href="/game_motscroises" class="game-card" data-title="mots croises cyber mots crossword puzzle lettres vocabulaire retro grille" style="border-color:#ffe600; box-shadow: 0 0 20px rgba(255,230,0,0.3); grid-column: 1 / -1;">
         <div class="card-top">

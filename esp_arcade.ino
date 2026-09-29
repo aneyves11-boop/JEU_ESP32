@@ -1,9 +1,9 @@
 /*
  * ==================================================================================
- *   ESP32 WEB ARCADE - 50 VRAIS JEUX D'ARCADE EMBARQUÉS (100% PROGMEM OFFLINE)
+ *   ESP32 WEB ARCADE - 50 VRAIS JEUX D'ARCADE EMBARQUES (100% PROGMEM OFFLINE)
  * ==================================================================================
  * 
- * 50 JEUX INDÉPENDANTS & DÉDIÉS :
+ * 50 JEUX INDEPENDANTS & DEDIES :
  *  1. Snake Retro             26. Blackjack 21 Pro
  *  2. Flappy Drone            27. Memory Flip 16
  *  3. Space Invaders          28. Pierre-Feuille-Ciseaux
@@ -13,14 +13,14 @@
  *  7. Neon Piano Tiles        32. Basket Dunk Shoot
  *  8. Tower Stacker           33. Sprint 100m Dash
  *  9. Knife Master            34. Ski Slalom
- * 10. Démineur Néon           35. Tir à l'Arc Bullseye
+ * 10. Demineur Neon           35. Tir a l'Arc Bullseye
  * 11. Morpion Cyber IA        36. Air Hockey Flash
  * 12. Pong vs IA Pro          37. Beat Tap Reflex
  * 13. Asteroids Blaster       38. Simon Musical 4-Notes
  * 14. Missile Defense         39. Note Drop Rain
  * 15. Cyber Turret 360        40. Tempo Tapper 60 BPM
  * 16. Galaxian Dive           41. Guitar Hero Mini
- * 17. Tank 2D Battle          42. Fil Électrique Buzz
+ * 17. Tank 2D Battle          42. Fil Electrique Buzz
  * 18. Alien Swarm Strike      43. Perfect Slice
  * 19. Lights Out Matrix       44. Coin in the Jar
  * 20. Slide 15 Puzzle         45. Grappin Harpoon
@@ -36,6 +36,13 @@
 #include <DNSServer.h>
 #include <WebServer.h>
 #include <Preferences.h>
+#include "FS.h"
+#include "SD_MMC.h"
+
+// Support Carte Micro-SD 2 Go (ESP32-CAM)
+bool sdCardAvailable = false;
+uint64_t sdCardTotalBytes = 0;
+uint64_t sdCardUsedBytes = 0;
 
 #include "login_page.h"
 #include "hub_page.h"
@@ -63,6 +70,9 @@
 #include "game_pack_rhythm.h"
 #include "game_pack_precision.h"
 #include "game_pack_retro.h"
+
+// 3D FPS WebGL
+#include "game_fps3d.h"
 
 #include "game_mp_undercover.h"
 
@@ -210,7 +220,14 @@ void handleRoot() {
     handleLoginPage(false);
     return;
   }
-  server.send_P(200, "text/html; charset=utf-8", HUB_HTML);
+  String html = HUB_HTML;
+  if (sdCardAvailable) {
+    uint32_t sdMb = (uint32_t)(sdCardTotalBytes / (1024 * 1024));
+    html.replace("%SD_BADGE%", "<span style='background:rgba(0,255,102,0.15); border:1px solid #00ff66; color:#00ff66; padding:3px 8px; border-radius:12px; font-size:0.75rem; font-weight:800; display:inline-flex; align-items:center; gap:4px;'>💾 SD " + String(sdMb) + " Mo • HD ACTIF</span>");
+  } else {
+    html.replace("%SD_BADGE%", "<span style='background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#8b9bb4; padding:3px 8px; border-radius:12px; font-size:0.75rem; font-weight:700;'>⚡ Flash Interne</span>");
+  }
+  server.send(200, "text/html; charset=utf-8", html);
 }
 
 // Helper macro for game route
@@ -242,6 +259,16 @@ void handleSettings() {
   html.replace("%STA_PASS%", sta_pass);
   html.replace("%AP_SSID%", ap_ssid);
   html.replace("%AP_PASS%", ap_pass);
+
+  if (sdCardAvailable) {
+    uint32_t sdMb = (uint32_t)(sdCardTotalBytes / (1024 * 1024));
+    uint32_t sdUsedMb = (uint32_t)(sdCardUsedBytes / (1024 * 1024));
+    html.replace("%SD_STATUS%", String(sdMb) + " Mo (" + String(sdUsedMb) + " Mo utilis&eacute;s - HD & Audio Actifs)");
+    html.replace("%SD_COLOR%", "var(--neon-green)");
+  } else {
+    html.replace("%SD_STATUS%", "Non d&eacute;tect&eacute;e (Mode Flash PROGMEM)");
+    html.replace("%SD_COLOR%", "var(--neon-pink)");
+  }
   server.send(200, "text/html; charset=utf-8", html);
 }
 
@@ -280,9 +307,47 @@ void handleSaveSettings() {
   server.send(200, "text/html; charset=utf-8", msg);
 }
 
+bool loadFromSdCard(String path) {
+  if (!sdCardAvailable) return false;
+  if (path.endsWith("/")) path += "index.html";
+  
+  String dataType = "text/plain";
+  if (path.endsWith(".html") || path.endsWith(".htm")) dataType = "text/html; charset=utf-8";
+  else if (path.endsWith(".css")) dataType = "text/css";
+  else if (path.endsWith(".js")) dataType = "application/javascript";
+  else if (path.endsWith(".png")) dataType = "image/png";
+  else if (path.endsWith(".gif")) dataType = "image/gif";
+  else if (path.endsWith(".jpg") || path.endsWith(".jpeg")) dataType = "image/jpeg";
+  else if (path.endsWith(".ico")) dataType = "image/x-icon";
+  else if (path.endsWith(".svg")) dataType = "image/svg+xml";
+  else if (path.endsWith(".mp3")) dataType = "audio/mpeg";
+  else if (path.endsWith(".wav")) dataType = "audio/wav";
+  else if (path.endsWith(".ogg")) dataType = "audio/ogg";
+  else if (path.endsWith(".json")) dataType = "application/json";
+
+  if (SD_MMC.exists(path.c_str())) {
+    File dataFile = SD_MMC.open(path.c_str(), "r");
+    if (dataFile) {
+      if (!dataFile.isDirectory()) {
+        server.streamFile(dataFile, dataType);
+        dataFile.close();
+        return true;
+      }
+      dataFile.close();
+    }
+  }
+  return false;
+}
 
 void handleNotFound() {
   String uri = server.uri();
+
+  // 1. Tenter de charger le fichier depuis la carte Micro-SD
+  if (loadFromSdCard(uri)) {
+    return;
+  }
+
+  // 2. Redirections Captive Portal
   if (uri.indexOf("generate_204") >= 0 || uri.indexOf("hotspot-detect.html") >= 0 || uri.indexOf("canonical.html") >= 0 || uri.indexOf("connecttest.txt") >= 0 || uri.indexOf("ncsi.txt") >= 0) {
     server.sendHeader("Location", String("http://") + apIP.toString() + "/", true);
     server.send(302, "text/plain", "");
@@ -301,6 +366,18 @@ void setup() {
   Serial.println("\n\n========================================");
   Serial.println("     ESP32 50-IN-1 WEB ARCADE SYSTEM    ");
   Serial.println("========================================");
+
+  // Initialisation de la carte Micro-SD 2 Go (Mode 1-bit pour ESP32-CAM)
+  if (SD_MMC.begin("/sdcard", true)) {
+    sdCardAvailable = true;
+    sdCardTotalBytes = SD_MMC.totalBytes();
+    sdCardUsedBytes = SD_MMC.usedBytes();
+    Serial.printf("[OK] Carte Micro-SD détectée ! Capacité : %llu Mo (Utilisé: %llu Mo)\n", 
+                  sdCardTotalBytes / (1024 * 1024), 
+                  sdCardUsedBytes / (1024 * 1024));
+  } else {
+    Serial.println("[INFO] Carte Micro-SD non détectée. Mode Flash PROGMEM actif.");
+  }
 
   preferences.begin("arcade", true);
   access_pass = preferences.getString("access_pass", "arcade123");
@@ -410,7 +487,9 @@ void setup() {
   ROUTE_GAME("/game_lunar", GAME_LUNAR_HTML);
   ROUTE_GAME("/game_cannon", GAME_CANNON_HTML);
 
-    ROUTE_GAME("/game_motscroises", GAME_MOTSCROISES_HTML);
+  // 3D FPS WebGL & Nouveautés
+  ROUTE_GAME("/game_fps3d", GAME_FPS3D_HTML);
+  ROUTE_GAME("/game_motscroises", GAME_MOTSCROISES_HTML);
   ROUTE_GAME("/game_devinettes", GAME_DEVINETTES_HTML);
 
   // --- 15 JEUX MULTIJOUEUR 1V1 TEMPS RÉEL + UNDERCOVER 3-8 JOUEURS ---

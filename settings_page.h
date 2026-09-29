@@ -80,6 +80,7 @@ const char SETTINGS_HTML[] PROGMEM = R"rawliteral(
       <div class="progress-bar-bg"><div class="progress-bar-fill"></div></div>
       <div class="mem-row"><span>✨ Espace Flash Libre :</span><span class="mem-val free">%FLASH_FREE% Ko</span></div>
       <div class="mem-row" style="margin-top:4px;"><span>Mémoire Vive (RAM) Libre :</span><span class="mem-val" style="color:var(--neon-yellow);">%RAM_FREE% Ko</span></div>
+      <div class="mem-row" style="margin-top:8px; border-top:1px dashed rgba(255,255,255,0.15); padding-top:6px;"><span>💾 Carte Micro-SD :</span><span class="mem-val" style="color:%SD_COLOR%;">%SD_STATUS%</span></div>
     </div>
 
     <form action="/save_settings" method="POST">

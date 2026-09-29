@@ -1,0 +1,37 @@
+================================================================================
+🎮 ESP32 ARCADE STATION - DOSSIER CARTE MICRO-SD 2 GO
+================================================================================
+
+Félicitations ! Votre carte Micro-SD de 2 Go est maintenant prise en charge par l'ESP32-CAM.
+
+--------------------------------------------------------------------------------
+📂 COMMENT INSTALLER CE DOSSIER SUR VOTRE CARTE MICRO-SD :
+--------------------------------------------------------------------------------
+1. Formatez votre carte Micro-SD de 2 Go en FAT32 (format standard).
+2. Copiez les dossiers de ce répertoire directement à la racine de la carte SD :
+   - /musiques/ : vos musiques d'ambiance et thèmes rétro au format .mp3
+   - /sons/     : vos bruitages personnalisés (.mp3 ou .wav)
+   - /textures/ : textures pour le Cyber-FPS 3D
+   - /jeux/     : pour ajouter de nouveaux jeux HTML5 / JS indépendants !
+
+--------------------------------------------------------------------------------
+✨ CE QUI A ÉTÉ AMÉLIORÉ SUR VOS JEUX :
+--------------------------------------------------------------------------------
+1. 🎨 GRAPHISMES HAUTE DÉFINITION (HD RETINA CANVAS) :
+   - Tous les jeux s'adaptent désormais à la résolution physique de votre smartphone (DPI ×2 ou ×3).
+   - Fini le flou sur écran OLED : les vaisseaux, serpents, néons et textes sont parfaitement nets et tranchants !
+
+2. 🔊 NOUVEAU MOTEUR SONORE ARCADE POLYPHONIQUE (WEB AUDIO API) :
+   - Tirs laser réalistes avec modulation de fréquence.
+   - Vraies explosions d'arcade avec bruit blanc basse fréquence filtré.
+   - Sons de nourriture, bonus et carillons rétro.
+   - Détection automatique des fichiers MP3 présents sur la carte SD pour les musiques de fond !
+
+3. ✨ MOTEUR DE PARTICULES & EFFET NÉON GLOW :
+   - Particules d'étincelles lumineuses sur chaque impact, destruction d'alien ou pomme mangée.
+   - Bordures arrondies, yeux animés et lueur dynamique.
+
+4. 💾 DIAGNOSTIC DE LA CARTE EN DIRECT :
+   - Dans le menu ⚙️ Réglages : affichage en direct de la capacité détectée (2048 Mo) et du statut HD.
+   - Sur la page d'accueil 🕹️ Hub : badge vert "💾 SD 2048 Mo • HD ACTIF".
+================================================================================

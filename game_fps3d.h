@@ -153,6 +153,18 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
       transition: all 0.2s;
     }
     .btn-play:active { transform: scale(0.95); }
+    .mode-select { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
+    .mode-select .btn-play { flex: 1 1 180px; max-width: 260px; padding-inline: 16px; }
+    .btn-team-play { background: linear-gradient(135deg, #ff526b, #145dde); color: #fff; }
+    .room-status { color: var(--cyan); font-size: 0.9rem; font-weight: 800; }
+    .team-roster { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: min(100%, 420px); }
+    .team-roster section { padding: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; }
+    .team-roster h2 { margin-bottom: 8px; font-size: 0.95rem; }
+    .team-red h2 { color: #ff6475; }
+    .team-blue h2 { color: #59aaff; }
+    .team-roster ul { list-style: none; color: #dce5ed; font-size: 0.82rem; line-height: 1.7; overflow-wrap: anywhere; }
+    .room-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .btn-secondary { background: #3c4654; color: #fff; }
   </style>
 </head>
 <body>
@@ -170,7 +182,7 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
     <div class="hud-stat-box">
       <a href="/hub" class="btn-exit">⬅ Quitter</a>
       <span>SCORE : <span id="txtScore" style="color:var(--cyan);">0</span></span>
-      <span>ENNEMIS : <span id="txtEnemies" style="color:var(--pink);">0</span></span>
+      <span><span id="enemyLabel">ENNEMIS :</span> <span id="txtEnemies" style="color:var(--pink);">0</span></span>
     </div>
   </div>
 
@@ -216,7 +228,23 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
       <b>📱 Mobile :</b> Joystick gauche (Déplacement), Joystick droit (Viser), Bouton 🔥 (Tir)<br>
       <b>💻 PC :</b> ZQSD/WASD pour bouger, Souris/Espace pour tirer, R pour recharger.
     </div>
-    <button class="btn-play" onclick="startGame()">🚀 Démarrer la Mission</button>
+    <div class="mode-select">
+      <button class="btn-play" onclick="startGame()">Solo</button>
+      <button class="btn-play btn-team-play" onclick="joinTeamMatch()">Équipes 4 contre 4</button>
+    </div>
+  </div>
+
+  <div class="screen-modal" id="teamLobby" style="display:none;">
+    <h1>ÉQUIPES 4 CONTRE 4</h1>
+    <p class="room-status" id="roomStatus">Connexion à la salle...</p>
+    <div class="team-roster">
+      <section class="team-red"><h2>Équipe rouge <span id="redCount">0/4</span></h2><ul id="redPlayers"></ul></section>
+      <section class="team-blue"><h2>Équipe bleue <span id="blueCount">0/4</span></h2><ul id="bluePlayers"></ul></section>
+    </div>
+    <div class="room-actions">
+      <button class="btn-play btn-team-play" id="startTeamMatch" onclick="startTeamMatch()" disabled>En attente d'un joueur</button>
+      <button class="btn-play btn-secondary" onclick="leaveTeamLobby()">Retour</button>
+    </div>
   </div>
 
   <!-- GAME OVER SCREEN -->
@@ -224,7 +252,7 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
     <h1 id="endTitle">MISSION ÉCHOUÉE</h1>
     <p id="endDesc" style="color:var(--pink); font-size:1.1rem; font-weight:800;">Votre signal vital s'est éteint.</p>
     <p style="color:#fff; font-size:1rem;">Score Final : <b id="endScoreText" style="color:var(--yellow);">0</b></p>
-    <button class="btn-play" onclick="startGame()">🔄 Recommencer</button>
+    <button class="btn-play" onclick="restartGame()">🔄 Recommencer</button>
   </div>
 </div>
 
@@ -380,7 +408,7 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
     3: createWallTexture(3)
   };
 
-  function createHumanoidMesh(walkPhase = 0) {
+  function createHumanoidMesh(walkPhase = 0, team = -1) {
     const mesh = [];
     const stride = Math.sin(walkPhase) * 0.52;
     const armSwing = Math.sin(walkPhase + Math.PI) * 0.38;
@@ -411,6 +439,39 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
       });
     }
 
+    function addEllipsoid(cx, cy, cz, radiusX, radiusY, radiusZ, color) {
+      const latitudeSteps = 4;
+      const longitudeSteps = 8;
+      const rings = [];
+      for (let latitude = 0; latitude <= latitudeSteps; latitude++) {
+        const theta = Math.PI * latitude / latitudeSteps;
+        const ring = [];
+        for (let longitude = 0; longitude < longitudeSteps; longitude++) {
+          const phi = Math.PI * 2 * longitude / longitudeSteps;
+          ring.push([
+            cx + radiusX * Math.sin(theta) * Math.cos(phi),
+            cy + radiusY * Math.sin(theta) * Math.sin(phi),
+            cz + radiusZ * Math.cos(theta)
+          ]);
+        }
+        rings.push(ring);
+      }
+
+      for (let latitude = 0; latitude < latitudeSteps; latitude++) {
+        for (let longitude = 0; longitude < longitudeSteps; longitude++) {
+          const next = (longitude + 1) % longitudeSteps;
+          const topLeft = rings[latitude][longitude];
+          const topRight = rings[latitude][next];
+          const bottomRight = rings[latitude + 1][next];
+          const bottomLeft = rings[latitude + 1][longitude];
+          const brightness = 0.68 + 0.3 * (1 - (latitude + 0.5) / latitudeSteps);
+          const faceColor = shadeColor(color, brightness);
+          if (latitude > 0) mesh.push({ vertices: [topLeft, bottomLeft, topRight], color: faceColor });
+          if (latitude < latitudeSteps - 1) mesh.push({ vertices: [topRight, bottomLeft, bottomRight], color: faceColor });
+        }
+      }
+    }
+
     addBox(-0.105, 0.015, 0.055, 0.16, 0.27, 0.11, '#41494a', stride, 0.43);
     addBox(0.105, 0.015, 0.055, 0.16, 0.27, 0.11, '#41494a', -stride, 0.43);
     addBox(-0.105, 0, 0.19, 0.14, 0.17, 0.22, '#788078', stride, 0.43);
@@ -421,23 +482,29 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
     addBox(-0.11, 0.16, 0.48, 0.09, 0.055, 0.095, '#6e756e');
     addBox(0, 0.16, 0.48, 0.09, 0.055, 0.095, '#777b70');
     addBox(0.11, 0.16, 0.48, 0.09, 0.055, 0.095, '#606b64');
-    addBox(-0.235, 0, 0.65, 0.16, 0.27, 0.15, '#626b68');
-    addBox(0.235, 0, 0.65, 0.16, 0.27, 0.15, '#626b68');
+    addEllipsoid(-0.235, 0, 0.65, 0.09, 0.14, 0.09, '#626b68');
+    addEllipsoid(0.235, 0, 0.65, 0.09, 0.14, 0.09, '#626b68');
     addBox(-0.25, 0, 0.47, 0.12, 0.16, 0.25, '#778078', armSwing, 0.71);
     addBox(0.25, 0, 0.47, 0.12, 0.16, 0.25, '#778078', -armSwing, 0.71);
     addBox(-0.25, 0.015, 0.29, 0.11, 0.14, 0.17, '#454e4d', armSwing, 0.71);
     addBox(0.25, 0.015, 0.29, 0.11, 0.14, 0.17, '#454e4d', -armSwing, 0.71);
-    addBox(0, 0, 0.79, 0.21, 0.2, 0.22, '#a58f79');
-    addBox(0, 0.015, 0.91, 0.28, 0.25, 0.14, '#aeb9b8');
-    addBox(0, 0.13, 0.80, 0.15, 0.035, 0.055, '#20272a');
+    addEllipsoid(0, 0, 0.79, 0.105, 0.095, 0.11, '#a58f79');
+    addEllipsoid(0, 0.005, 0.91, 0.145, 0.135, 0.085, '#aeb9b8');
+    addEllipsoid(0, 0.09, 0.79, 0.07, 0.025, 0.035, '#20272a');
+    addEllipsoid(-0.105, -0.145, 0.22, 0.075, 0.075, 0.055, '#626b68');
+    addEllipsoid(0.105, -0.145, 0.22, 0.075, 0.075, 0.055, '#626b68');
     addBox(0, 0.19, 0.54, 0.42, 0.06, 0.065, '#20262a');
     addBox(-0.27, 0.19, 0.54, 0.18, 0.045, 0.045, '#333b3d');
     addBox(0.1, 0.19, 0.59, 0.12, 0.08, 0.12, '#252b2e');
     addBox(0.33, 0.19, 0.54, 0.2, 0.035, 0.035, '#242a2c');
+    if (team >= 0) addBox(-0.235, -0.145, 0.65, 0.055, 0.025, 0.065, team === 0 ? '#ed4258' : '#428ff5');
     return mesh;
   }
 
   const humanoidMeshes = Array.from({ length: 8 }, (_, index) => createHumanoidMesh(index * Math.PI / 4));
+  const teamHumanoidMeshes = [0, 1].map(team =>
+    Array.from({ length: 8 }, (_, index) => createHumanoidMesh(index * Math.PI / 4, team))
+  );
 
   const canvas3D = document.getElementById('view3D');
   const ctx3D = canvas3D.getContext('2d');
@@ -456,6 +523,15 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
 
   let enemies = [];
   let particles = [];
+  let fpsSocket = null;
+  let fpsMyId = -1;
+  let fpsRoomPlayers = [];
+  let fpsRemotePlayers = {};
+  let fpsTeam = -1;
+  let fpsScores = [0, 0];
+  let multiplayerMode = false;
+  let fpsMatchStarted = false;
+  let fpsLastStateSent = 0;
   let isRunning = false;
   let lastTime = 0;
   let weaponRecoil = 0;
@@ -489,7 +565,219 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
     ];
   }
 
+  function sendFpsMessage(message) {
+    if (fpsSocket && fpsSocket.readyState === WebSocket.OPEN) {
+      fpsSocket.send(JSON.stringify(message));
+    }
+  }
+
+  function renderTeamLobby(players) {
+    const redList = document.getElementById('redPlayers');
+    const blueList = document.getElementById('bluePlayers');
+    redList.replaceChildren();
+    blueList.replaceChildren();
+    const red = players.filter(entry => entry.team === 0);
+    const blue = players.filter(entry => entry.team === 1);
+    [[red, redList], [blue, blueList]].forEach(([teamPlayers, list]) => {
+      teamPlayers.forEach(entry => {
+        const row = document.createElement('li');
+        row.textContent = entry.name + (entry.id === fpsMyId ? ' (toi)' : '');
+        list.appendChild(row);
+      });
+    });
+    document.getElementById('redCount').textContent = red.length + '/4';
+    document.getElementById('blueCount').textContent = blue.length + '/4';
+    const status = document.getElementById('roomStatus');
+    const button = document.getElementById('startTeamMatch');
+    const canStart = players.length >= 2 && red.length > 0 && blue.length > 0 && !fpsMatchStarted;
+    status.textContent = players.length + '/8 joueurs connectés';
+    button.disabled = !canStart;
+    button.textContent = canStart ? 'Lancer le match' : (players.length < 2 ? "En attente d'un joueur" : 'Match en cours');
+  }
+
+  function onFpsRoomState(players) {
+    const previousTeams = new Map(fpsRoomPlayers.map(entry => [entry.id, entry.team]));
+    fpsRoomPlayers = players.slice(0, 8).map((entry, index) => ({
+      id: entry.id,
+      name: entry.name,
+      team: fpsMatchStarted && previousTeams.has(entry.id) ? previousTeams.get(entry.id) : index % 2
+    }));
+    const self = fpsRoomPlayers.find(entry => entry.id === fpsMyId);
+    if (self && !fpsMatchStarted) fpsTeam = self.team;
+    renderTeamLobby(fpsRoomPlayers);
+  }
+
+  function joinTeamMatch() {
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('teamLobby').style.display = 'flex';
+    document.getElementById('roomStatus').textContent = 'Connexion à la salle...';
+    const myPseudo = localStorage.getItem('arcade_pseudo') || ('Joueur_' + Math.floor(Math.random() * 900 + 100));
+    fpsSocket = new WebSocket('ws://' + location.hostname + ':81');
+    fpsSocket.onopen = () => sendFpsMessage({ t: 'room_join', room: 'fps_teams', name: myPseudo });
+    fpsSocket.onerror = () => { document.getElementById('roomStatus').textContent = 'Connexion impossible au serveur multijoueur'; };
+    fpsSocket.onclose = () => {
+      if (!fpsMatchStarted) document.getElementById('roomStatus').textContent = 'Connexion perdue. Retourne au menu puis réessaie.';
+    };
+    fpsSocket.onmessage = event => {
+      let message;
+      try { message = JSON.parse(event.data); } catch (_) { return; }
+      if (message.t === 'room_joined') {
+        fpsMyId = message.my_id;
+      } else if (message.t === 'room_state') {
+        onFpsRoomState(message.players || []);
+      } else if (message.t === 'player_left') {
+        delete fpsRemotePlayers[message.id];
+      } else if (message.t === 'fps_start') {
+        beginTeamRound();
+      } else if (message.t === 'fps_state') {
+        if (message.id !== fpsMyId) {
+          const current = fpsRemotePlayers[message.id];
+          const rosterEntry = fpsRoomPlayers.find(entry => entry.id === message.id);
+          fpsRemotePlayers[message.id] = {
+            ...message,
+            team: rosterEntry ? rosterEntry.team : message.team,
+            isPlayer: true,
+            x: current ? current.x : message.x,
+            y: current ? current.y : message.y,
+            targetX: message.x,
+            targetY: message.y
+          };
+        }
+      } else if (message.t === 'fps_hit' && message.to === fpsMyId && message.team !== fpsTeam) {
+        takeTeamDamage(message.from);
+      } else if (message.t === 'fps_kill') {
+        fpsScores[message.team] = message.score;
+        if (message.killer === fpsMyId) player.score = message.score;
+        if (fpsRemotePlayers[message.victim]) fpsRemotePlayers[message.victim].alive = false;
+        updateHUD();
+      } else if (message.t === 'fps_win') {
+        showTeamResult(message.team);
+      }
+    };
+  }
+
+  function leaveTeamLobby() {
+    sendFpsMessage({ t: 'room_leave' });
+    if (fpsSocket) fpsSocket.close();
+    fpsSocket = null;
+    fpsMyId = -1;
+    fpsRoomPlayers = [];
+    fpsRemotePlayers = {};
+    fpsTeam = -1;
+    fpsMatchStarted = false;
+    document.getElementById('teamLobby').style.display = 'none';
+    document.getElementById('startScreen').style.display = 'flex';
+  }
+
+  function startTeamMatch() {
+    if (fpsRoomPlayers.length < 2 || fpsTeam < 0) return;
+    sendFpsMessage({ t: 'fps_start' });
+    beginTeamRound();
+  }
+
+  function beginTeamRound() {
+    if (fpsMatchStarted) return;
+    const slot = fpsRoomPlayers.findIndex(entry => entry.id === fpsMyId);
+    if (slot < 0) return;
+    fpsMatchStarted = true;
+    multiplayerMode = true;
+    fpsTeam = fpsRoomPlayers[slot].team;
+    fpsScores = [0, 0];
+    fpsRemotePlayers = {};
+    const teamSlot = fpsRoomPlayers.slice(0, slot).filter(entry => entry.team === fpsTeam).length;
+    player.x = fpsTeam === 0 ? 1.5 + teamSlot : 14.5 - teamSlot;
+    player.y = fpsTeam === 0 ? 1.5 : 14.5;
+    player.dir = fpsTeam === 0 ? 0 : Math.PI;
+    player.hp = 100;
+    player.shield = 100;
+    player.ammo = 30;
+    player.maxAmmo = 90;
+    player.score = 0;
+    player.alive = true;
+    enemies = [];
+    particles = [];
+    document.getElementById('teamLobby').style.display = 'none';
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('endScreen').style.display = 'none';
+    document.getElementById('enemyLabel').textContent = 'ÉQUIPES :';
+    isRunning = true;
+    lastTime = performance.now();
+    updateHUD();
+    requestAnimationFrame(gameLoop);
+  }
+
+  function restartGame() {
+    if (multiplayerMode) {
+      fpsMatchStarted = false;
+      multiplayerMode = false;
+      document.getElementById('enemyLabel').textContent = 'ENNEMIS :';
+      document.getElementById('endScreen').style.display = 'none';
+      document.getElementById('teamLobby').style.display = 'flex';
+      renderTeamLobby(fpsRoomPlayers);
+    } else {
+      startGame();
+    }
+  }
+
+  function takeTeamDamage(killer) {
+    if (!player.alive) return;
+    player.shield -= 25;
+    if (player.shield < 0) {
+      player.hp += player.shield;
+      player.shield = 0;
+    }
+    if (player.hp <= 0) {
+      player.hp = 0;
+      player.alive = false;
+      const teamScore = ++fpsScores[fpsTeam === 0 ? 1 : 0];
+      sendFpsMessage({ t: 'fps_kill', killer, victim: fpsMyId, team: fpsTeam === 0 ? 1 : 0, score: teamScore });
+      if (teamScore >= 10) {
+        sendFpsMessage({ t: 'fps_win', team: fpsTeam === 0 ? 1 : 0 });
+        showTeamResult(fpsTeam === 0 ? 1 : 0);
+      } else {
+        setTimeout(respawnTeamPlayer, 1800);
+      }
+    }
+    updateHUD();
+    sendFpsState();
+  }
+
+  function respawnTeamPlayer() {
+    const playerIndex = Math.max(0, fpsRoomPlayers.findIndex(entry => entry.id === fpsMyId));
+    const slot = fpsRoomPlayers.slice(0, playerIndex).filter(entry => entry.team === fpsTeam).length;
+    player.x = fpsTeam === 0 ? 1.5 + slot : 14.5 - slot;
+    player.y = fpsTeam === 0 ? 1.5 : 14.5;
+    player.dir = fpsTeam === 0 ? 0 : Math.PI;
+    player.hp = 100;
+    player.shield = 100;
+    player.alive = true;
+    updateHUD();
+    sendFpsState();
+  }
+
+  function showTeamResult(winningTeam) {
+    isRunning = false;
+    document.getElementById('endTitle').textContent = winningTeam === fpsTeam ? 'VICTOIRE !' : 'DÉFAITE';
+    document.getElementById('endTitle').style.color = winningTeam === fpsTeam ? '#ff6475' : '#59aaff';
+    document.getElementById('endDesc').textContent = winningTeam === 0 ? 'L’équipe rouge remporte le match.' : 'L’équipe bleue remporte le match.';
+    document.getElementById('endScoreText').textContent = fpsScores[winningTeam];
+    document.getElementById('endScreen').style.display = 'flex';
+  }
+
+  function sendFpsState() {
+    if (!multiplayerMode || fpsMyId < 0) return;
+    sendFpsMessage({
+      t: 'fps_state', id: fpsMyId, name: fpsRoomPlayers.find(entry => entry.id === fpsMyId)?.name || 'Joueur',
+      team: fpsTeam, x: player.x, y: player.y, dir: player.dir, hp: player.hp,
+      alive: player.alive !== false, walking: player.walking || false, walkPhase: player.walkPhase || 0
+    });
+  }
+
   function startGame() {
+    multiplayerMode = false;
+    fpsMatchStarted = false;
+    player.alive = true;
+    document.getElementById('enemyLabel').textContent = 'ENNEMIS :';
     document.getElementById('startScreen').style.display = 'none';
     document.getElementById('endScreen').style.display = 'none';
     resizeCanvases(); // Forcer la bonne taille avant le premier rendu
@@ -589,7 +877,7 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
 
   function triggerShoot(e) {
     if (e) e.preventDefault();
-    if (!isRunning || player.reloading) return;
+    if (!isRunning || player.reloading || (multiplayerMode && player.alive === false)) return;
     if (player.ammo <= 0) { triggerReload(); return; }
 
     player.ammo--;
@@ -633,6 +921,28 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
       }
       updateHUD();
     }
+
+    if (multiplayerMode) {
+      let hitPlayer = null;
+      let nearestPlayer = 8;
+      Object.values(fpsRemotePlayers).forEach(remote => {
+        if (!remote.alive || remote.team === fpsTeam) return;
+        const dx = remote.x - player.x;
+        const dy = remote.y - player.y;
+        const distance = Math.hypot(dx, dy);
+        let angle = Math.atan2(dy, dx) - player.dir;
+        while (angle > Math.PI) angle -= Math.PI * 2;
+        while (angle < -Math.PI) angle += Math.PI * 2;
+        if (Math.abs(angle) < 0.13 && distance < nearestPlayer && !isWallBetween(player.x, player.y, remote.x, remote.y)) {
+          nearestPlayer = distance;
+          hitPlayer = remote;
+        }
+      });
+      if (hitPlayer) {
+        playSound('hit');
+        sendFpsMessage({ t: 'fps_hit', from: fpsMyId, to: hitPlayer.id, team: fpsTeam });
+      }
+    }
   }
 
   function triggerReload(e) {
@@ -674,7 +984,9 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
 
   function updateHUD() {
     document.getElementById('txtScore').innerText = player.score;
-    document.getElementById('txtEnemies').innerText = enemies.filter(e => e.alive).length;
+    document.getElementById('txtEnemies').innerText = multiplayerMode
+      ? fpsScores[0] + ' - ' + fpsScores[1]
+      : enemies.filter(e => e.alive).length;
     document.getElementById('txtHp').innerText = player.hp;
     document.getElementById('barHp').style.width = Math.max(0, player.hp) + '%';
     document.getElementById('txtShield').innerText = player.shield;
@@ -749,7 +1061,7 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
       dy += Math.sin(player.dir) * (-ldy) + Math.sin(player.dir + Math.PI/2) * ldx;
     }
 
-    if (dx !== 0 || dy !== 0) {
+    if ((dx !== 0 || dy !== 0) && (!multiplayerMode || player.alive !== false)) {
       let len = Math.sqrt(dx*dx + dy*dy);
       dx = (dx/len) * moveSpeed;
       dy = (dy/len) * moveSpeed;
@@ -758,6 +1070,19 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
       if (MAP[Math.floor(player.y) * MAP_W + Math.floor(newX)] === 0) player.x = newX;
       if (MAP[Math.floor(newY) * MAP_W + Math.floor(player.x)] === 0) player.y = newY;
       weaponBob += dt * 10;
+    }
+
+    player.walking = (dx !== 0 || dy !== 0) && (!multiplayerMode || player.alive !== false);
+    if (player.walking) player.walkPhase = (player.walkPhase || 0) + dt * 9;
+    if (multiplayerMode) {
+      Object.values(fpsRemotePlayers).forEach(remote => {
+        remote.x += (remote.targetX - remote.x) * Math.min(1, dt * 12);
+        remote.y += (remote.targetY - remote.y) * Math.min(1, dt * 12);
+      });
+      if (time - fpsLastStateSent > 100) {
+        fpsLastStateSent = time;
+        sendFpsState();
+      }
     }
 
     // Enemies AI & Drone behaviors
@@ -905,7 +1230,8 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
     }
 
     // Render Enemies (Sprites sorted by depth)
-    let sortedEnemies = enemies.map((en, idx) => {
+    const sceneActors = enemies.concat(multiplayerMode ? Object.values(fpsRemotePlayers) : []);
+    let sortedEnemies = sceneActors.map(en => {
       let dx = en.x - player.x;
       let dy = en.y - player.y;
       let dist = Math.hypot(dx, dy);
@@ -913,17 +1239,18 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
       while (angle > Math.PI) angle -= Math.PI*2;
       while (angle < -Math.PI) angle += Math.PI*2;
       return { en, dist, angle };
-    }).filter(s => s.en.alive && s.dist > 0.5 && Math.abs(s.angle) < player.fov)
+    }).filter(s => s.en.alive !== false && s.dist > 0.5 && Math.abs(s.angle) < player.fov)
       .sort((a, b) => b.dist - a.dist);
 
     sortedEnemies.forEach(s => {
-      const facing = Math.atan2(player.y - s.en.y, player.x - s.en.x);
+      const facing = s.en.isPlayer ? s.en.dir : Math.atan2(player.y - s.en.y, player.x - s.en.x);
       const cosFacing = Math.cos(facing);
       const sinFacing = Math.sin(facing);
       const projectedTriangles = [];
 
       const gaitIndex = Math.floor((s.en.walkPhase / (Math.PI * 2)) * humanoidMeshes.length) % humanoidMeshes.length;
-      humanoidMeshes[gaitIndex].forEach(triangle => {
+      const actorMeshes = s.en.isPlayer ? teamHumanoidMeshes[s.en.team] : humanoidMeshes;
+      actorMeshes[gaitIndex].forEach(triangle => {
         const points = triangle.vertices.map(vertex => {
           const worldX = s.en.x - vertex[0] * sinFacing + vertex[1] * cosFacing;
           const worldY = s.en.y + vertex[0] * cosFacing + vertex[1] * sinFacing;
@@ -960,8 +1287,9 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
       const barWidth = Math.max(8, focalLength * 0.28 / s.dist);
       ctx3D.fillStyle = 'rgba(0, 0, 0, 0.8)';
       ctx3D.fillRect(centerX - barWidth / 2, barY - 3, barWidth, 3);
-      ctx3D.fillStyle = '#ff376f';
-      ctx3D.fillRect(centerX - barWidth / 2, barY - 3, barWidth * Math.max(0, s.en.hp / 50), 3);
+      ctx3D.fillStyle = s.en.isPlayer ? (s.en.team === 0 ? '#ed4258' : '#428ff5') : '#ff376f';
+      const healthRatio = Math.max(0, s.en.hp / (s.en.isPlayer ? 100 : 50));
+      ctx3D.fillRect(centerX - barWidth / 2, barY - 3, barWidth * healthRatio, 3);
     });
   }
 
@@ -988,13 +1316,23 @@ const char GAME_FPS3D_HTML[] PROGMEM = R"rawliteral(
       mmCtx.fill();
     });
 
+    if (multiplayerMode) {
+      Object.values(fpsRemotePlayers).forEach(remote => {
+        if (!remote.alive) return;
+        mmCtx.fillStyle = remote.team === 0 ? '#ed4258' : '#428ff5';
+        mmCtx.beginPath();
+        mmCtx.arc(remote.x * cellW, remote.y * cellH, 3, 0, Math.PI * 2);
+        mmCtx.fill();
+      });
+    }
+
     // Player
-    mmCtx.fillStyle = '#ffe600';
+    mmCtx.fillStyle = multiplayerMode ? (fpsTeam === 0 ? '#ed4258' : '#428ff5') : '#ffe600';
     mmCtx.beginPath();
     mmCtx.arc(player.x * cellW, player.y * cellH, 3, 0, Math.PI*2);
     mmCtx.fill();
 
-    mmCtx.strokeStyle = '#ffe600';
+    mmCtx.strokeStyle = mmCtx.fillStyle;
     mmCtx.lineWidth = 1.5;
     mmCtx.beginPath();
     mmCtx.moveTo(player.x * cellW, player.y * cellH);
